@@ -36,6 +36,14 @@ Same engine, same web UI, same API — the container is the parity guarantee acr
 platforms. For a team deployment, set `CHAMP_STUDIO_ACCESS_TOKEN` in `.env` and share
 `http://<host>:8787` + the token; teammates can also point the Mac app's engine URL at it.
 
+## Distribute to your team
+
+| Audience | Package | How |
+|---|---|---|
+| Mac designers | **`dist/ChampStudio-1.0.0.dmg`** — engine embedded, zero setup | Build: `./macapp/scripts/make_dmg.sh`. They drag to Applications, right-click → Open the first time (ad-hoc signed), add a key. Engine auto-starts (~30 s first launch). |
+| Server / everyone via browser | **Multi-arch Docker image** (amd64+arm64) | See [docs/DEPLOY-SERVER.md](docs/DEPLOY-SERVER.md) — set `CHAMP_STUDIO_ACCESS_TOKEN`, share `http://server:8787`. |
+| Windows devices | **`windows/`** one-click scripts (no Docker) | See [windows/README-WINDOWS.md](windows/README-WINDOWS.md) — `setup-windows.ps1` once, then `run-windows.bat`. Docker Desktop also works. |
+
 ## What's inside
 
 | Path | What |

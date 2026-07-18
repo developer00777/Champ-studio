@@ -9,3 +9,6 @@ dist/
 *.egg-info/
 
 *.app/
+engine/dist/
+engine/build/
+*.spec

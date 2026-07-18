@@ -9,6 +9,7 @@ from __future__ import annotations
 import base64
 import logging
 import os
+import sys
 from pathlib import Path
 
 import uvicorn
@@ -26,7 +27,13 @@ from .providers.openrouter import OpenRouterClient
 
 log = logging.getLogger("champstudio")
 
-WEB_DIR = Path(os.environ.get("CHAMP_WEB_DIR", Path(__file__).resolve().parents[2] / "web"))
+def _default_web_dir() -> Path:
+    if getattr(sys, "frozen", False):  # PyInstaller bundle
+        return Path(getattr(sys, "_MEIPASS", ".")) / "web"
+    return Path(__file__).resolve().parents[2] / "web"
+
+
+WEB_DIR = Path(os.environ.get("CHAMP_WEB_DIR") or _default_web_dir())
 
 app = FastAPI(title="Champ Studio Engine", version=config.ENGINE_VERSION)
 

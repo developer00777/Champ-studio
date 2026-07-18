@@ -17,6 +17,9 @@ struct RootView: View {
         }
         .background(Theme.bg)
         .task {
+            // Auto-start a local engine if needed (bundled engines can take
+            // 20-40s to boot; ensureRunning polls health for up to 120s).
+            await launcher.ensureRunning(client: engine)
             // Keep the health indicator fresh.
             while !Task.isCancelled {
                 _ = await engine.isReachable()
@@ -70,15 +73,29 @@ struct AppSidebar: View {
         VStack(alignment: .leading, spacing: 8) {
             Divider().overlay(Theme.border)
             HStack(spacing: 8) {
-                Circle()
-                    .fill(engine.health != nil ? Color.green : Color.red)
-                    .frame(width: 8, height: 8)
-                Text(engine.health != nil ? "Engine online" : "Engine offline")
-                    .font(.caption)
-                    .foregroundColor(Theme.secondaryText)
+                if launcher.isStarting {
+                    ProgressView()
+                        .controlSize(.mini)
+                    Text("Starting engine…")
+                        .font(.caption)
+                        .foregroundColor(Theme.secondaryText)
+                } else {
+                    Circle()
+                        .fill(engine.health != nil ? Color.green : Color.red)
+                        .frame(width: 8, height: 8)
+                    Text(engine.health != nil ? "Engine online" : "Engine offline")
+                        .font(.caption)
+                        .foregroundColor(Theme.secondaryText)
+                }
                 Spacer()
             }
-            if engine.health == nil && engine.isLocalhost {
+            if let lastError = launcher.lastError, engine.health == nil, !launcher.isStarting {
+                Text(lastError)
+                    .font(.caption2)
+                    .foregroundColor(.red)
+                    .lineLimit(3)
+            }
+            if engine.health == nil && engine.isLocalhost && !launcher.isStarting {
                 Button {
                     startEngine()
                 } label: {
@@ -102,10 +119,11 @@ struct AppSidebar: View {
         starting = true
         launcher.start()
         Task {
-            // Give the engine a few seconds to boot, polling health.
-            for _ in 0..<10 {
-                try? await Task.sleep(nanoseconds: 1_000_000_000)
+            // Frozen (PyInstaller) engines can take 20-40s; poll up to 120s.
+            for _ in 0..<60 {
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
                 if await engine.isReachable() { break }
+                if !launcher.isRunning { break }
             }
             starting = false
         }

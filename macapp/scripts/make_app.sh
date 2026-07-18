@@ -1,10 +1,21 @@
 #!/bin/bash
 # Assemble "Champ Studio.app" from the SPM release build.
-# Usage: scripts/make_app.sh
+# Usage: scripts/make_app.sh [--embed-engine]
+#   --embed-engine  Copy the PyInstaller engine (engine/dist/champstudio-engine)
+#                   into Contents/Resources/engine/ for a self-contained app.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+REPO_ROOT="$(cd "$ROOT/.." && pwd)"
+
+EMBED_ENGINE=0
+for arg in "$@"; do
+  case "$arg" in
+    --embed-engine) EMBED_ENGINE=1 ;;
+    *) echo "error: unknown argument: $arg" >&2; exit 2 ;;
+  esac
+done
 
 echo "==> Building release binary"
 cd "$ROOT"
@@ -65,7 +76,18 @@ PLIST
 
 printf 'APPL????' > "$APP/Contents/PkgInfo"
 
-echo "==> Ad-hoc code signing"
+if [[ "$EMBED_ENGINE" == "1" ]]; then
+  ENGINE_DIST="$REPO_ROOT/engine/dist/champstudio-engine"
+  if [[ ! -x "$ENGINE_DIST/champstudio-engine" ]]; then
+    echo "error: bundled engine not found at $ENGINE_DIST (build it with PyInstaller first)" >&2
+    exit 1
+  fi
+  echo "==> Embedding engine ($(du -sh "$ENGINE_DIST" | cut -f1)) into Contents/Resources/engine"
+  mkdir -p "$APP/Contents/Resources"
+  ditto "$ENGINE_DIST" "$APP/Contents/Resources/engine"
+fi
+
+echo "==> Ad-hoc code signing (may take a while with an embedded engine)"
 codesign --force --deep -s - "$APP"
 
 echo "==> Done: $APP"
