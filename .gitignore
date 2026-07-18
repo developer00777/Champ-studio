@@ -12,3 +12,4 @@ dist/
 engine/dist/
 engine/build/
 *.spec
+dist/
