@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Champ Studio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B0D12'/%3E%3Ccircle cx='16' cy='16' r='8' fill='%23FF6B35'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+
+  <aside class="sidebar">
+    <div class="wordmark">Champ&nbsp;<em>Studio</em></div>
+    <nav class="nav" id="nav">
+      <button class="nav-item" data-view="create">
+        <svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4L12 3zM19 15l.9 2.6L22.5 18l-2.6.9L19 21.5l-.9-2.6L15.5 18l2.6-.9L19 15z"/></svg>
+        Create</button>
+      <button class="nav-item" data-view="animate">
+        <svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13zM10 8.5v7l6-3.5-6-3.5z"/></svg>
+        Animate</button>
+      <button class="nav-item" data-view="lab">
+        <svg viewBox="0 0 24 24"><path d="M9 3h6v2h-1v4.6l4.7 8.2A2 2 0 0 1 17 21H7a2 2 0 0 1-1.7-3.2L10 9.6V5H9V3zm3 8.6L9.3 16.4h5.4L12 11.6z"/></svg>
+        Derivative Lab</button>
+      <button class="nav-item" data-view="library">
+        <svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5zm4 10l2.5-3 2 2.4L15 11l3 4H8z"/></svg>
+        Library</button>
+      <button class="nav-item" data-view="settings">
+        <svg viewBox="0 0 24 24"><path d="M12 8.5A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5zm8.9 5l-1.9-.6a7 7 0 0 0 0-1.8l1.9-.6a1 1 0 0 0 .6-1.3l-1-2.4a1 1 0 0 0-1.3-.5l-1.9.7a7 7 0 0 0-1.5-1l.2-2a1 1 0 0 0-1-1.1h-2.6a1 1 0 0 0-1 1.1l.2 2a7 7 0 0 0-1.5 1l-1.9-.7a1 1 0 0 0-1.3.5l-1 2.4a1 1 0 0 0 .6 1.3l1.9.6a7 7 0 0 0 0 1.8l-1.9.6a1 1 0 0 0-.6 1.3l1 2.4a1 1 0 0 0 1.3.5l1.9-.7a7 7 0 0 0 1.5 1l-.2 2a1 1 0 0 0 1 1.1h2.6a1 1 0 0 0 1-1.1l-.2-2a7 7 0 0 0 1.5-1l1.9.7a1 1 0 0 0 1.3-.5l1-2.4a1 1 0 0 0-.6-1.3z"/></svg>
+        Settings</button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="engine-status" id="engine-status" title="Engine status">
+        <span class="dot" id="status-dot"></span>
+        <span id="status-text">Connecting…</span>
+      </div>
+      <div class="engine-version" id="engine-version"></div>
+    </div>
+  </aside>
+
+  <main id="main">
+
+    <!-- ══ CREATE ══ -->
+    <section class="view" id="view-create">
+      <header class="view-head">
+        <h1>Create</h1>
+        <p>Generate images from a prompt. <kbd>⌘</kbd><kbd>↵</kbd> to run.</p>
+      </header>
+      <div class="prompt-dock glass">
+        <textarea id="create-prompt" rows="1" placeholder="Describe the image you want — subject, style, lighting…"></textarea>
+        <button class="btn ember big" id="create-go">Generate</button>
+      </div>
+      <div class="controls-row" id="create-controls">
+        <div class="ctl" id="create-model-slot"><label>Model</label></div>
+        <div class="ctl"><label>Aspect</label><div class="chip-row" id="create-aspect"></div></div>
+        <div class="ctl"><label>Resolution</label>
+          <select id="create-res" class="sel">
+            <option value="">Auto</option><option value="512">512</option>
+            <option value="1K">1K</option><option value="2K">2K</option><option value="4K">4K</option>
+          </select></div>
+        <div class="ctl"><label>Count</label>
+          <select id="create-count" class="sel"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+        <div class="ctl"><label>Format</label>
+          <select id="create-format" class="sel">
+            <option value="">Default</option><option value="png">PNG</option><option value="jpeg">JPEG</option>
+            <option value="webp">WebP</option><option value="svg">SVG</option>
+          </select></div>
+        <div class="ctl"><label>Transparent BG</label>
+          <button class="switch" id="create-transparent" role="switch" aria-checked="false"><span></span></button></div>
+        <div class="ctl"><label>Reference</label>
+          <button class="btn ghost" id="create-ref-btn">+ Add image</button></div>
+      </div>
+      <div class="ref-strip" id="create-refs" hidden></div>
+      <div class="results-grid" id="create-results"></div>
+      <div class="empty-state" id="create-empty">
+        <div class="empty-mark">✦</div>
+        <h3>Ready when you are</h3>
+        <p>Type a prompt above and hit <strong>Generate</strong> — results land here and in your Library.</p>
+      </div>
+    </section>
+
+    <!-- ══ ANIMATE ══ -->
+    <section class="view" id="view-animate">
+      <header class="view-head">
+        <h1>Animate</h1>
+        <p>Text-to-video, or bring an image to life. <kbd>⌘</kbd><kbd>↵</kbd> to run.</p>
+      </header>
+      <div class="prompt-dock glass">
+        <textarea id="animate-prompt" rows="1" placeholder="Describe the motion — camera moves, action, mood…"></textarea>
+        <button class="btn ember big" id="animate-go">Animate</button>
+      </div>
+      <div class="controls-row">
+        <div class="ctl" id="animate-model-slot"><label>Model</label></div>
+        <div class="ctl"><label>Duration</label>
+          <div class="num-wrap"><input type="number" id="animate-duration" class="sel num" min="1" max="60" value="5"><span>s</span></div></div>
+        <div class="ctl"><label>Aspect</label><div class="chip-row" id="animate-aspect"></div></div>
+        <div class="ctl"><label>Resolution</label>
+          <select id="animate-res" class="sel">
+            <option value="">Auto</option><option value="512">512</option>
+            <option value="1K">1K</option><option value="2K">2K</option><option value="4K">4K</option>
+          </select></div>
+        <div class="ctl"><label>Audio</label>
+          <button class="switch" id="animate-audio" role="switch" aria-checked="false"><span></span></button></div>
+        <div class="ctl"><label>Source image</label>
+          <button class="btn ghost" id="animate-src-btn">+ From library</button></div>
+      </div>
+      <div class="ref-strip" id="animate-src" hidden></div>
+      <h2 class="section-title">Jobs</h2>
+      <div class="jobs-list" id="jobs-list"></div>
+      <div class="empty-state" id="jobs-empty">
+        <div class="empty-mark">▶</div>
+        <h3>No renders yet</h3>
+        <p>Submit a prompt and your video jobs will queue up here.</p>
+      </div>
+    </section>
+
+    <!-- ══ DERIVATIVE LAB ══ -->
+    <section class="view" id="view-lab">
+      <header class="view-head">
+        <h1>Derivative Lab</h1>
+        <p>Chain transforms — image → vector → palette → anything. Every output is a new asset.</p>
+      </header>
+      <div class="lab-source glass" id="lab-source">
+        <div class="drop-zone" id="lab-drop">
+          <div class="empty-mark">⌬</div>
+          <p><strong>Drop an image here</strong> to upload, or</p>
+          <div class="drop-actions">
+            <button class="btn ghost" id="lab-pick">Choose from Library</button>
+            <button class="btn ghost" id="lab-upload">Upload file</button>
+            <input type="file" id="lab-file" accept="image/*,.svg" hidden>
+          </div>
+        </div>
+        <div class="lab-current" id="lab-current" hidden>
+          <img id="lab-thumb" alt="Source">
+          <div class="lab-current-meta">
+            <div class="lineage" id="lab-lineage"></div>
+            <div class="lab-current-actions">
+              <button class="btn ghost sm" id="lab-swap">Change source</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="lab-tools-wrap" hidden>
+        <h2 class="section-title">Tools</h2>
+        <div class="tools-grid" id="lab-tools"></div>
+        <h2 class="section-title" id="lab-results-title" hidden>Results</h2>
+        <div class="results-strip" id="lab-results"></div>
+      </div>
+    </section>
+
+    <!-- ══ LIBRARY ══ -->
+    <section class="view" id="view-library">
+      <header class="view-head">
+        <h1>Library</h1>
+        <p>Everything you've made, in one place.</p>
+      </header>
+      <div class="chip-row filters" id="library-filters"></div>
+      <div class="masonry" id="library-grid"></div>
+      <div class="empty-state" id="library-empty" hidden>
+        <div class="empty-mark">▦</div>
+        <h3>Nothing here yet</h3>
+        <p>Create your first image and it'll show up in the Library automatically.</p>
+        <button class="btn ember" data-goto="create">Open Create</button>
+      </div>
+    </section>
+
+    <!-- ══ SETTINGS ══ -->
+    <section class="view" id="view-settings">
+      <header class="view-head">
+        <h1>Settings</h1>
+        <p>Provider keys and engine info.</p>
+      </header>
+      <div class="settings-card glass">
+        <h2 class="section-title">API keys</h2>
+        <div class="key-row">
+          <label for="key-openrouter">OpenRouter</label>
+          <input type="password" id="key-openrouter" class="sel key-input" autocomplete="off" spellcheck="false" placeholder="sk-or-…">
+          <span class="key-note" id="note-openrouter"></span>
+        </div>
+        <div class="key-row">
+          <label for="key-muapi">MuAPI</label>
+          <input type="password" id="key-muapi" class="sel key-input" autocomplete="off" spellcheck="false" placeholder="mu-…">
+          <span class="key-note" id="note-muapi"></span>
+        </div>
+        <div class="settings-actions">
+          <button class="btn ember" id="settings-save">Save keys</button>
+          <span class="hint">Get a key at <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer">openrouter.ai/keys</a> · <a href="https://muapi.ai" target="_blank" rel="noreferrer">muapi.ai</a>. Leave a field blank to keep it, clear + save to remove.</span>
+        </div>
+      </div>
+      <div class="settings-card glass">
+        <h2 class="section-title">Engine</h2>
+        <p class="hint" id="settings-engine">—</p>
+        <p class="hint">Assets are stored in the engine's data directory (<code>CHAMP_DATA_DIR</code>); deleting an asset removes its file permanently.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div id="modal-root"></div>
+<div id="toast-root"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

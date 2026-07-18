@@ -1,0 +1,10 @@
+.git
+engine/.venv
+engine/**/__pycache__
+engine/.pytest_cache
+macapp
+docs
+scripts
+*.md
+.env
+.DS_Store

@@ -1,0 +1,22 @@
+services:
+  champstudio:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: championsgroup/champstudio:1.0.0
+    container_name: champstudio
+    ports:
+      - "8787:8787"
+    environment:
+      # Option A: put keys here / in a .env file. Option B: leave unset and
+      # enter them in the web UI Settings (stored in the champ-data volume).
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - MUAPI_API_KEY=${MUAPI_API_KEY:-}
+      # Uncomment to require a shared token on API calls (team deployments):
+      # - CHAMP_STUDIO_ACCESS_TOKEN=${CHAMP_STUDIO_ACCESS_TOKEN}
+    volumes:
+      - champ-data:/data
+    restart: unless-stopped
+
+volumes:
+  champ-data:
