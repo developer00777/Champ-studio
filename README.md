@@ -17,7 +17,7 @@ Bring your own keys; everything runs on your machine.
 git clone <this repo> && cd "Champ Studio"
 ./scripts/install-mac.sh          # engine + Champ Studio.app
 ./scripts/run-local.sh            # engine + web UI on http://127.0.0.1:8787
-open "macapp/dist/Champ Studio.app"   # native app (talks to the same engine)
+open "macapp/Champ Studio.app"        # native app (talks to the same engine)
 ```
 
 Add your OpenRouter key in **Settings** (either UI). Keys are stored `0600` in

@@ -30,9 +30,8 @@ echo "▸ Fetching Remove-Background model weights..."
 if command -v swift >/dev/null 2>&1; then
   echo "▸ Building Champ Studio.app..."
   cd "$REPO_DIR/macapp"
-  swift build -c release
-  ./scripts/make_app.sh release
-  echo "▸ App at: $REPO_DIR/macapp/dist/Champ Studio.app  (drag to /Applications if you like)"
+  ./scripts/make_app.sh
+  echo "▸ App at: $REPO_DIR/macapp/Champ Studio.app  (drag to /Applications if you like)"
 else
   echo "▸ swift not found — skipping Mac app (engine + web UI still fully usable)"
 fi
