@@ -277,8 +277,11 @@ async def run_transform(tool: str, body: TransformRequest):
     if not path:
         raise HTTPException(404, f"asset {body.asset_id} not found")
     source = library.get_asset(body.asset_id)
-    if source["kind"] not in ("image", "vector"):
-        raise HTTPException(400, "transforms take image assets")
+    if source["kind"] != "image":
+        raise HTTPException(
+            400,
+            "transforms take raster images — export/rasterize vectors before re-processing",
+        )
 
     try:
         outputs = await run_in_threadpool(fn, path.read_bytes(), body.params)
