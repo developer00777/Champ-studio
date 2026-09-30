@@ -102,3 +102,56 @@ def test_audio_creates_audio_asset(client, with_key, monkeypatch):
     assert seen == {"text": "One engine, one library.", "model": "google/gemini-3.8-flash-tts",
                     "voice": "Puck", "speed": 1.1}
     assert client.get(asset["url"]).content == FAKE_MP3
+
+
+class _FakeVideoClient:
+    provider = "openrouter"
+
+    def __init__(self):
+        self.submitted = None
+
+    async def submit_video(self, **kwargs):
+        self.submitted = kwargs
+        return "provider-job-1"
+
+    async def poll_video(self, job_id):
+        return {"status": "completed", "url": "https://example.test/out.mp4", "cost": 0.25}
+
+    async def download(self, url):
+        return b"\x00\x00\x00\x18ftypmp42"
+
+
+async def _wait_for(job_id, timeout_s=2.0):
+    for _ in range(int(timeout_s / 0.02)):
+        job = jobs.get_job(job_id)
+        if job["status"] in ("completed", "failed"):
+            return job
+        await asyncio.sleep(0.02)
+    raise AssertionError(f"job {job_id} still {jobs.get_job(job_id)['status']}")
+
+
+def test_redact_strips_data_urls():
+    assert jobs.redact({"first_frame": "data:image/png;base64,AAA", "duration": 5,
+                        "input_references": ["data:audio/mpeg;base64,BBB", "https://x/y.png"]}) == {
+        "first_frame": "<inline data>", "duration": 5,
+        "input_references": ["<inline data>", "https://x/y.png"],
+    }
+
+
+async def test_job_records_kind_and_saves_redacted_params(monkeypatch):
+    monkeypatch.setattr(jobs, "POLL_INTERVAL_S", 0)
+    fake = _FakeVideoClient()
+    job = await jobs.start_video_job(
+        fake, prompt="", model="heygen/avatar-iv", parent_id=None,
+        submit_kwargs={"input_references": ["data:image/png;base64,AAA"],
+                       "audio_references": ["data:audio/mpeg;base64,BBB"], "resolution": "720p"},
+        kind="lipsync", extra_params={"audio_asset_id": "abc123"},
+    )
+    assert job["kind"] == "lipsync"
+    assert fake.submitted["input_references"] == ["data:image/png;base64,AAA"]  # provider got real data
+    done = await _wait_for(job["id"])
+    assert done["status"] == "completed", done["error"]
+    params = done["asset"]["params"]
+    assert params == {"input_references": ["<inline data>"], "audio_references": ["<inline data>"],
+                      "resolution": "720p", "audio_asset_id": "abc123", "kind": "lipsync"}
+    assert done["asset"]["cost"] == 0.25 and done["asset"]["kind"] == "video"

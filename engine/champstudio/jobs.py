@@ -23,6 +23,21 @@ POLL_TIMEOUT_S = 1200  # 20 min
 _jobs: dict[str, dict] = {}
 
 
+def redact(value):
+    """Copy of `value` with inline data URLs replaced, for storage in asset params.
+
+    Base64 frames and audio are megabytes each; the library only needs to know
+    that something inline was sent, never the bytes.
+    """
+    if isinstance(value, dict):
+        return {k: redact(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [redact(v) for v in value]
+    if isinstance(value, str) and value.startswith("data:"):
+        return "<inline data>"
+    return value
+
+
 def get_job(job_id: str) -> dict | None:
     return _jobs.get(job_id)
 
@@ -38,12 +53,19 @@ async def start_video_job(
     model: str,
     parent_id: str | None = None,
     submit_kwargs: dict,
+    kind: str = "video",
+    extra_params: dict | None = None,
 ) -> dict:
-    """Submit to the provider and spawn a background poller. Returns the job record."""
+    """Submit to the provider and spawn a background poller. Returns the job record.
+
+    `kind` tags the job for clients ("video" from Animate, "lipsync" from Lip Sync);
+    `extra_params` is recorded on the resulting asset next to the redacted submit kwargs.
+    """
     provider_job_id = await client.submit_video(prompt=prompt, model=model, **submit_kwargs)
     job_id = uuid.uuid4().hex[:12]
     job = {
         "id": job_id,
+        "kind": kind,
         "status": "pending",
         "provider": client.provider,
         "provider_job_id": provider_job_id,
@@ -55,11 +77,12 @@ async def start_video_job(
         "created_at": time.time(),
     }
     _jobs[job_id] = job
-    asyncio.create_task(_poll_loop(client, job, submit_kwargs))
+    params = {**redact(submit_kwargs), **(extra_params or {}), "kind": kind}
+    asyncio.create_task(_poll_loop(client, job, params))
     return job
 
 
-async def _poll_loop(client, job: dict, submit_kwargs: dict) -> None:
+async def _poll_loop(client, job: dict, params: dict) -> None:
     start = time.time()
     try:
         while time.time() - start < POLL_TIMEOUT_S:
@@ -74,7 +97,7 @@ async def _poll_loop(client, job: dict, submit_kwargs: dict) -> None:
                     prompt=job["prompt"],
                     model=job["model"],
                     provider=job["provider"],
-                    params=submit_kwargs,
+                    params=params,
                     parent_id=job.get("parent_id"),
                     cost=state.get("cost"),
                 )
