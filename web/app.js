@@ -518,7 +518,112 @@ const voice = (() => {
   return {};
 })();
 
-function sendToLipSync(asset) { show("create"); createTabs.activate("lipsync"); toast(`Lip Sync pane lands in the next task (${asset.kind})`); }
+/* ── LIP SYNC pane (portrait + voice track → talking head) ──────── */
+
+const lipsync = (() => {
+  const goBtn = $("#ls-go"), list = $("#ls-jobs"), emptyEl = $("#ls-empty");
+  const imgPrev = $("#ls-image-preview"), audPrev = $("#ls-audio-preview");
+  const aspect = chipGroup($("#ls-aspect"),
+    ["9:16", "16:9", "1:1"].map((v) => ({ value: v, label: v })), "lipsync.aspect", "9:16");
+  const resSel = $("#ls-res");
+  resSel.value = pref("lipsync.res", "720p");
+  resSel.onchange = () => setPref("lipsync.res", resSel.value);
+  let image = null, audio = null; // Asset | null
+
+  function paint() {
+    imgPrev.replaceChildren(image
+      ? el("img", { src: image.url, alt: "Portrait" })
+      : el("span", { class: "empty-mark" }, "☺"));
+    audPrev.replaceChildren(audio
+      ? el("audio", { src: audio.url, controls: true, preload: "metadata" })
+      : el("span", { class: "empty-mark" }, "♪"));
+    goBtn.disabled = !(image && audio);
+  }
+  function setImage(a) { image = a; paint(); }
+  function setAudio(a) { audio = a; paint(); }
+
+  async function uploadTo(setter, file, kind) {
+    if (!file) return;
+    const form = new FormData();
+    form.append("file", file);
+    try {
+      toast(`Uploading ${file.name}…`);
+      const asset = await api("/api/assets/upload", { method: "POST", form });
+      if (asset.kind !== kind) { toast(`That file is ${asset.kind}, not ${kind}.`, "error"); return; }
+      setter(asset);
+      toast("Uploaded", "ok");
+    } catch (e) { toast(e.message, "error"); }
+  }
+  $("#ls-image-pick").addEventListener("click", async () => { const a = await pickFromLibrary({ kinds: ["image"] }); if (a) setImage(a); });
+  $("#ls-audio-pick").addEventListener("click", async () => { const a = await pickFromLibrary({ kinds: ["audio"] }); if (a) setAudio(a); });
+  $("#ls-image-upload").addEventListener("click", () => $("#ls-image-file").click());
+  $("#ls-audio-upload").addEventListener("click", () => $("#ls-audio-file").click());
+  $("#ls-image-file").addEventListener("change", (e) => { uploadTo(setImage, e.target.files[0], "image"); e.target.value = ""; });
+  $("#ls-audio-file").addEventListener("change", (e) => { uploadTo(setAudio, e.target.files[0], "audio"); e.target.value = ""; });
+
+  let pollTimer = null;
+  async function refreshJobs() {
+    let jobs;
+    try { ({ jobs } = await api("/api/videos/jobs")); }
+    catch { return; }
+    jobs = (jobs || []).filter((j) => j.kind === "lipsync");
+    emptyEl.hidden = jobs.length > 0;
+    list.replaceChildren(...jobs.map(jobCard));
+    const active = jobs.some((j) => j.status === "pending" || j.status === "in_progress");
+    if (active && !pollTimer) pollTimer = setInterval(refreshJobs, 3000);
+    if (!active && pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+
+  async function submit() {
+    if (!(image && audio)) { toast("Pick a portrait and a voice track first.", "error"); return; }
+    goBtn.disabled = true; goBtn.classList.add("busy");
+    try {
+      await api("/api/lipsync", { method: "POST", body: {
+        image_asset_id: image.id, audio_asset_id: audio.id,
+        aspect_ratio: aspect.value, resolution: resSel.value,
+      } });
+      toast("Lip sync job queued", "ok");
+      refreshJobs();
+    } catch (e) {
+      toast(e.message, "error", 7000);
+    } finally {
+      goBtn.classList.remove("busy"); paint();
+    }
+  }
+  goBtn.addEventListener("click", submit);
+  onTab.lipsync = refreshJobs;
+  paint();
+  return { setImage, setAudio, refreshJobs };
+})();
+
+function sendToLipSync(asset) {
+  if (asset.kind === "audio") lipsync.setAudio(asset); else lipsync.setImage(asset);
+  show("create");
+  createTabs.activate("lipsync");
+}
+
+/* ── shared job card (Animate + Lip Sync) ───────────────────────── */
+
+function jobCard(job) {
+  const st = job.status || "pending";
+  const media = st === "completed" && job.asset
+    ? el("div", { class: "job-media" }, el("video", { src: job.asset.url, controls: true, playsinline: true, preload: "metadata" }))
+    : el("div", { class: "job-media" }, el("div", { class: "job-wait" },
+        st === "failed" ? el("span", { style: "font-size:22px" }, "✕") : el("div", { class: "pulse-ring" }),
+        st === "failed" ? "render failed" : st === "pending" ? "queued…" : "rendering…"));
+  return el("div", { class: "job-card", dataset: { job: job.id } },
+    media,
+    el("div", { class: "job-info" },
+      el("div", { class: "job-top" },
+        el("span", { class: `status-pill ${st}` }, st.replace("_", " ")),
+        el("span", { class: "job-model" }, shortModel(job.model)),
+        el("span", { class: "job-date" }, fmtDate(job.created_at))),
+      el("p", { class: "prompt", title: job.prompt || "" }, job.prompt || (job.kind === "lipsync" ? "Lip sync" : "")),
+      job.error ? el("div", { class: "job-error" }, job.error) : [],
+      st === "completed" && job.asset ? el("div", { class: "job-actions" },
+        el("button", { class: "btn sm", onclick: () => download(job.asset) }, "Download"),
+        el("button", { class: "btn sm", onclick: () => openDetail(job.asset.id) }, "Details")) : []));
+}
 
 /* ── ANIMATE view ───────────────────────────────────────────────── */
 
@@ -558,32 +663,11 @@ const animate = (() => {
 
   /* jobs */
   let pollTimer = null;
-  function jobCard(job) {
-    const st = job.status || "pending";
-    const media = st === "completed" && job.asset
-      ? el("div", { class: "job-media" }, el("video", { src: job.asset.url, controls: true, playsinline: true, preload: "metadata" }))
-      : el("div", { class: "job-media" }, el("div", { class: "job-wait" },
-          st === "failed" ? el("span", { style: "font-size:22px" }, "✕") : el("div", { class: "pulse-ring" }),
-          st === "failed" ? "render failed" : st === "pending" ? "queued…" : "rendering…"));
-    return el("div", { class: "job-card", dataset: { job: job.id } },
-      media,
-      el("div", { class: "job-info" },
-        el("div", { class: "job-top" },
-          el("span", { class: `status-pill ${st}` }, st.replace("_", " ")),
-          el("span", { class: "job-model" }, shortModel(job.model)),
-          el("span", { class: "job-date" }, fmtDate(job.created_at))),
-        el("p", { class: "prompt", title: job.prompt || "" }, job.prompt || ""),
-        job.error ? el("div", { class: "job-error" }, job.error) : [],
-        st === "completed" && job.asset ? el("div", { class: "job-actions" },
-          el("button", { class: "btn sm", onclick: () => download(job.asset) }, "Download"),
-          el("button", { class: "btn sm", onclick: () => openDetail(job.asset.id) }, "Details")) : []));
-  }
-
   async function refreshJobs() {
     let jobs;
     try { ({ jobs } = await api("/api/videos/jobs")); }
     catch { return; }
-    jobs = jobs || [];
+    jobs = (jobs || []).filter((j) => j.kind !== "lipsync");
     emptyEl.hidden = jobs.length > 0;
     list.replaceChildren(...jobs.map(jobCard));
     const active = jobs.some((j) => j.status === "pending" || j.status === "in_progress");

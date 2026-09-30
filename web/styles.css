@@ -627,3 +627,18 @@ input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner
 }
 .picker-grid .pick-audio small { font: 11px var(--font-mono); color: var(--champ-mist); overflow-wrap: anywhere; }
 .detail-media .audio-tile { min-height: 200px; }
+
+/* ── lip sync setup ─────────────────────────────────────────────── */
+.lipsync-setup {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px;
+  padding: 18px; border-radius: var(--radius-lg); margin-bottom: 20px;
+}
+.ls-slot > label { display: block; font: 600 10.5px var(--font-body); letter-spacing: .09em; text-transform: uppercase; color: var(--champ-mist); margin-bottom: 8px; }
+.ls-preview {
+  height: 190px; border-radius: var(--radius); background: var(--champ-carbon); border: 1px dashed var(--champ-steel);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; padding: 10px;
+}
+.ls-preview .empty-mark { margin: 0; }
+.ls-preview img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
+.ls-preview audio { width: 100%; }
+.sel.static { display: inline-flex; align-items: center; font: 12px var(--font-mono); color: var(--champ-cloud); }

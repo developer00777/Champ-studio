@@ -109,9 +109,40 @@
       </div>
 
       <div class="tab-pane" data-pane="lipsync" hidden>
-        <div class="empty-state">
+        <div class="lipsync-setup glass">
+          <div class="ls-slot">
+            <label>Portrait</label>
+            <div class="ls-preview" id="ls-image-preview"></div>
+            <div class="drop-actions">
+              <button class="btn ghost sm" id="ls-image-pick">From library</button>
+              <button class="btn ghost sm" id="ls-image-upload">Upload</button>
+              <input type="file" id="ls-image-file" accept="image/*" hidden>
+            </div>
+          </div>
+          <div class="ls-slot">
+            <label>Voice track</label>
+            <div class="ls-preview" id="ls-audio-preview"></div>
+            <div class="drop-actions">
+              <button class="btn ghost sm" id="ls-audio-pick">From library</button>
+              <button class="btn ghost sm" id="ls-audio-upload">Upload</button>
+              <button class="btn ghost sm" data-create-tab="audio">Make one in Voice</button>
+              <input type="file" id="ls-audio-file" accept="audio/*" hidden>
+            </div>
+          </div>
+        </div>
+        <div class="controls-row">
+          <div class="ctl"><label>Aspect</label><div class="chip-row" id="ls-aspect"></div></div>
+          <div class="ctl"><label>Resolution</label>
+            <select id="ls-res" class="sel"><option value="720p">720p</option><option value="1080p">1080p</option></select></div>
+          <div class="ctl"><label>Model</label><span class="sel static">heygen/avatar-iv · $0.05/s</span></div>
+          <div class="ctl"><label>&nbsp;</label><button class="btn ember big" id="ls-go" disabled>Sync lips</button></div>
+        </div>
+        <h2 class="section-title">Lip sync jobs</h2>
+        <div class="jobs-list" id="ls-jobs"></div>
+        <div class="empty-state" id="ls-empty">
           <div class="empty-mark">☺</div>
-          <h3>Lip Sync arrives in the next task</h3>
+          <h3>No talking heads yet</h3>
+          <p>Pick a portrait and a voice track, then hit <strong>Sync lips</strong>. Finished videos land in your Library.</p>
         </div>
       </div>
     </section>
