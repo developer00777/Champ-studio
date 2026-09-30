@@ -54,7 +54,7 @@ Useful for Director: `previous_job_id` continues a finished clip on models that 
 
 ## Open items
 
-1. A working OpenRouter key and approval for one paid test call.
+1. Live test pending (2026-10-01): needs a working OpenRouter key; run the three curl calls in docs/superpowers/plans/2026-10-01-phase-1-audio-voice.md Task 9 Step 4 and record voice / image-to-video / lip sync results here.
 2. The plan's three decisions: Mac app as a shell, Windows via Docker, retirement date.
 
 Spike script: `overlay_spike/spike.py` in the session scratchpad. It is the seed of `edit/overlays.py`.

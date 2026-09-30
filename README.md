@@ -10,6 +10,8 @@ Bring your own keys; everything runs on your machine.
   Wan — via the async `/api/v1/videos` API), plus optional **MuAPI** as a second engine.
 - **Derivative Lab runs 100% locally** (vtracer, U²-Net, OpenCV) — no API cost, no upload.
 - Every asset keeps its **lineage**: image → video → vector chains are traceable.
+- **Voice** — paste a script, pick a model and voice, get an mp3 in the Library (`POST /api/audio`, OpenRouter `/audio/speech`).
+- **Lip Sync** — a portrait plus a voice track becomes a talking-head video through `heygen/avatar-iv` on OpenRouter (`POST /api/lipsync`). No HeyGen account needed; billed per second on the OpenRouter key.
 
 ## Install — Mac (native)
 
@@ -56,8 +58,10 @@ platforms. For a team deployment, set `CHAMP_STUDIO_ACCESS_TOKEN` in `.env` and 
 
 ## API in 20 seconds
 
-`GET /api/health` · `GET/PUT /api/settings` · `GET /api/models/{images,videos}` ·
+`GET /api/health` · `GET/PUT /api/settings` · `GET /api/models/{images,videos,speech}` ·
 `POST /api/images` (sync) · `POST /api/videos` → job → `GET /api/videos/jobs/{id}` ·
+`POST /api/audio` (`{text, model?, voice?, speed?}` → audio asset) ·
+`POST /api/lipsync` (`{image_asset_id, audio_asset_id, aspect_ratio?, resolution?}` → video job) ·
 `GET /api/transform` + `POST /api/transform/{tool}` · `GET /api/assets` (+upload/file/delete,
 lineage). Everything the two UIs do goes through this one API — build your own client if
 you want.

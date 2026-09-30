@@ -13,7 +13,7 @@ import stat
 import threading
 from pathlib import Path
 
-ENGINE_VERSION = "1.0.0"
+ENGINE_VERSION = "1.1.0"
 DEFAULT_PORT = 8787
 
 _ENV_KEYS = {
