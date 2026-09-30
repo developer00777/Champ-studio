@@ -618,6 +618,8 @@ input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner
 .audio-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 14px; }
 .audio-tile .audio-glyph { font-size: 40px; color: var(--ember); line-height: 1; }
 .audio-tile audio { width: 100%; height: 34px; }
+/* in cards: beat `.asset-card .media` (block) and keep the player in the top area, clear of the hover actions */
+.asset-card .media.audio-tile { display: flex; justify-content: flex-start; aspect-ratio: 1; padding-top: 18px; }
 .badge.audio { color: var(--amber); border-color: rgba(245, 158, 11, .4); }
 .picker-grid .pick-audio {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
