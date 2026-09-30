@@ -251,6 +251,18 @@ async def generate_audio(body: AudioRequest):
 # ── videos (async jobs) ──────────────────────────────────────────────
 
 
+def _asset_data_url(asset_id: str, expect_kind: str) -> tuple[dict, str]:
+    """Load a library asset as a base64 data URL for provider payloads."""
+    asset = library.get_asset(asset_id)
+    path = library.asset_path(asset_id)
+    if not asset or not path:
+        raise HTTPException(404, f"asset {asset_id} not found")
+    if asset["kind"] != expect_kind:
+        raise HTTPException(400, f"asset {asset_id} is {asset['kind']}, expected {expect_kind}")
+    b64 = base64.b64encode(path.read_bytes()).decode()
+    return asset, f"data:{asset['mime']};base64,{b64}"
+
+
 class VideoRequest(BaseModel):
     prompt: str = Field(min_length=1)
     model: str = "google/veo-3.1"
@@ -280,11 +292,7 @@ async def generate_video(body: VideoRequest):
     }
 
     if body.image_asset_id:
-        path = library.asset_path(body.image_asset_id)
-        if not path:
-            raise HTTPException(404, f"asset {body.image_asset_id} not found")
-        asset = library.get_asset(body.image_asset_id)
-        data_url = f"data:{asset['mime']};base64,{base64.b64encode(path.read_bytes()).decode()}"
+        _, data_url = _asset_data_url(body.image_asset_id, "image")
         if client.provider == "openrouter":
             submit_kwargs["first_frame"] = data_url
         else:
@@ -311,6 +319,42 @@ async def video_job(job_id: str):
     if not job:
         raise HTTPException(404, "job not found")
     return job
+
+
+# ── lip sync (portrait + voice track → talking head) ─────────────────
+
+DEFAULT_LIPSYNC_MODEL = "heygen/avatar-iv"
+
+
+class LipSyncRequest(BaseModel):
+    image_asset_id: str
+    audio_asset_id: str
+    model: str = DEFAULT_LIPSYNC_MODEL
+    aspect_ratio: str | None = None
+    resolution: str | None = None
+    prompt: str | None = None   # optional motion/expression direction
+
+
+@app.post("/api/lipsync", dependencies=[guarded])
+async def lipsync(body: LipSyncRequest):
+    client = OpenRouterClient()  # v1: lip sync is OpenRouter-only (heygen/avatar-iv)
+    _, image_url = _asset_data_url(body.image_asset_id, "image")
+    _, audio_url = _asset_data_url(body.audio_asset_id, "audio")
+    submit_kwargs: dict = {"input_references": [image_url], "audio_references": [audio_url]}
+    if body.aspect_ratio:
+        submit_kwargs["aspect_ratio"] = body.aspect_ratio
+    if body.resolution:
+        submit_kwargs["resolution"] = body.resolution
+    job = await jobs.start_video_job(
+        client,
+        prompt=body.prompt or "",
+        model=body.model,
+        parent_id=body.image_asset_id,
+        submit_kwargs=submit_kwargs,
+        kind="lipsync",
+        extra_params={"audio_asset_id": body.audio_asset_id},
+    )
+    return {"job_id": job["id"], "status": job["status"]}
 
 
 # ── transforms (Derivative Lab) ──────────────────────────────────────

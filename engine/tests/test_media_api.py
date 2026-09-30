@@ -155,3 +155,61 @@ async def test_job_records_kind_and_saves_redacted_params(monkeypatch):
     assert params == {"input_references": ["<inline data>"], "audio_references": ["<inline data>"],
                       "resolution": "720p", "audio_asset_id": "abc123", "kind": "lipsync"}
     assert done["asset"]["cost"] == 0.25 and done["asset"]["kind"] == "video"
+
+
+def test_lipsync_without_key_fails_cleanly(client, portrait, voice_track):
+    r = client.post("/api/lipsync", json={"image_asset_id": portrait, "audio_asset_id": voice_track})
+    assert r.status_code == 502 and "API key" in r.json()["detail"]
+
+
+def test_lipsync_validates_assets(client, with_key, portrait, voice_track):
+    r = client.post("/api/lipsync", json={"image_asset_id": "nope", "audio_asset_id": voice_track})
+    assert r.status_code == 404
+    r = client.post("/api/lipsync", json={"image_asset_id": voice_track, "audio_asset_id": portrait})
+    assert r.status_code == 400
+    assert "expected image" in r.json()["detail"]
+
+
+def test_lipsync_submits_portrait_and_audio_references(client, with_key, portrait, voice_track, monkeypatch):
+    seen = {}
+
+    async def fake_submit(self, **kwargs):
+        seen.update(kwargs)
+        return "gen-vid-lip"
+
+    async def fake_poll(self, job_id):
+        return {"status": "in_progress"}
+
+    monkeypatch.setattr(OpenRouterClient, "submit_video", fake_submit)
+    monkeypatch.setattr(OpenRouterClient, "poll_video", fake_poll)
+    r = client.post("/api/lipsync", json={
+        "image_asset_id": portrait, "audio_asset_id": voice_track,
+        "aspect_ratio": "9:16", "resolution": "720p",
+    })
+    assert r.status_code == 200, r.text
+    job_id = r.json()["job_id"]
+    assert seen["model"] == "heygen/avatar-iv" and seen["prompt"] == ""
+    assert seen["aspect_ratio"] == "9:16" and seen["resolution"] == "720p"
+    assert seen["input_references"][0].startswith("data:image/png;base64,")
+    assert seen["audio_references"][0].startswith("data:audio/mpeg;base64,")
+    job = client.get(f"/api/videos/jobs/{job_id}").json()
+    assert job["kind"] == "lipsync" and job["parent_id"] == portrait
+    assert any(j["id"] == job_id for j in client.get("/api/videos/jobs").json()["jobs"])
+
+
+def test_image_to_video_uses_first_frame_keyword(client, with_key, portrait, monkeypatch):
+    seen = {}
+
+    async def fake_submit(self, **kwargs):
+        seen.update(kwargs)
+        return "gen-vid-i2v"
+
+    async def fake_poll(self, job_id):
+        return {"status": "in_progress"}
+
+    monkeypatch.setattr(OpenRouterClient, "submit_video", fake_submit)
+    monkeypatch.setattr(OpenRouterClient, "poll_video", fake_poll)
+    r = client.post("/api/videos", json={"prompt": "slow zoom", "image_asset_id": portrait})
+    assert r.status_code == 200, r.text
+    assert seen["first_frame"].startswith("data:image/png;base64,")
+    assert "frame_images" not in seen and "image_url" not in seen
