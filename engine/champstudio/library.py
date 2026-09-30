@@ -21,7 +21,7 @@ _lock = threading.Lock()
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS assets (
     id          TEXT PRIMARY KEY,
-    kind        TEXT NOT NULL,            -- image | video | vector | data
+    kind        TEXT NOT NULL,            -- image | video | audio | vector | data
     mime        TEXT NOT NULL,
     filename    TEXT NOT NULL,
     prompt      TEXT DEFAULT '',
@@ -52,6 +52,8 @@ def kind_for_mime(mime: str) -> str:
         return "image"
     if mime.startswith("video/"):
         return "video"
+    if mime.startswith("audio/"):
+        return "audio"
     return "data"
 
 

@@ -321,8 +321,8 @@ async def assets(kind: str | None = None, limit: int = 200, offset: int = 0):
 @app.post("/api/assets/upload", dependencies=[guarded])
 async def upload_asset(file: UploadFile = File(...)):
     mime = file.content_type or "image/png"
-    if not (mime.startswith("image/") or mime.startswith("video/")):
-        raise HTTPException(400, "only image or video uploads")
+    if not mime.startswith(("image/", "video/", "audio/")):
+        raise HTTPException(400, "only image, video or audio uploads")
     data = await file.read()
     if len(data) > 100 * 1024 * 1024:
         raise HTTPException(413, "file too large (100 MB max)")
