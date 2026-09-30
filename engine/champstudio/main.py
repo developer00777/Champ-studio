@@ -17,7 +17,7 @@ from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from starlette.concurrency import run_in_threadpool
 
 from . import config, jobs, library, transforms
@@ -123,6 +123,17 @@ async def video_models():
     return await _merged_models("video")
 
 
+@app.get("/api/models/speech", dependencies=[guarded])
+async def speech_models():
+    if not config.get_api_key("openrouter"):
+        return []
+    try:
+        return await OpenRouterClient().list_speech_models()
+    except ProviderError as e:
+        log.warning("model list (speech): %s", e)
+        return []
+
+
 async def _merged_models(kind: str) -> list[dict]:
     out: list[dict] = []
     for provider, cls in (("openrouter", OpenRouterClient), ("muapi", MuAPIClient)):
@@ -195,6 +206,46 @@ async def generate_images(body: ImageRequest):
         if m.data
     ]
     return {"assets": assets}
+
+
+# ── audio (text-to-speech) ───────────────────────────────────────────
+
+DEFAULT_SPEECH_MODEL = "google/gemini-3.8-flash-tts"
+
+
+class AudioRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=4000)
+    model: str = DEFAULT_SPEECH_MODEL
+    voice: str | None = None
+    speed: float | None = Field(default=None, ge=0.25, le=4.0)
+
+    @field_validator("text")
+    @classmethod
+    def _not_blank(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("text must not be blank")
+        return v.strip()
+
+
+@app.post("/api/audio", dependencies=[guarded])
+async def generate_audio(body: AudioRequest):
+    client = OpenRouterClient()  # v1: speech is OpenRouter-only
+    media = await client.synthesize_speech(
+        text=body.text, model=body.model, voice=body.voice, speed=body.speed
+    )
+    params = body.model_dump(exclude={"text", "model"}, exclude_none=True)
+    if media.meta.get("generation_id"):
+        params["generation_id"] = media.meta["generation_id"]
+    asset = library.save_asset(
+        media.data,
+        media.mime,
+        prompt=body.text,
+        model=body.model,
+        provider=media.provider,
+        params=params,
+        cost=media.cost,
+    )
+    return {"assets": [asset]}
 
 
 # ── videos (async jobs) ──────────────────────────────────────────────

@@ -67,3 +67,38 @@ def test_audio_upload_lands_as_audio_kind(client, voice_track):
 def test_library_filters_by_audio_kind(client, voice_track):
     ids = {a["id"] for a in client.get("/api/assets?kind=audio").json()["assets"]}
     assert voice_track in ids
+
+
+def test_speech_models_empty_without_key(client):
+    assert client.get("/api/models/speech").json() == []
+
+
+def test_audio_without_key_fails_cleanly(client):
+    r = client.post("/api/audio", json={"text": "hello"})
+    assert r.status_code == 502
+    assert "API key" in r.json()["detail"]
+
+
+def test_audio_rejects_blank_text(client, with_key):
+    assert client.post("/api/audio", json={"text": "   "}).status_code == 422
+
+
+def test_audio_creates_audio_asset(client, with_key, monkeypatch):
+    seen = {}
+
+    async def fake_synth(self, *, text, model, voice=None, speed=None):
+        seen.update(text=text, model=model, voice=voice, speed=speed)
+        return GeneratedMedia(kind="audio", data=FAKE_MP3, mime="audio/mpeg", model=model,
+                              provider="openrouter", prompt=text, meta={"generation_id": "g1"})
+
+    monkeypatch.setattr(OpenRouterClient, "synthesize_speech", fake_synth)
+    r = client.post("/api/audio", json={"text": "One engine, one library.", "voice": "Puck", "speed": 1.1})
+    assert r.status_code == 200, r.text
+    asset = r.json()["assets"][0]
+    assert asset["kind"] == "audio" and asset["mime"] == "audio/mpeg"
+    assert asset["model"] == "google/gemini-3.8-flash-tts" and asset["provider"] == "openrouter"
+    assert asset["prompt"] == "One engine, one library."
+    assert asset["params"] == {"voice": "Puck", "speed": 1.1, "generation_id": "g1"}
+    assert seen == {"text": "One engine, one library.", "model": "google/gemini-3.8-flash-tts",
+                    "voice": "Puck", "speed": 1.1}
+    assert client.get(asset["url"]).content == FAKE_MP3
