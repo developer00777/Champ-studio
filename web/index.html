@@ -47,38 +47,72 @@
     <section class="view" id="view-create">
       <header class="view-head">
         <h1>Create</h1>
-        <p>Generate images from a prompt. <kbd>⌘</kbd><kbd>↵</kbd> to run.</p>
+        <p>Images, voiceovers and talking heads. <kbd>⌘</kbd><kbd>↵</kbd> to run.</p>
       </header>
-      <div class="prompt-dock glass">
-        <textarea id="create-prompt" rows="1" placeholder="Describe the image you want — subject, style, lighting…"></textarea>
-        <button class="btn ember big" id="create-go">Generate</button>
+      <div class="tab-row" id="create-tabs" role="tablist">
+        <button class="tab" role="tab" data-tab="image">Image</button>
+        <button class="tab" role="tab" data-tab="audio">Voice</button>
+        <button class="tab" role="tab" data-tab="lipsync">Lip Sync</button>
       </div>
-      <div class="controls-row" id="create-controls">
-        <div class="ctl" id="create-model-slot"><label>Model</label></div>
-        <div class="ctl"><label>Aspect</label><div class="chip-row" id="create-aspect"></div></div>
-        <div class="ctl"><label>Resolution</label>
-          <select id="create-res" class="sel">
-            <option value="">Auto</option><option value="512">512</option>
-            <option value="1K">1K</option><option value="2K">2K</option><option value="4K">4K</option>
-          </select></div>
-        <div class="ctl"><label>Count</label>
-          <select id="create-count" class="sel"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
-        <div class="ctl"><label>Format</label>
-          <select id="create-format" class="sel">
-            <option value="">Default</option><option value="png">PNG</option><option value="jpeg">JPEG</option>
-            <option value="webp">WebP</option><option value="svg">SVG</option>
-          </select></div>
-        <div class="ctl"><label>Transparent BG</label>
-          <button class="switch" id="create-transparent" role="switch" aria-checked="false"><span></span></button></div>
-        <div class="ctl"><label>Reference</label>
-          <button class="btn ghost" id="create-ref-btn">+ Add image</button></div>
+
+      <div class="tab-pane" data-pane="image">
+        <div class="prompt-dock glass">
+          <textarea id="create-prompt" rows="1" placeholder="Describe the image you want — subject, style, lighting…"></textarea>
+          <button class="btn ember big" id="create-go">Generate</button>
+        </div>
+        <div class="controls-row" id="create-controls">
+          <div class="ctl" id="create-model-slot"><label>Model</label></div>
+          <div class="ctl"><label>Aspect</label><div class="chip-row" id="create-aspect"></div></div>
+          <div class="ctl"><label>Resolution</label>
+            <select id="create-res" class="sel">
+              <option value="">Auto</option><option value="512">512</option>
+              <option value="1K">1K</option><option value="2K">2K</option><option value="4K">4K</option>
+            </select></div>
+          <div class="ctl"><label>Count</label>
+            <select id="create-count" class="sel"><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+          <div class="ctl"><label>Format</label>
+            <select id="create-format" class="sel">
+              <option value="">Default</option><option value="png">PNG</option><option value="jpeg">JPEG</option>
+              <option value="webp">WebP</option><option value="svg">SVG</option>
+            </select></div>
+          <div class="ctl"><label>Transparent BG</label>
+            <button class="switch" id="create-transparent" role="switch" aria-checked="false"><span></span></button></div>
+          <div class="ctl"><label>Reference</label>
+            <button class="btn ghost" id="create-ref-btn">+ Add image</button></div>
+        </div>
+        <div class="ref-strip" id="create-refs" hidden></div>
+        <div class="results-grid" id="create-results"></div>
+        <div class="empty-state" id="create-empty">
+          <div class="empty-mark">✦</div>
+          <h3>Ready when you are</h3>
+          <p>Type a prompt above and hit <strong>Generate</strong> — results land here and in your Library.</p>
+        </div>
       </div>
-      <div class="ref-strip" id="create-refs" hidden></div>
-      <div class="results-grid" id="create-results"></div>
-      <div class="empty-state" id="create-empty">
-        <div class="empty-mark">✦</div>
-        <h3>Ready when you are</h3>
-        <p>Type a prompt above and hit <strong>Generate</strong> — results land here and in your Library.</p>
+
+      <div class="tab-pane" data-pane="audio" hidden>
+        <div class="prompt-dock glass">
+          <textarea id="audio-text" rows="2" placeholder="Paste the script to voice — up to 4,000 characters…"></textarea>
+          <button class="btn ember big" id="audio-go">Voice it</button>
+        </div>
+        <div class="controls-row">
+          <div class="ctl" id="audio-model-slot"><label>Model</label></div>
+          <div class="ctl"><label>Voice</label><select id="audio-voice" class="sel"></select></div>
+          <div class="ctl"><label>Speed</label>
+            <div class="num-wrap"><input type="number" id="audio-speed" class="sel num" min="0.5" max="2" step="0.1" value="1"><span>×</span></div></div>
+        </div>
+        <div class="results-grid" id="audio-results"></div>
+        <div class="empty-state" id="audio-empty">
+          <div class="empty-mark">♪</div>
+          <h3>No voiceovers yet</h3>
+          <p>Paste a script and hit <strong>Voice it</strong>. Every take is saved to your Library as audio.</p>
+        </div>
+      </div>
+
+      <div class="tab-pane" data-pane="lipsync" hidden>
+        <div class="empty-state">
+          <div class="empty-mark">☺</div>
+          <h3>Lip Sync arrives in the next task</h3>
+        </div>
       </div>
     </section>
 

@@ -604,3 +604,24 @@ input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner
   .key-row { grid-template-columns: 1fr; }
   .key-note { grid-column: 1; }
 }
+
+/* ── create tabs ────────────────────────────────────────────────── */
+.tab-row { display: flex; gap: 4px; margin: -6px 0 20px; border-bottom: 1px solid var(--champ-slate); }
+.tab {
+  background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  color: var(--champ-mist); padding: 8px 14px; font: 600 13px var(--font-body); cursor: pointer;
+}
+.tab:hover { color: var(--champ-cloud); }
+.tab.active { color: var(--ember-hover); border-bottom-color: var(--ember); }
+
+/* ── audio assets ───────────────────────────────────────────────── */
+.audio-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 14px; }
+.audio-tile .audio-glyph { font-size: 40px; color: var(--ember); line-height: 1; }
+.audio-tile audio { width: 100%; height: 34px; }
+.badge.audio { color: var(--amber); border-color: rgba(245, 158, 11, .4); }
+.picker-grid .pick-audio {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  aspect-ratio: 1; padding: 8px; text-align: center; color: var(--champ-cloud); font-size: 30px;
+}
+.picker-grid .pick-audio small { font: 11px var(--font-mono); color: var(--champ-mist); overflow-wrap: anywhere; }
+.detail-media .audio-tile { min-height: 200px; }

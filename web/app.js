@@ -99,7 +99,9 @@ function pickFromLibrary({ kinds = ["image"] } = {}) {
       const usable = assets.filter((a) => kinds.includes(a.kind));
       grid.replaceChildren(...(usable.length
         ? usable.map((a) => el("button", { class: "pick", title: a.prompt || a.filename || a.id, onclick: () => done(a) },
-            el("img", { src: a.url, alt: "", loading: "lazy" })))
+            a.kind === "audio"
+              ? el("div", { class: "pick-audio" }, el("span", {}, "♪"), el("small", {}, (a.prompt || a.filename || a.id).slice(0, 60)))
+              : el("img", { src: a.url, alt: "", loading: "lazy" })))
         : [el("div", { class: "combo-empty" }, "No matching assets yet — generate something in Create first.")]));
     }).catch((e) => grid.replaceChildren(el("div", { class: "combo-empty" }, e.message)));
     // resolve(null) when dismissed without picking
@@ -112,7 +114,7 @@ function pickFromLibrary({ kinds = ["image"] } = {}) {
 
 /* ── searchable model combo ─────────────────────────────────────── */
 
-function modelCombo(slot, { endpoint, storeKey, fallback }) {
+function modelCombo(slot, { endpoint, storeKey, fallback, onChange }) {
   let models = [];
   let value = pref(storeKey, fallback.id);
   let valueName = pref(storeKey + ".name", fallback.name);
@@ -129,6 +131,7 @@ function modelCombo(slot, { endpoint, storeKey, fallback }) {
     setPref(storeKey, value); setPref(storeKey + ".name", valueName);
     nameSpan.textContent = valueName;
     closePop();
+    onChange?.(m);
   }
   function closePop() { pop?.remove(); pop = null; document.removeEventListener("click", onDocClick, true); }
   function onDocClick(e) { if (pop && !root.contains(e.target)) closePop(); }
@@ -169,10 +172,14 @@ function modelCombo(slot, { endpoint, storeKey, fallback }) {
       const list = await api(endpoint);
       models = Array.isArray(list) && list.length ? list : [fallback];
     } catch { models = [fallback]; }
-    if (!models.some((m) => m.id === value)) select(models[0]);
+    const current = models.find((m) => m.id === value);
+    if (current) onChange?.(current); else select(models[0]);
   })();
 
-  return { get value() { return value; } };
+  return {
+    get value() { return value; },
+    get model() { return models.find((m) => m.id === value) || null; },
+  };
 }
 
 /* ── chips + switch helpers ─────────────────────────────────────── */
@@ -259,6 +266,11 @@ function mediaFor(asset, { controls = false } = {}) {
   if (asset.kind === "video") {
     return el("video", { class: "media", src: asset.url, controls, muted: !controls, playsinline: true, preload: "metadata" });
   }
+  if (asset.kind === "audio") {
+    return el("div", { class: "media audio-tile" },
+      el("span", { class: "audio-glyph" }, "♪"),
+      el("audio", { src: asset.url, controls: true, preload: "metadata", onclick: (e) => e.stopPropagation() }));
+  }
   return el("img", { class: "media", src: asset.url, alt: asset.prompt || "asset", loading: "lazy" });
 }
 
@@ -267,6 +279,9 @@ function assetCard(asset, { onDelete } = {}) {
   if (asset.kind === "image" || asset.kind === "vector") {
     actions.push(el("button", { class: "btn sm", onclick: () => sendToAnimate(asset) }, "Animate"));
     actions.push(el("button", { class: "btn sm", onclick: () => sendToLab(asset) }, "Lab"));
+  }
+  if (asset.kind === "audio" || asset.kind === "image") {
+    actions.push(el("button", { class: "btn sm", onclick: () => sendToLipSync(asset) }, "Lip Sync"));
   }
   actions.push(el("button", { class: "btn sm", onclick: () => download(asset) }, "Download"));
   actions.push(el("button", {
@@ -312,6 +327,7 @@ async function openDetail(assetId) {
   const actions = el("div", { class: "detail-actions" },
     canDerive && el("button", { class: "btn ember", onclick: () => { close(); sendToAnimate(asset); } }, "Animate"),
     canDerive && el("button", { class: "btn", onclick: () => { close(); sendToLab(asset); } }, "Open in Lab"),
+    (asset.kind === "audio" || asset.kind === "image") && el("button", { class: "btn", onclick: () => { close(); sendToLipSync(asset); } }, "Lip Sync"),
     el("button", { class: "btn", onclick: () => download(asset) }, "Download"),
     el("button", {
       class: "btn danger",
@@ -341,6 +357,33 @@ async function openDetail(assetId) {
       actions));
   const close = openModal(asset.prompt ? asset.prompt.slice(0, 64) + (asset.prompt.length > 64 ? "…" : "") : "Asset", body, { wide: true });
 }
+
+/* ── CREATE tabs ────────────────────────────────────────────────── */
+
+const onTab = {}; // tab name -> fn, run when the tab becomes visible
+const createTabs = (() => {
+  const tabs = $$("#create-tabs .tab");
+  const panes = $$("#view-create .tab-pane");
+  function activate(name) {
+    if (!tabs.some((t) => t.dataset.tab === name)) name = "image";
+    tabs.forEach((t) => {
+      const on = t.dataset.tab === name;
+      t.classList.toggle("active", on);
+      t.setAttribute("aria-selected", String(on));
+    });
+    panes.forEach((p) => { p.hidden = p.dataset.pane !== name; });
+    setPref("create.tab", name);
+    onTab[name]?.();
+  }
+  tabs.forEach((t) => t.addEventListener("click", () => activate(t.dataset.tab)));
+  document.body.addEventListener("click", (e) => {
+    const go = e.target.closest("[data-create-tab]");
+    if (go) { show("create"); activate(go.dataset.createTab); }
+  });
+  activate(pref("create.tab", "image"));
+  onEnter.create = () => onTab[pref("create.tab", "image")]?.();
+  return { activate };
+})();
 
 /* ── CREATE view ────────────────────────────────────────────────── */
 
@@ -415,6 +458,67 @@ const create = (() => {
   });
   return {};
 })();
+
+/* ── VOICE pane (text-to-speech) ────────────────────────────────── */
+
+const voice = (() => {
+  const textEl = $("#audio-text"), goBtn = $("#audio-go");
+  const results = $("#audio-results"), emptyEl = $("#audio-empty");
+  const voiceSel = $("#audio-voice"), speedEl = $("#audio-speed");
+  autoGrow(textEl);
+  speedEl.value = pref("audio.speed", 1);
+  speedEl.onchange = () => setPref("audio.speed", Number(speedEl.value));
+
+  function paintVoices(m) {
+    const voices = m?.voices || [];
+    const remembered = pref(`audio.voice.${m?.id}`, voices[0] || "");
+    voiceSel.replaceChildren(...(voices.length
+      ? voices.map((v) => el("option", { value: v, selected: v === remembered }, v))
+      : [el("option", { value: "" }, "Provider default")]));
+    voiceSel.disabled = !voices.length;
+  }
+  const model = modelCombo($("#audio-model-slot"), {
+    endpoint: "/api/models/speech", storeKey: "audio.model",
+    fallback: {
+      id: "google/gemini-3.8-flash-tts", name: "Gemini 3.8 Flash TTS", provider: "openrouter", vendor: "google",
+      voices: ["Kore", "Puck", "Zephyr", "Charon", "Fenrir", "Leda"],
+    },
+    onChange: paintVoices,
+  });
+  voiceSel.onchange = () => setPref(`audio.voice.${model.value}`, voiceSel.value);
+
+  async function synthesize() {
+    const text = textEl.value.trim();
+    if (!text) { toast("Paste a script first.", "error"); textEl.focus(); return; }
+    emptyEl.hidden = true;
+    const shimmer = el("div", { class: "shimmer-card" }, el("div", { class: "shimmer" }), el("div", { class: "shimmer bar" }));
+    results.prepend(shimmer);
+    goBtn.disabled = true; goBtn.classList.add("busy");
+    try {
+      const payload = { text, model: model.value };
+      if (voiceSel.value) payload.voice = voiceSel.value;
+      const speed = Number(speedEl.value);
+      if (speed && speed !== 1) payload.speed = speed;
+      const { assets } = await api("/api/audio", { method: "POST", body: payload });
+      shimmer.remove();
+      results.prepend(...assets.map((a) => assetCard(a)));
+      toast("Voiceover ready", "ok");
+    } catch (e) {
+      shimmer.remove();
+      if (!results.children.length) emptyEl.hidden = false;
+      toast(e.message, "error", 7000);
+    } finally {
+      goBtn.disabled = false; goBtn.classList.remove("busy");
+    }
+  }
+  goBtn.addEventListener("click", synthesize);
+  textEl.addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") { e.preventDefault(); synthesize(); }
+  });
+  return {};
+})();
+
+function sendToLipSync(asset) { show("create"); createTabs.activate("lipsync"); toast(`Lip Sync pane lands in the next task (${asset.kind})`); }
 
 /* ── ANIMATE view ───────────────────────────────────────────────── */
 
@@ -674,6 +778,7 @@ const library = (() => {
     { value: "", label: "All" },
     { value: "image", label: "Images" },
     { value: "video", label: "Videos" },
+    { value: "audio", label: "Audio" },
     { value: "vector", label: "Vectors" },
     { value: "data", label: "Data" },
   ], "library.kind", "");
