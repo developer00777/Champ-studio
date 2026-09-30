@@ -92,3 +92,68 @@ async def test_video_error_is_a_provider_error_with_message():
 
     with pytest.raises(ProviderError, match="frame_images invalid"):
         await make_client(handler).submit_video(prompt="x", model="m")
+
+
+async def test_list_speech_models_exposes_voices():
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/api/v1/models"
+        assert request.url.params["output_modalities"] == "speech"
+        return httpx.Response(200, json={"data": [
+            {"id": "google/gemini-3.8-flash-tts", "name": "Gemini 3.8 Flash TTS",
+             "supported_voices": ["Kore", "Puck"], "pricing": {"prompt": "0.0000005"}},
+            {"id": "fish-audio/s2-pro", "name": "Fish S2 Pro"},
+        ]})
+
+    models = await make_client(handler).list_speech_models()
+    assert models[0] == {
+        "id": "google/gemini-3.8-flash-tts", "name": "Gemini 3.8 Flash TTS",
+        "provider": "openrouter", "vendor": "google", "voices": ["Kore", "Puck"],
+        "meta": {"pricing": {"prompt": "0.0000005"}},
+    }
+    assert models[1]["voices"] == [] and models[1]["vendor"] == "fish-audio"
+
+
+async def test_synthesize_speech_posts_mp3_request_and_returns_audio_media():
+    seen = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen["url"] = str(request.url)
+        seen["body"] = json.loads(request.content)
+        return httpx.Response(200, content=b"ID3fake", headers={
+            "content-type": "audio/mpeg", "x-generation-id": "gen-tts-1"})
+
+    media = await make_client(handler).synthesize_speech(
+        text="Hello team", model="google/gemini-3.8-flash-tts", voice="Kore", speed=1.2)
+    assert seen["url"] == "https://openrouter.ai/api/v1/audio/speech"
+    assert seen["body"] == {"model": "google/gemini-3.8-flash-tts", "input": "Hello team",
+                            "voice": "Kore", "response_format": "mp3", "speed": 1.2}
+    assert media.kind == "audio" and media.mime == "audio/mpeg" and media.data == b"ID3fake"
+    assert media.model == "google/gemini-3.8-flash-tts" and media.prompt == "Hello team"
+    assert media.meta["generation_id"] == "gen-tts-1"
+
+
+async def test_synthesize_speech_omits_voice_and_default_speed():
+    seen = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen["body"] = json.loads(request.content)
+        return httpx.Response(200, content=b"ID3", headers={"content-type": "audio/mpeg"})
+
+    await make_client(handler).synthesize_speech(text="x", model="m", speed=1.0)
+    assert seen["body"] == {"model": "m", "input": "x", "response_format": "mp3"}
+
+
+async def test_synthesize_speech_errors_surface_provider_message():
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(400, json={"error": {"message": "voice is required"}})
+
+    with pytest.raises(ProviderError, match="voice is required"):
+        await make_client(handler).synthesize_speech(text="x", model="m")
+
+
+async def test_synthesize_speech_rejects_empty_body():
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, content=b"", headers={"content-type": "audio/mpeg"})
+
+    with pytest.raises(ProviderError, match="empty audio"):
+        await make_client(handler).synthesize_speech(text="x", model="m")

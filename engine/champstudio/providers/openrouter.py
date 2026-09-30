@@ -87,6 +87,59 @@ class OpenRouterClient:
             if m.get("id")
         ]
 
+    async def list_speech_models(self) -> list[dict]:
+        """Text-to-speech models from the general catalog; `supported_voices` becomes `voices`."""
+        async with self._http(15.0) as client:
+            r = await client.get(
+                f"{BASE}/models", params={"output_modalities": "speech"}, headers=self._headers
+            )
+        if r.status_code >= 400:
+            raise ProviderError(f"OpenRouter speech model list failed ({r.status_code})")
+        return [
+            {
+                "id": m["id"],
+                "name": m.get("name") or m["id"],
+                "provider": "openrouter",
+                "vendor": m["id"].split("/")[0],
+                "voices": list(m.get("supported_voices") or []),
+                "meta": {"pricing": m.get("pricing")} if m.get("pricing") is not None else {},
+            }
+            for m in r.json().get("data", [])
+            if m.get("id")
+        ]
+
+    # ── speech (sync bytes) ──────────────────────────────────────────
+
+    async def synthesize_speech(
+        self,
+        *,
+        text: str,
+        model: str,
+        voice: str | None = None,
+        speed: float | None = None,
+    ) -> GeneratedMedia:
+        body: dict = {"model": model, "input": text, "response_format": "mp3"}
+        if voice:
+            body["voice"] = voice
+        if speed is not None and speed != 1.0:
+            body["speed"] = speed
+        async with self._http(300.0) as client:
+            r = await client.post(f"{BASE}/audio/speech", headers=self._headers, json=body)
+        if r.status_code >= 400:
+            raise ProviderError(_err("speech synthesis", r))
+        if not r.content:
+            raise ProviderError("OpenRouter returned empty audio")
+        mime = (r.headers.get("content-type") or "audio/mpeg").split(";")[0].strip() or "audio/mpeg"
+        return GeneratedMedia(
+            kind="audio",
+            data=r.content,
+            mime=mime,
+            model=model,
+            provider=self.provider,
+            prompt=text,
+            meta={"generation_id": r.headers.get("x-generation-id")},
+        )
+
     # ── images (sync) ────────────────────────────────────────────────
 
     async def generate_images(
