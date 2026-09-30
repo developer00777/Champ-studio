@@ -235,7 +235,7 @@ async def generate_video(body: VideoRequest):
         asset = library.get_asset(body.image_asset_id)
         data_url = f"data:{asset['mime']};base64,{base64.b64encode(path.read_bytes()).decode()}"
         if client.provider == "openrouter":
-            submit_kwargs["frame_images"] = [{"url": data_url, "frame_type": "first_frame"}]
+            submit_kwargs["first_frame"] = data_url
         else:
             submit_kwargs["image_url"] = data_url
 

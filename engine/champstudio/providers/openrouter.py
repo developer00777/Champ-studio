@@ -1,10 +1,14 @@
-"""OpenRouter provider — unified image API + async video API.
+"""OpenRouter provider — unified image API, async video API, speech API.
 
 Image API   : POST https://openrouter.ai/api/v1/images        (sync, base64 out)
 Video API   : POST https://openrouter.ai/api/v1/videos        (job id, poll)
-Model lists : GET  /api/v1/images/models, /api/v1/videos/models
+Speech API  : POST https://openrouter.ai/api/v1/audio/speech  (sync, raw audio bytes)
+Model lists : GET  /api/v1/images/models, /api/v1/videos/models,
+              GET  /api/v1/models?output_modalities=speech
 
-Verified against OpenRouter docs on 2026-07-18.
+Payload shapes follow the API reference as of 2026-09-30:
+  frame_images     [{"type": "image_url", "image_url": {"url"}, "frame_type": "first_frame"|"last_frame"}]
+  input_references [{"type": "image_url", ...} | {"type": "audio_url", "audio_url": {"url"}}]
 """
 
 from __future__ import annotations
@@ -23,17 +27,35 @@ APP_HEADERS = {
 }
 
 
+def image_part(url: str) -> dict:
+    return {"type": "image_url", "image_url": {"url": url}}
+
+
+def audio_part(url: str) -> dict:
+    return {"type": "audio_url", "audio_url": {"url": url}}
+
+
 class OpenRouterClient:
     provider = "openrouter"
 
-    def __init__(self, api_key: str | None = None) -> None:
+    def __init__(
+        self,
+        api_key: str | None = None,
+        transport: httpx.AsyncBaseTransport | None = None,
+    ) -> None:
         self.api_key = api_key or get_api_key("openrouter")
         if not self.api_key:
             raise ProviderError("OpenRouter API key not set — add it in Settings")
+        self._transport = transport  # tests inject httpx.MockTransport; None = real network
 
     @property
     def _headers(self) -> dict:
         return {"Authorization": f"Bearer {self.api_key}", **APP_HEADERS}
+
+    def _http(self, timeout: float, *, follow_redirects: bool = False) -> httpx.AsyncClient:
+        return httpx.AsyncClient(
+            timeout=timeout, transport=self._transport, follow_redirects=follow_redirects
+        )
 
     # ── model discovery ──────────────────────────────────────────────
 
@@ -44,11 +66,11 @@ class OpenRouterClient:
         return await self._list_models("videos")
 
     async def _list_models(self, kind: str) -> list[dict]:
-        async with httpx.AsyncClient(timeout=15.0) as client:
+        async with self._http(15.0) as client:
             r = await client.get(f"{BASE}/{kind}/models", headers=self._headers)
-            if r.status_code >= 400:
-                raise ProviderError(f"OpenRouter model list failed ({r.status_code})")
-            data = r.json().get("data", [])
+        if r.status_code >= 400:
+            raise ProviderError(f"OpenRouter model list failed ({r.status_code})")
+        data = r.json().get("data", [])
         return [
             {
                 "id": m.get("id"),
@@ -92,9 +114,9 @@ class OpenRouterClient:
         if seed is not None:
             body["seed"] = seed
         if input_references:
-            body["input_references"] = input_references
+            body["input_references"] = [image_part(u) for u in input_references]
 
-        async with httpx.AsyncClient(timeout=300.0) as client:
+        async with self._http(300.0) as client:
             r = await client.post(f"{BASE}/images", headers=self._headers, json=body)
         if r.status_code >= 400:
             raise ProviderError(_err("image generation", r))
@@ -132,10 +154,15 @@ class OpenRouterClient:
         resolution: str | None = None,
         generate_audio: bool | None = None,
         seed: int | None = None,
-        frame_images: list[dict] | None = None,       # [{"url": ..., "frame_type": "first_frame"}]
-        input_references: list[str] | None = None,
+        first_frame: str | None = None,
+        last_frame: str | None = None,
+        input_references: list[str] | None = None,   # image URLs / data URLs
+        audio_references: list[str] | None = None,   # audio URLs / data URLs
+        provider_options: dict | None = None,        # {"heygen": {...}} passthrough
     ) -> str:
-        body: dict = {"model": model, "prompt": prompt}
+        body: dict = {"model": model}
+        if prompt:  # optional for image-driven models such as heygen/avatar-iv
+            body["prompt"] = prompt
         if duration:
             body["duration"] = duration
         if aspect_ratio:
@@ -146,12 +173,21 @@ class OpenRouterClient:
             body["generate_audio"] = generate_audio
         if seed is not None:
             body["seed"] = seed
-        if frame_images:
-            body["frame_images"] = frame_images
-        if input_references:
-            body["input_references"] = input_references
+        frames = []
+        if first_frame:
+            frames.append({**image_part(first_frame), "frame_type": "first_frame"})
+        if last_frame:
+            frames.append({**image_part(last_frame), "frame_type": "last_frame"})
+        if frames:
+            body["frame_images"] = frames
+        refs = [image_part(u) for u in (input_references or [])]
+        refs += [audio_part(u) for u in (audio_references or [])]
+        if refs:
+            body["input_references"] = refs
+        if provider_options:
+            body["provider"] = {"options": provider_options}
 
-        async with httpx.AsyncClient(timeout=60.0) as client:
+        async with self._http(60.0) as client:
             r = await client.post(f"{BASE}/videos", headers=self._headers, json=body)
         if r.status_code >= 400:
             raise ProviderError(_err("video submit", r))
@@ -163,7 +199,7 @@ class OpenRouterClient:
     async def poll_video(self, job_id: str) -> dict:
         """One poll. Returns {status, url?, error?, cost?} with status in
         pending|in_progress|completed|failed."""
-        async with httpx.AsyncClient(timeout=30.0) as client:
+        async with self._http(30.0) as client:
             r = await client.get(f"{BASE}/videos/{job_id}", headers=self._headers)
         if r.status_code >= 400:
             raise ProviderError(_err("video poll", r))
@@ -180,7 +216,7 @@ class OpenRouterClient:
         return out
 
     async def download(self, url: str) -> bytes:
-        async with httpx.AsyncClient(timeout=600.0, follow_redirects=True) as client:
+        async with self._http(600.0, follow_redirects=True) as client:
             r = await client.get(url, headers=self._headers)
             r.raise_for_status()
             return r.content
