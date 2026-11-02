@@ -1,0 +1,182 @@
+{
+  "cst": "1.0",
+  "id": "mg-lt-bracket",
+  "name": "Bracket Lower Third",
+  "category": "motion-graphics",
+  "description": "Accent bar with a name that drops in letter by letter and a coloured title.",
+  "tags": [
+    "graphic",
+    "lower third",
+    "name",
+    "corporate"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "name"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Person's name"
+      },
+      "role": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Job title and company"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "name": "Alex Morgan",
+    "role": "VP Revenue Operations, Northwind"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "bar",
+          "type": "shape",
+          "name": "Bar",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.715,
+              0.005,
+              0.135
+            ],
+            "vertical": [
+              0.06,
+              0.655,
+              0.008,
+              0.088
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "name",
+          "type": "text",
+          "name": "Name",
+          "text": "{{name}}",
+          "box": {
+            "*": [
+              0.078,
+              0.715,
+              0.6,
+              0.075
+            ],
+            "vertical": [
+              0.085,
+              0.655,
+              0.83,
+              0.045
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "size": 52,
+            "weight": 800,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "text_anim": {
+            "by": "char",
+            "type": "drop",
+            "duration": 0.25,
+            "stagger": 0.02,
+            "delay": 0.1,
+            "order": "forward",
+            "out": false
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "role",
+          "type": "text",
+          "name": "Role",
+          "text": "{{role}}",
+          "box": {
+            "*": [
+              0.078,
+              0.795,
+              0.6,
+              0.05
+            ],
+            "vertical": [
+              0.085,
+              0.705,
+              0.83,
+              0.032
+            ]
+          },
+          "start": 0.35,
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "size": 30,
+            "weight": 700,
+            "color": {
+              "$slot": "accent"
+            },
+            "align": "left"
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

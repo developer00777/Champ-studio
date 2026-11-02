@@ -1,0 +1,222 @@
+{
+  "cst": "1.0",
+  "id": "mg-callout-price",
+  "name": "Price Tag",
+  "category": "motion-graphics",
+  "description": "Tilted price tag whose price counts up, with a small label.",
+  "tags": [
+    "graphic",
+    "callout",
+    "promo",
+    "pricing",
+    "stat"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "price"
+    ],
+    "properties": {
+      "label": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Label"
+      },
+      "price": {
+        "type": "string",
+        "maxLength": 12,
+        "x-kind": "text",
+        "description": "Price, e.g. $1,299"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "label": "Starting at",
+    "price": "$1,299"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 4.5
+      },
+      "layers": [
+        {
+          "id": "tag",
+          "type": "shape",
+          "name": "Tag",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            },
+            "radius": 0.18
+          },
+          "box": {
+            "*": [
+              0.68,
+              0.62,
+              0.26,
+              0.24
+            ],
+            "vertical": [
+              0.5,
+              0.66,
+              0.44,
+              0.13
+            ]
+          },
+          "transform": {
+            "rotation": -6
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "hole",
+          "type": "shape",
+          "name": "Hole",
+          "shape": {
+            "kind": "ellipse",
+            "fill": "#111318"
+          },
+          "box": {
+            "*": [
+              0.695,
+              0.645,
+              0.016,
+              0.0284
+            ],
+            "vertical": [
+              0.52,
+              0.675,
+              0.03,
+              0.0169
+            ]
+          },
+          "transform": {
+            "rotation": -6
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "label",
+          "type": "text",
+          "name": "Label",
+          "text": "{{label}}",
+          "box": {
+            "*": [
+              0.69,
+              0.645,
+              0.24,
+              0.05
+            ],
+            "vertical": [
+              0.51,
+              0.672,
+              0.42,
+              0.028
+            ]
+          },
+          "transform": {
+            "rotation": -6
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 28,
+            "weight": 700,
+            "color": "#FFFFFFD9",
+            "uppercase": true,
+            "letter_spacing": 0.1
+          },
+          "start": 0.15,
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "price",
+          "type": "text",
+          "name": "Price",
+          "text": "{{price}}",
+          "box": {
+            "*": [
+              0.69,
+              0.69,
+              0.24,
+              0.14
+            ],
+            "vertical": [
+              0.51,
+              0.7,
+              0.42,
+              0.08
+            ]
+          },
+          "transform": {
+            "rotation": -6
+          },
+          "style": {
+            "$brand": "styles.title",
+            "shadow": false,
+            "bg_color": "",
+            "size": 96,
+            "weight": 900,
+            "color": "#FFFFFF"
+          },
+          "counter": {
+            "start": 0,
+            "duration": 1.0,
+            "delay": 0.2,
+            "ease": "ease-out"
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "cst": "1.0",
+  "id": "mg-title-lines",
+  "name": "Line Reveal Title",
+  "category": "motion-graphics",
+  "description": "Multi-line headline where each line slides up from behind a mask, beside an accent bar.",
+  "tags": [
+    "graphic",
+    "title",
+    "editorial",
+    "typography"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "headline"
+    ],
+    "properties": {
+      "headline": {
+        "type": "string",
+        "maxLength": 90,
+        "x-kind": "text",
+        "description": "Headline (wraps over 2–3 lines)"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "headline": "The pipeline you can actually trust"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "bar",
+          "type": "shape",
+          "name": "Bar",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.008,
+              0.4
+            ],
+            "vertical": [
+              0.07,
+              0.36,
+              0.014,
+              0.26
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "headline",
+          "type": "text",
+          "name": "Headline",
+          "text": "{{headline}}",
+          "box": {
+            "*": [
+              0.11,
+              0.3,
+              0.72,
+              0.4
+            ],
+            "vertical": [
+              0.11,
+              0.36,
+              0.82,
+              0.26
+            ]
+          },
+          "style": {
+            "$brand": "styles.title",
+            "shadow": true,
+            "bg_color": "",
+            "size": 96,
+            "color": "#FFFFFF",
+            "align": "left",
+            "line_height": 1.05
+          },
+          "text_anim": {
+            "by": "line",
+            "type": "reveal",
+            "duration": 0.45,
+            "stagger": 0.15,
+            "delay": 0.2,
+            "order": "forward",
+            "out": true
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

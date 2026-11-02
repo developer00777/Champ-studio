@@ -1,0 +1,221 @@
+{
+  "cst": "1.0",
+  "id": "mg-title-chapter",
+  "name": "Chapter Card",
+  "category": "motion-graphics",
+  "description": "Outlined chapter number with a spaced label, a divider and the chapter title.",
+  "tags": [
+    "graphic",
+    "title",
+    "chapter",
+    "section"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "title"
+    ],
+    "properties": {
+      "number": {
+        "type": "string",
+        "maxLength": 4,
+        "x-kind": "text",
+        "description": "Chapter number"
+      },
+      "title": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Chapter title"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "number": "02",
+    "title": "Building the forecast"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 4.5
+      },
+      "layers": [
+        {
+          "id": "kicker",
+          "type": "text",
+          "name": "Label",
+          "text": "Chapter",
+          "box": {
+            "*": [
+              0.3,
+              0.2,
+              0.4,
+              0.05
+            ],
+            "vertical": [
+              0.2,
+              0.3,
+              0.6,
+              0.03
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 28,
+            "weight": 700,
+            "color": "#FFFFFFB3",
+            "uppercase": true,
+            "letter_spacing": 0.4
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "number",
+          "type": "text",
+          "name": "Number",
+          "text": "{{number}}",
+          "box": {
+            "*": [
+              0.3,
+              0.25,
+              0.4,
+              0.26
+            ],
+            "vertical": [
+              0.2,
+              0.33,
+              0.6,
+              0.14
+            ]
+          },
+          "style": {
+            "$brand": "styles.title",
+            "shadow": false,
+            "bg_color": "",
+            "size": 230,
+            "weight": 900,
+            "color": "#00000000",
+            "stroke_color": {
+              "$slot": "accent"
+            },
+            "stroke_width": 4,
+            "fit": "shrink"
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "divider",
+          "type": "shape",
+          "name": "Divider",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "start": 0.35,
+          "box": {
+            "*": [
+              0.44,
+              0.545,
+              0.12,
+              0.006
+            ],
+            "vertical": [
+              0.38,
+              0.5,
+              0.24,
+              0.0035
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "name": "Title",
+          "text": "{{title}}",
+          "box": {
+            "*": [
+              0.1,
+              0.58,
+              0.8,
+              0.12
+            ],
+            "vertical": [
+              0.06,
+              0.52,
+              0.88,
+              0.08
+            ]
+          },
+          "start": 0.45,
+          "style": {
+            "$brand": "styles.title",
+            "shadow": false,
+            "bg_color": "",
+            "size": 72,
+            "color": "#FFFFFF"
+          },
+          "text_anim": {
+            "by": "word",
+            "type": "rise",
+            "duration": 0.35,
+            "stagger": 0.08,
+            "delay": 0.0,
+            "order": "forward",
+            "out": false
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

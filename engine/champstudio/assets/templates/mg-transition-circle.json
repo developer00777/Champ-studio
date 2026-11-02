@@ -1,0 +1,148 @@
+{
+  "cst": "1.0",
+  "id": "mg-transition-circle",
+  "name": "Circle Burst",
+  "category": "motion-graphics",
+  "description": "A brand-colour circle bursts out from the centre to cover the frame, then dissolves.",
+  "tags": [
+    "graphic",
+    "transition",
+    "stinger",
+    "reveal"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [],
+    "properties": {
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {},
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 1.2
+      },
+      "layers": [
+        {
+          "id": "circle",
+          "type": "shape",
+          "name": "Circle",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "box": {
+            "*": [
+              -0.15,
+              -0.766,
+              1.3,
+              2.311
+            ],
+            "vertical": [
+              -0.75,
+              -0.15,
+              2.5,
+              1.3
+            ]
+          },
+          "keyframes": {
+            "scale": [
+              [
+                0,
+                0.0,
+                "ease-in"
+              ],
+              [
+                0.5,
+                1.0
+              ]
+            ],
+            "opacity": [
+              [
+                0.6,
+                1,
+                "ease"
+              ],
+              [
+                1.2,
+                0
+              ]
+            ]
+          }
+        },
+        {
+          "id": "ring",
+          "type": "shape",
+          "name": "Ring",
+          "shape": {
+            "kind": "ellipse",
+            "fill": null,
+            "stroke": "#FFFFFF",
+            "stroke_width": 10
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.144,
+              0.4,
+              0.711
+            ],
+            "vertical": [
+              0.15,
+              0.3,
+              0.7,
+              0.394
+            ]
+          },
+          "keyframes": {
+            "scale": [
+              [
+                0,
+                0.1,
+                "ease-out"
+              ],
+              [
+                0.6,
+                1.6
+              ]
+            ],
+            "opacity": [
+              [
+                0,
+                1,
+                "ease-in"
+              ],
+              [
+                0.6,
+                0
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

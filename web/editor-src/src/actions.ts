@@ -1,5 +1,6 @@
 // Editing commands shared by keyboard shortcuts, toolbar buttons and menus.
 
+import * as gfx from "./graphics";
 import { media } from "./media";
 import { clipEnd, defaultAdjust, findClip, makeClip, timelineDuration, type Clip, type Timeline, type TrackKind } from "./model";
 import * as ops from "./ops";
@@ -194,6 +195,68 @@ export function addShape(): void {
 export function addAdjustmentLayer(): void {
   const clip = makeClip({ type: "adjustment", name: "Adjustment layer", start: store.playhead, duration: store.fps * 5, adjust: defaultAdjust() });
   placeOverlay(clip);
+}
+
+// ── graphics (Essential Graphics) ──
+
+/** The selected graphic clip, if any. */
+export function selectedGraphic(): Clip | null {
+  const c = store.primary()?.clip;
+  return c?.type === "graphic" ? c : null;
+}
+
+/** New graphic clip at the playhead with one text layer (Premiere: Graphics → New Layer → Text). */
+export function newGraphic(first: "text" | "rect" = "text"): void {
+  if (!guard()) return;
+  const layer = gfx.makeLayer(first, { accent: store.brand?.colors?.primary });
+  if (layer.type === "text") Object.assign(layer.style, brandStyle("title"), { size: 72 });
+  const g = gfx.makeGraphic(store.playhead, store.fps * 5, layer);
+  placeOverlay(g);
+  store.selectLayer(g.id, layer.id);
+}
+
+/** Add a layer to the selected graphic (or start a new graphic). */
+export function addGraphicLayer(kind: Parameters<typeof gfx.makeLayer>[0], opts: { asset_id?: string } = {}): void {
+  if (!guard()) return;
+  const g = selectedGraphic();
+  const layer = gfx.makeLayer(kind, { accent: store.brand?.colors?.primary, ...opts });
+  if (layer.type === "text") Object.assign(layer.style, brandStyle("title"));
+  if (!g) {
+    const ng = gfx.makeGraphic(store.playhead, store.fps * 5, layer);
+    placeOverlay(ng);
+    store.selectLayer(ng.id, layer.id);
+    return;
+  }
+  store.apply(`Add ${layer.name.toLowerCase()} layer`, (tl) => gfx.addLayer(tl, g.id, layer));
+  store.selectLayer(g.id, layer.id);
+}
+
+/** Group the selected text/shape/image clips into one graphic clip. */
+export function groupIntoGraphic(): void {
+  if (!guard()) return;
+  const ids = selectedIds(false);
+  let gid: string | null = null;
+  store.apply("Group into graphic", (tl) => {
+    const r = gfx.groupIntoGraphic(tl, ids);
+    gid = r.id;
+    return r.tl;
+  });
+  if (gid) store.select([gid]);
+  else toast("Select titles, shapes or images to group into a graphic", "info");
+}
+
+/** Break the selected graphic back into separate clips (controls are baked in). */
+export function ungroupGraphic(): void {
+  if (!guard()) return;
+  const g = selectedGraphic();
+  if (!g) return;
+  let ids: string[] = [];
+  store.apply("Ungroup graphic", (tl) => {
+    const r = gfx.ungroupGraphic(tl, g.id);
+    ids = r.ids;
+    return r.tl;
+  });
+  store.select(ids);
 }
 
 export function addTrack(kind: TrackKind): void {

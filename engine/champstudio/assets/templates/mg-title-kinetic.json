@@ -1,0 +1,175 @@
+{
+  "cst": "1.0",
+  "id": "mg-title-kinetic",
+  "name": "Kinetic Word Title",
+  "category": "motion-graphics",
+  "description": "Headline words pop on one after another, then an accent rule and subhead; words pop off at the end.",
+  "tags": [
+    "graphic",
+    "title",
+    "kinetic",
+    "typography"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "headline"
+    ],
+    "properties": {
+      "headline": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Headline"
+      },
+      "subhead": {
+        "type": "string",
+        "maxLength": 80,
+        "x-kind": "text",
+        "description": "Supporting line"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "headline": "Revenue, rebuilt for 2027",
+    "subhead": "How top teams forecast with confidence"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "headline",
+          "type": "text",
+          "name": "Headline",
+          "text": "{{headline}}",
+          "box": {
+            "*": [
+              0.08,
+              0.34,
+              0.84,
+              0.22
+            ],
+            "vertical": [
+              0.06,
+              0.36,
+              0.88,
+              0.17
+            ]
+          },
+          "style": {
+            "$brand": "styles.title",
+            "shadow": true,
+            "bg_color": "",
+            "size": 110,
+            "color": "#FFFFFF"
+          },
+          "text_anim": {
+            "by": "word",
+            "type": "pop",
+            "duration": 0.35,
+            "stagger": 0.12,
+            "delay": 0.0,
+            "order": "forward",
+            "out": true
+          }
+        },
+        {
+          "id": "rule",
+          "type": "shape",
+          "name": "Rule",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "start": 0.6,
+          "box": {
+            "*": [
+              0.42,
+              0.585,
+              0.16,
+              0.008
+            ],
+            "vertical": [
+              0.35,
+              0.55,
+              0.3,
+              0.005
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "subhead",
+          "type": "text",
+          "name": "Subhead",
+          "text": "{{subhead}}",
+          "if": "subhead",
+          "start": 0.85,
+          "box": {
+            "*": [
+              0.15,
+              0.61,
+              0.7,
+              0.08
+            ],
+            "vertical": [
+              0.1,
+              0.57,
+              0.8,
+              0.06
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 40,
+            "weight": 500,
+            "color": "#FFFFFFD9"
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.5
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

@@ -1,0 +1,266 @@
+{
+  "cst": "1.0",
+  "id": "mg-cta-url",
+  "name": "Browser URL Bar",
+  "category": "motion-graphics",
+  "description": "A browser address bar where your URL types itself in, with a blinking cursor.",
+  "tags": [
+    "graphic",
+    "cta",
+    "website",
+    "url"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "url"
+    ],
+    "properties": {
+      "url": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Web address"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "url": "championsgroup.com/report"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "bar",
+          "type": "shape",
+          "name": "Bar",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF",
+            "radius": 0.5
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.45,
+              0.6,
+              0.1
+            ],
+            "vertical": [
+              0.06,
+              0.47,
+              0.88,
+              0.055
+            ]
+          },
+          "anim_in": {
+            "type": "zoom-in",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "dot0",
+          "type": "shape",
+          "name": "Dot 1",
+          "shape": {
+            "kind": "ellipse",
+            "fill": "#FF5F57"
+          },
+          "box": {
+            "*": [
+              0.225,
+              0.4875,
+              0.014,
+              0.025
+            ],
+            "vertical": [
+              0.09,
+              0.4905,
+              0.026,
+              0.0146
+            ]
+          },
+          "start": 0.15,
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.25
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "dot1",
+          "type": "shape",
+          "name": "Dot 2",
+          "shape": {
+            "kind": "ellipse",
+            "fill": "#FEBC2E"
+          },
+          "box": {
+            "*": [
+              0.247,
+              0.4875,
+              0.014,
+              0.025
+            ],
+            "vertical": [
+              0.13,
+              0.4905,
+              0.026,
+              0.0146
+            ]
+          },
+          "start": 0.15,
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.25
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "dot2",
+          "type": "shape",
+          "name": "Dot 3",
+          "shape": {
+            "kind": "ellipse",
+            "fill": "#28C840"
+          },
+          "box": {
+            "*": [
+              0.269,
+              0.4875,
+              0.014,
+              0.025
+            ],
+            "vertical": [
+              0.16999999999999998,
+              0.4905,
+              0.026,
+              0.0146
+            ]
+          },
+          "start": 0.15,
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.25
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "url",
+          "type": "text",
+          "name": "URL",
+          "text": "{{url}}",
+          "start": 0.3,
+          "box": {
+            "*": [
+              0.31,
+              0.45,
+              0.46,
+              0.1
+            ],
+            "vertical": [
+              0.23,
+              0.47,
+              0.68,
+              0.055
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 40,
+            "weight": 600,
+            "color": "#111318",
+            "align": "left"
+          },
+          "text_anim": {
+            "by": "char",
+            "type": "fade",
+            "duration": 0.06,
+            "stagger": 0.05,
+            "delay": 0.0,
+            "order": "forward",
+            "out": false
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "lock",
+          "type": "shape",
+          "name": "Accent",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            },
+            "radius": 0.5
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.57,
+              0.6,
+              0.008
+            ],
+            "vertical": [
+              0.06,
+              0.54,
+              0.88,
+              0.004
+            ]
+          },
+          "start": 0.4,
+          "anim_in": {
+            "type": "wipe",
+            "sec": 1.2
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

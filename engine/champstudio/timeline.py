@@ -69,12 +69,14 @@ class TextStyle(BaseModel):
 
 
 class Shape(BaseModel):
-    kind: Literal["rect", "ellipse", "line"] = "rect"
+    kind: Literal["rect", "ellipse", "line", "triangle", "polygon", "star"] = "rect"
     fill: str | None = "#FFFFFF"
     radius: float = 0.0          # fraction of min(w, h)
     stroke: str | None = None
     stroke_width: float = 0
-    gradient: list[str] | None = None   # [top, bottom] colours
+    gradient: list[str] | None = None   # [start, end] colours
+    gradient_angle: float = 180.0       # degrees; 180 = top → bottom, 90 = left → right
+    sides: int = 6                      # polygon sides / star points
 
 
 class Adjust(BaseModel):
@@ -102,11 +104,65 @@ class Captions(BaseModel):
     max_lines: int = 2
 
 
+class TextAnim(BaseModel):
+    """Per-unit text animator (After Effects / Essential Graphics style): each
+    character, word or line animates in on its own, offset by `stagger`."""
+    by: Literal["char", "word", "line"] = "word"
+    type: Literal["fade", "rise", "drop", "pop", "slide-left", "slide-right", "reveal"] = "rise"
+    duration: int = 10          # frames per unit
+    stagger: int = 2            # frames between units
+    delay: int = 0              # frames after the clip starts
+    order: Literal["forward", "reverse", "center", "random"] = "forward"
+    out: bool = False           # also animate out (mirrored) at the end
+
+
+class Counter(BaseModel):
+    """Count the first number in the text up from `start` (e.g. "$4.2M", "87%")."""
+    start: float = 0.0
+    duration: int = 30          # frames
+    delay: int = 0
+    ease: Ease = "ease-out"
+
+
+class Pin(BaseModel):
+    """Responsive position: keep this layer's box wrapped around another layer's
+    content (e.g. a bar that grows with the name typed into a lower third)."""
+    to: str                     # layer id inside the same graphic
+    pad: list[float] = Field(default_factory=lambda: [0.02, 0.012, 0.02, 0.012])  # l, t, r, b (canvas units)
+    sides: list[Literal["left", "top", "right", "bottom"]] = Field(
+        default_factory=lambda: ["left", "top", "right", "bottom"])
+
+
+class Control(BaseModel):
+    """An exposed "master property" of a graphic (MOGRT-style). Layers read it
+    through `bind` paths such as {"text": "{{name}}", "style.color": "{{accent}}"}."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str
+    label: str = ""
+    kind: Literal["text", "color", "number", "toggle", "choice", "media"] = "text"
+    value: bool | int | float | str | dict | None = ""
+    options: list[str] = []
+    min: float | None = None
+    max: float | None = None
+    multiline: bool = False
+
+
+class Graphic(BaseModel):
+    """A graphic clip (Premiere's Essential Graphics): a stack of layers, bottom
+    first. Each layer is a Clip (text/shape/image/color) whose start/duration are
+    relative to the graphic clip; `hold` layers run to the graphic's end, so
+    stretching the clip keeps intro and outro animations intact."""
+    layers: list["Clip"] = []
+    controls: list[Control] = []
+    template: str | None = None
+
+
 class Clip(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="allow")
 
     id: str
-    type: Literal["video", "image", "text", "shape", "color", "audio", "captions", "adjustment"]
+    type: Literal["video", "image", "text", "shape", "color", "audio", "captions", "adjustment", "graphic"]
     start: int = 0
     duration: int = 30
     in_: int = Field(0, alias="in")         # source offset, frames
@@ -131,6 +187,15 @@ class Clip(BaseModel):
     color: str = "#000000"
     adjust: Adjust | None = None
     captions: Captions | None = None
+    # motion graphics (any text clip, and layers inside a graphic)
+    graphic: Graphic | None = None
+    text_anim: TextAnim | None = None
+    counter: Counter | None = None
+    pin: Pin | None = None                  # graphic layers only
+    mask: Literal["below", "below-inverse"] | None = None   # graphic layers: clip to the layers beneath
+    bind: dict[str, str] = {}               # graphic layers: property path → "{{control}}" template
+    hold: bool = True                       # graphic layers: run to the end of the graphic
+    locked: bool = False                    # graphic layers: not selectable on the monitor
     # audio
     volume: float = 1.0                     # linear gain
     fade_in: int = 0                        # frames
@@ -153,6 +218,9 @@ class Clip(BaseModel):
         if self.speed <= 0:
             self.speed = 1.0
         return self
+
+
+Graphic.model_rebuild()
 
 
 class Track(BaseModel):

@@ -1,0 +1,228 @@
+{
+  "cst": "1.0",
+  "id": "mg-lt-two-tone",
+  "name": "Two-Tone Lower Third",
+  "category": "motion-graphics",
+  "description": "Stacked name and title bars that each resize to their text — broadcast style.",
+  "tags": [
+    "graphic",
+    "lower third",
+    "name",
+    "news"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "name"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Person's name"
+      },
+      "role": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Job title and company"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "name": "Alex Morgan",
+    "role": "VP Revenue Operations, Northwind"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "bar1",
+          "type": "shape",
+          "name": "Name bar",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            },
+            "radius": 0.06
+          },
+          "box": {
+            "*": [
+              0.075,
+              0.72,
+              0.6,
+              0.075
+            ],
+            "vertical": [
+              0.08,
+              0.66,
+              0.84,
+              0.045
+            ]
+          },
+          "pin": {
+            "to": "name",
+            "pad": [
+              0.012,
+              0.006,
+              0.012,
+              0.006
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "name",
+          "type": "text",
+          "name": "Name",
+          "text": "{{name}}",
+          "box": {
+            "*": [
+              0.08,
+              0.72,
+              0.6,
+              0.065
+            ],
+            "vertical": [
+              0.085,
+              0.66,
+              0.83,
+              0.04
+            ]
+          },
+          "start": 0.12,
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 44,
+            "weight": 800,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.25
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "bar2",
+          "type": "shape",
+          "name": "Title bar",
+          "start": 0.25,
+          "shape": {
+            "kind": "rect",
+            "fill": "#111318EB",
+            "radius": 0.06
+          },
+          "box": {
+            "*": [
+              0.075,
+              0.8,
+              0.6,
+              0.05
+            ],
+            "vertical": [
+              0.08,
+              0.712,
+              0.84,
+              0.03
+            ]
+          },
+          "pin": {
+            "to": "role",
+            "pad": [
+              0.012,
+              0.006,
+              0.012,
+              0.006
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "role",
+          "type": "text",
+          "name": "Role",
+          "text": "{{role}}",
+          "box": {
+            "*": [
+              0.08,
+              0.8,
+              0.6,
+              0.045
+            ],
+            "vertical": [
+              0.085,
+              0.712,
+              0.83,
+              0.026
+            ]
+          },
+          "start": 0.35,
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 28,
+            "weight": 500,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

@@ -151,13 +151,18 @@ export interface TemplateSummary {
   name: string;
   category: string;
   description?: string;
+  tags?: string[];
+  origin?: string;
+  overlay?: boolean;
+  graphic?: boolean;
   slots?: string[];
   aspects?: string[];
   duration_hint?: number;
 }
 
+/** A template compiled into one graphic clip (MOGRT-style). */
 export interface GraphicResult {
-  tracks: Array<{ id: string; clips: Clip[] }>;
+  clip: Clip;
   duration: number;
 }
 

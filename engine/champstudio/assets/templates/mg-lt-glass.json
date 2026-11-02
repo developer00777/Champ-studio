@@ -1,0 +1,228 @@
+{
+  "cst": "1.0",
+  "id": "mg-lt-glass",
+  "name": "Glass Card Lower Third",
+  "category": "motion-graphics",
+  "description": "Translucent card with an accent edge; the card widens to fit the name.",
+  "tags": [
+    "graphic",
+    "lower third",
+    "name",
+    "modern"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "name"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Person's name"
+      },
+      "role": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Job title and company"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "name": "Alex Morgan",
+    "role": "VP Revenue Operations, Northwind"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "card",
+          "type": "shape",
+          "name": "Card",
+          "shape": {
+            "kind": "rect",
+            "fill": "#0B0D12B8",
+            "radius": 0.12
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.7,
+              0.5,
+              0.165
+            ],
+            "vertical": [
+              0.06,
+              0.645,
+              0.86,
+              0.1
+            ]
+          },
+          "pin": {
+            "to": "role",
+            "pad": [
+              0.02,
+              0,
+              0.025,
+              0.02
+            ],
+            "sides": [
+              "left",
+              "right",
+              "bottom"
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "edge",
+          "type": "shape",
+          "name": "Edge",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            },
+            "radius": 0.5
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.72,
+              0.004,
+              0.125
+            ],
+            "vertical": [
+              0.06,
+              0.66,
+              0.007,
+              0.07
+            ]
+          },
+          "start": 0.15,
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "name",
+          "type": "text",
+          "name": "Name",
+          "text": "{{name}}",
+          "box": {
+            "*": [
+              0.08,
+              0.72,
+              0.6,
+              0.07
+            ],
+            "vertical": [
+              0.085,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 46,
+            "weight": 800,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "text_anim": {
+            "by": "char",
+            "type": "rise",
+            "duration": 0.3,
+            "stagger": 0.02,
+            "delay": 0.2,
+            "order": "forward",
+            "out": false
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "role",
+          "type": "text",
+          "name": "Role",
+          "text": "{{role}}",
+          "box": {
+            "*": [
+              0.08,
+              0.793,
+              0.6,
+              0.045
+            ],
+            "vertical": [
+              0.085,
+              0.708,
+              0.8,
+              0.028
+            ]
+          },
+          "start": 0.5,
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 28,
+            "weight": 500,
+            "color": "#FFFFFFB8",
+            "align": "left"
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

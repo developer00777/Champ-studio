@@ -84,8 +84,11 @@ def test_gallery_preview_and_graphic(client):
     img = client.get("/api/templates/b2b-stat-ad/preview.jpg?aspect=9:16")
     assert img.status_code == 200 and img.headers["content-type"] == "image/jpeg"
     gr = client.post("/api/templates/lower-third/graphic", json={"values": {"name": "Priya Shah"}, "start": 30}).json()
-    texts = [c["text"] for tr in gr["tracks"] for c in tr["clips"] if c["type"] == "text"]
-    assert "Priya Shah" in texts and all(c["start"] >= 30 for tr in gr["tracks"] for c in tr["clips"])
+    clip = gr["clip"]
+    assert clip["type"] == "graphic" and clip["start"] == 30
+    texts = [layer["text"] for layer in clip["graphic"]["layers"] if layer["type"] == "text"]
+    assert "Priya Shah" in texts
+    assert {c["id"]: c["value"] for c in clip["graphic"]["controls"]}["name"] == "Priya Shah"
 
 
 def test_ai_fill_compose_and_render(client, fake):

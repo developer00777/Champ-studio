@@ -70,7 +70,7 @@ def _media_ref(clip: Clip, fps: int, *, media_prefix: str | None) -> otio.schema
             ref = otio.schema.ExternalReference(target_url=target, available_range=span)
             ref.name = asset["filename"]
             return ref
-    if clip.type in ("text", "shape", "color", "captions", "adjustment"):
+    if clip.type in ("text", "shape", "color", "captions", "adjustment", "graphic"):
         return otio.schema.GeneratorReference(name=clip.type, generator_kind=f"champ.{clip.type}",
                                               available_range=span)
     return otio.schema.MissingReference(available_range=span)

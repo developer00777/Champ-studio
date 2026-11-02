@@ -1,0 +1,149 @@
+{
+  "cst": "1.0",
+  "id": "mg-callout-badge",
+  "name": "Burst Badge",
+  "category": "motion-graphics",
+  "description": "Spinning starburst badge that pops on with a short word — NEW, LIVE, 50% OFF.",
+  "tags": [
+    "graphic",
+    "callout",
+    "badge",
+    "promo",
+    "social"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "badge"
+    ],
+    "properties": {
+      "badge": {
+        "type": "string",
+        "maxLength": 10,
+        "x-kind": "text",
+        "description": "Badge text"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "badge": "NEW"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 4
+      },
+      "layers": [
+        {
+          "id": "burst",
+          "type": "shape",
+          "name": "Burst",
+          "shape": {
+            "kind": "star",
+            "sides": 14,
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.79,
+              0.1,
+              0.15,
+              0.2667
+            ],
+            "vertical": [
+              0.64,
+              0.08,
+              0.3,
+              0.169
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "anim_out": {
+            "type": "zoom-out",
+            "sec": 0.3
+          },
+          "keyframes": {
+            "rotation": [
+              [
+                0,
+                0,
+                "linear"
+              ],
+              [
+                4,
+                45
+              ]
+            ]
+          }
+        },
+        {
+          "id": "badge",
+          "type": "text",
+          "name": "Badge",
+          "text": "{{badge}}",
+          "box": {
+            "*": [
+              0.8,
+              0.12,
+              0.13,
+              0.2267
+            ],
+            "vertical": [
+              0.66,
+              0.1,
+              0.26,
+              0.129
+            ]
+          },
+          "start": 0.1,
+          "transform": {
+            "rotation": -12
+          },
+          "style": {
+            "$brand": "styles.title",
+            "shadow": false,
+            "bg_color": "",
+            "size": 60,
+            "weight": 900,
+            "color": "#FFFFFF",
+            "uppercase": true
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "zoom-out",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

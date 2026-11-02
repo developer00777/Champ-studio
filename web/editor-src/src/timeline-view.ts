@@ -356,10 +356,15 @@ export class TimelineView {
       ctx.fillStyle = c.color;
       ctx.fillRect(x, bodyY, w, bodyH);
     } else if (c.type === "audio" && c.asset_id) this.drawWave(ctx, tl, c, r.track, x, bodyY, w, bodyH);
-    else if (c.type === "text" || c.type === "captions") {
+    else if (c.type === "text" || c.type === "captions" || c.type === "graphic") {
       ctx.fillStyle = "rgba(255,255,255,0.75)";
       ctx.font = "11px Inter, sans-serif";
-      const t = c.type === "text" ? c.text : (c.captions?.words ?? []).map((wd) => wd.w).join(" ");
+      const t =
+        c.type === "text"
+          ? c.text
+          : c.type === "graphic"
+            ? (c.graphic?.controls.filter((k) => k.kind === "text").map((k) => String(k.value ?? "")) ?? []).concat(c.graphic?.controls.length ? [] : (c.graphic?.layers ?? []).filter((l) => l.type === "text").map((l) => l.text)).filter(Boolean).join(" · ")
+            : (c.captions?.words ?? []).map((wd) => wd.w).join(" ");
       ctx.fillText(t.replace(/\n/g, " ").slice(0, 200), Math.max(x, HEADER_W) + 6, bodyY + bodyH / 2 + 4);
     }
     // header band
@@ -1021,6 +1026,9 @@ export class TimelineView {
     } else if (h.kind === "header" && !h.button && !store.readOnly) {
       const name = await promptDialog("Track", "Track name", h.track.name, "Rename");
       if (name) store.apply("Rename track", (tl) => ops.updateTrack(tl, h.track.id, (t) => (t.name = name)));
+    } else if (h.kind === "clip" && h.clip.type === "graphic") {
+      store.selectLayer(h.clip.id, null);
+      store.showPanel("graphics");
     }
   };
 
@@ -1062,6 +1070,7 @@ function defaultName(c: Clip): string {
   if (c.type === "color") return "Color matte";
   if (c.type === "adjustment") return "Adjustment layer";
   if (c.type === "shape") return "Shape";
+  if (c.type === "graphic") return "Graphic";
   const a = c.asset_id ? media.assets.get(c.asset_id) : undefined;
   return (a?.params?.filename as string | undefined) ?? a?.prompt ?? c.type;
 }

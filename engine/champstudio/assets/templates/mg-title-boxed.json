@@ -1,0 +1,233 @@
+{
+  "cst": "1.0",
+  "id": "mg-title-boxed",
+  "name": "Boxed Title",
+  "category": "motion-graphics",
+  "description": "Bold headline on a colour block that fits the text, with a dark label tab above.",
+  "tags": [
+    "graphic",
+    "title",
+    "bold",
+    "social"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "headline"
+    ],
+    "properties": {
+      "label": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Label above"
+      },
+      "headline": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Headline"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "label": "New research",
+    "headline": "B2B buyers want proof"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "block",
+          "type": "shape",
+          "name": "Block",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            },
+            "radius": 0.04
+          },
+          "box": {
+            "*": [
+              0.15,
+              0.43,
+              0.7,
+              0.14
+            ],
+            "vertical": [
+              0.08,
+              0.45,
+              0.84,
+              0.09
+            ]
+          },
+          "pin": {
+            "to": "headline",
+            "pad": [
+              0.025,
+              0.018,
+              0.025,
+              0.018
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "headline",
+          "type": "text",
+          "name": "Headline",
+          "text": "{{headline}}",
+          "box": {
+            "*": [
+              0.15,
+              0.43,
+              0.7,
+              0.14
+            ],
+            "vertical": [
+              0.08,
+              0.45,
+              0.84,
+              0.09
+            ]
+          },
+          "style": {
+            "$brand": "styles.title",
+            "shadow": false,
+            "bg_color": "",
+            "size": 88,
+            "weight": 900,
+            "color": "#FFFFFF"
+          },
+          "text_anim": {
+            "by": "char",
+            "type": "rise",
+            "duration": 0.3,
+            "stagger": 0.02,
+            "delay": 0.25,
+            "order": "forward",
+            "out": false
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "tab",
+          "type": "shape",
+          "name": "Label tab",
+          "shape": {
+            "kind": "rect",
+            "fill": "#111318",
+            "radius": 0.15
+          },
+          "start": 0.3,
+          "box": {
+            "*": [
+              0.3,
+              0.345,
+              0.4,
+              0.055
+            ],
+            "vertical": [
+              0.2,
+              0.4,
+              0.6,
+              0.032
+            ]
+          },
+          "pin": {
+            "to": "label",
+            "pad": [
+              0.014,
+              0.008,
+              0.014,
+              0.008
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "label",
+          "type": "text",
+          "name": "Label",
+          "text": "{{label}}",
+          "if": "label",
+          "start": 0.3,
+          "box": {
+            "*": [
+              0.3,
+              0.345,
+              0.4,
+              0.055
+            ],
+            "vertical": [
+              0.2,
+              0.4,
+              0.6,
+              0.032
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 26,
+            "weight": 700,
+            "color": "#FFFFFF",
+            "uppercase": true,
+            "letter_spacing": 0.12
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

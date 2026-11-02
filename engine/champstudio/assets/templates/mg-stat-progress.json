@@ -1,0 +1,214 @@
+{
+  "cst": "1.0",
+  "id": "mg-stat-progress",
+  "name": "Progress Bar",
+  "category": "motion-graphics",
+  "description": "A labelled bar that fills to a percentage while the number counts up.",
+  "tags": [
+    "graphic",
+    "stat",
+    "data",
+    "progress"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "percent"
+    ],
+    "properties": {
+      "label": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "What is measured"
+      },
+      "percent": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "x-kind": "number",
+        "description": "Percent (0–100)"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "label": "Quota attainment",
+    "percent": 72
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "label",
+          "type": "text",
+          "name": "Label",
+          "text": "{{label}}",
+          "box": {
+            "*": [
+              0.1,
+              0.5,
+              0.6,
+              0.08
+            ],
+            "vertical": [
+              0.1,
+              0.5,
+              0.6,
+              0.04
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "size": 44,
+            "weight": 700,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "pct",
+          "type": "text",
+          "name": "Percent",
+          "text": "{{percent}}%",
+          "box": {
+            "*": [
+              0.6,
+              0.47,
+              0.3,
+              0.12
+            ],
+            "vertical": [
+              0.6,
+              0.485,
+              0.3,
+              0.055
+            ]
+          },
+          "style": {
+            "$brand": "styles.stat",
+            "shadow": false,
+            "bg_color": "",
+            "size": 90,
+            "color": {
+              "$slot": "accent"
+            },
+            "align": "right"
+          },
+          "counter": {
+            "start": 0,
+            "duration": 1.2,
+            "delay": 0.25
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "track",
+          "type": "shape",
+          "name": "Track",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF2E",
+            "radius": 0.5
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.61,
+              0.8,
+              0.03
+            ],
+            "vertical": [
+              0.1,
+              0.55,
+              0.8,
+              0.016
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "fill",
+          "type": "shape",
+          "name": "Fill",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            },
+            "radius": 0.5
+          },
+          "start": 0.25,
+          "box": {
+            "*": [
+              0.1,
+              0.61,
+              0.576,
+              0.03
+            ],
+            "vertical": [
+              0.1,
+              0.55,
+              0.576,
+              0.016
+            ]
+          },
+          "bind": {
+            "box.2": "{{percent}} * 0.008"
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 1.2
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

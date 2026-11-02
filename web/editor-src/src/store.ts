@@ -36,7 +36,7 @@ interface Command {
 }
 
 export type Tool = "select" | "razor";
-export type StoreEvent = "doc" | "selection" | "playhead" | "history" | "tool" | "project" | "readonly" | "save" | "marks";
+export type StoreEvent = "doc" | "selection" | "playhead" | "history" | "tool" | "project" | "readonly" | "save" | "marks" | "panel";
 
 const MAX_HISTORY = 300;
 
@@ -59,6 +59,10 @@ export class Store extends Emitter<StoreEvent> {
   revision = 0;
   ctx: OpCtx = {};
   brand: Brand | null = null;
+  /** Selected layer inside a graphic clip (Essential Graphics → Edit). */
+  layer: { clip: string; id: string } | null = null;
+  /** Ask the UI to show a panel ("graphics" opens Essential Graphics). */
+  wantPanel: string | null = null;
   private undoStack: Command[] = [];
   private redoStack: Command[] = [];
 
@@ -190,12 +194,26 @@ export class Store extends Emitter<StoreEvent> {
       if (mode === "toggle" && this.selection.has(id)) this.selection.delete(id);
       else this.selection.add(id);
     }
+    if (this.layer && !this.selection.has(this.layer.clip)) this.layer = null;
     this.emit("selection");
   }
 
+  /** Select a layer of a graphic clip (null: the graphic itself). */
+  selectLayer(clipId: string, layerId: string | null): void {
+    this.selection = new Set([clipId]);
+    this.layer = layerId ? { clip: clipId, id: layerId } : null;
+    this.emit("selection");
+  }
+
+  showPanel(id: string): void {
+    this.wantPanel = id;
+    this.emit("panel");
+  }
+
   clearSelection(): void {
-    if (!this.selection.size) return;
+    if (!this.selection.size && !this.layer) return;
     this.selection.clear();
+    this.layer = null;
     this.emit("selection");
   }
 
@@ -208,6 +226,10 @@ export class Store extends Emitter<StoreEvent> {
       }
     }
     for (const t of [...this.targets]) if (!this.doc.tracks.some((x) => x.id === t)) this.targets.delete(t);
+    if (this.layer && !findClip(this.doc, this.layer.clip)?.clip.graphic?.layers.some((l) => l.id === this.layer!.id)) {
+      this.layer = null;
+      changed = true;
+    }
     if (changed) this.emit("selection");
   }
 

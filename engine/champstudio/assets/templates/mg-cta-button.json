@@ -1,0 +1,244 @@
+{
+  "cst": "1.0",
+  "id": "mg-cta-button",
+  "name": "CTA Button",
+  "category": "motion-graphics",
+  "description": "Call-to-action button that fits its text and pulses, with an optional URL beneath.",
+  "tags": [
+    "graphic",
+    "cta",
+    "button",
+    "conversion"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "cta"
+    ],
+    "properties": {
+      "cta": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Button text"
+      },
+      "url": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "URL or detail"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "cta": "Book a demo →",
+    "url": "championsgroup.com/demo"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "button",
+          "type": "shape",
+          "name": "Button",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            },
+            "radius": 0.5
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.42,
+              0.4,
+              0.1
+            ],
+            "vertical": [
+              0.15,
+              0.46,
+              0.7,
+              0.055
+            ]
+          },
+          "pin": {
+            "to": "cta",
+            "pad": [
+              0.035,
+              0.022,
+              0.035,
+              0.022
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "keyframes": {
+            "scale": [
+              [
+                1.2,
+                1
+              ],
+              [
+                1.5,
+                1.06
+              ],
+              [
+                1.8,
+                1
+              ],
+              [
+                2.6,
+                1
+              ],
+              [
+                2.9,
+                1.06
+              ],
+              [
+                3.2,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "id": "cta",
+          "type": "text",
+          "name": "Button text",
+          "text": "{{cta}}",
+          "box": {
+            "*": [
+              0.3,
+              0.42,
+              0.4,
+              0.1
+            ],
+            "vertical": [
+              0.15,
+              0.46,
+              0.7,
+              0.055
+            ]
+          },
+          "style": {
+            "$brand": "styles.button",
+            "shadow": false,
+            "bg_color": "",
+            "size": 52,
+            "color": "#FFFFFF"
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "keyframes": {
+            "scale": [
+              [
+                1.2,
+                1
+              ],
+              [
+                1.5,
+                1.06
+              ],
+              [
+                1.8,
+                1
+              ],
+              [
+                2.6,
+                1
+              ],
+              [
+                2.9,
+                1.06
+              ],
+              [
+                3.2,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "id": "url",
+          "type": "text",
+          "name": "URL",
+          "text": "{{url}}",
+          "if": "url",
+          "start": 0.5,
+          "box": {
+            "*": [
+              0.2,
+              0.56,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.56,
+              0.8,
+              0.03
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "size": 32,
+            "weight": 600,
+            "color": "#FFFFFFD9"
+          },
+          "text_anim": {
+            "by": "char",
+            "type": "fade",
+            "duration": 0.15,
+            "stagger": 0.015,
+            "delay": 0.0,
+            "order": "forward",
+            "out": false
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

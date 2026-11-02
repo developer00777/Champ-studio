@@ -1,0 +1,190 @@
+{
+  "cst": "1.0",
+  "id": "mg-lt-pill",
+  "name": "Pill Lower Third",
+  "category": "motion-graphics",
+  "description": "Rounded pill that grows to fit the name, with the title sliding in underneath.",
+  "tags": [
+    "graphic",
+    "lower third",
+    "name",
+    "interview"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "name"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Person's name"
+      },
+      "role": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Job title and company"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "name": "Alex Morgan",
+    "role": "VP Revenue Operations, Northwind"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "pill",
+          "type": "shape",
+          "name": "Pill",
+          "shape": {
+            "kind": "rect",
+            "radius": 0.5,
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.075,
+              0.72,
+              0.6,
+              0.075
+            ],
+            "vertical": [
+              0.08,
+              0.66,
+              0.84,
+              0.045
+            ]
+          },
+          "pin": {
+            "to": "name",
+            "pad": [
+              0.016,
+              0.01,
+              0.016,
+              0.01
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "name",
+          "type": "text",
+          "name": "Name",
+          "text": "{{name}}",
+          "box": {
+            "*": [
+              0.075,
+              0.72,
+              0.6,
+              0.075
+            ],
+            "vertical": [
+              0.08,
+              0.66,
+              0.84,
+              0.045
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 46,
+            "weight": 800,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "text_anim": {
+            "by": "char",
+            "type": "rise",
+            "duration": 0.3,
+            "stagger": 0.025,
+            "delay": 0.15,
+            "order": "forward",
+            "out": false
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "role",
+          "type": "text",
+          "name": "Role",
+          "text": "{{role}}",
+          "box": {
+            "*": [
+              0.075,
+              0.8,
+              0.6,
+              0.05
+            ],
+            "vertical": [
+              0.08,
+              0.712,
+              0.84,
+              0.03
+            ]
+          },
+          "start": 0.45,
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "size": 30,
+            "weight": 500,
+            "color": "#FFFFFFE6",
+            "align": "left"
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

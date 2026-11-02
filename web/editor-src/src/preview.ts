@@ -6,7 +6,8 @@ import { postBlob } from "./api";
 import { media } from "./media";
 import { clipEnd, prop, timelineDuration, type Clip, type Timeline, type Track } from "./model";
 import { store } from "./store";
-import { captionLines, css, renderText } from "./text";
+import { counterText, resolveLayers, unitEffect, unitProgress } from "./graphics";
+import { captionLines, contentBbox, css, renderText, unitCells } from "./text";
 
 type Ctx2D = CanvasRenderingContext2D;
 
@@ -35,6 +36,14 @@ export class Preview {
   private layerA = document.createElement("canvas");
   private layerB = document.createElement("canvas");
   private layerC = document.createElement("canvas");
+  /** Scratch canvases for graphic clips (one per nesting depth) and masked layers. */
+  private gfxPool: HTMLCanvasElement[] = [];
+  private maskPool: HTMLCanvasElement[] = [];
+  private depth = 0;
+  /** Text scale of the outermost sequence while drawing inside a graphic. */
+  private textScale: number | null = null;
+  /** Responsive (pinned) boxes for the frame being drawn. */
+  private boxOverride = new Map<string, [number, number, number, number]>();
   private videos = new Map<string, VideoSlot>();
   private audios = new Map<string, AudioSlot>();
   private audioCtx: AudioContext | null = null;
@@ -190,11 +199,134 @@ export class Preview {
     ctx.fillStyle = css(tl.background, { r: 0, g: 0, b: 0, a: 255 });
     ctx.fillRect(0, 0, this.W, this.H);
     const now = performance.now();
-    for (const track of tl.tracks) {
-      if (track.kind !== "video" || track.hidden) continue;
-      this.drawTrack(ctx, tl, track, f, now);
-    }
+    this.drawTracks(ctx, tl, tl.tracks.filter((t) => t.kind === "video" && !t.hidden), f, now);
     if (this.playing) this.preroll(tl, f, now);
+  }
+
+  private drawTracks(ctx: Ctx2D, tl: Timeline, tracks: Track[], f: number, now: number): void {
+    this.resolvePins(tracks, f);
+    for (const track of tracks) this.drawTrack(ctx, tl, track, f, now);
+  }
+
+  /** Responsive layout: pinned layers wrap the current content of their target (port of compositor._resolve_pins). */
+  private resolvePins(tracks: Track[], f: number): void {
+    this.boxOverride = new Map();
+    const active = new Map<string, Clip>();
+    for (const t of tracks) for (const c of t.clips) if (c.enabled && c.start <= f && f < clipEnd(c)) active.set(c.id, c);
+    for (const c of active.values()) {
+      const target = c.pin ? active.get(c.pin.to) : undefined;
+      if (!c.pin || !target) continue;
+      const [tx, ty, tw, th] = this.boxPx(target);
+      const fRel = f - target.start;
+      const ox = prop(target, "x", fRel, target.transform.x) * this.W;
+      const oy = prop(target, "y", fRel, target.transform.y) * this.H;
+      let bb: [number, number, number, number] | null = null;
+      if (target.type === "text") {
+        bb = contentBbox(counterText(target.text, target.counter, fRel), target.style, tw, th, this.scaleText());
+        if (!bb) {
+          this.boxOverride.set(c.id, [0, 0, 0, 0]);
+          continue;
+        }
+      }
+      const [x0, y0, x1, y1] = bb ?? [0, 0, tw, th];
+      const edges = { left: tx + x0 + ox, top: ty + y0 + oy, right: tx + x1 + ox, bottom: ty + y1 + oy };
+      const [px, py, pw, ph] = this.boxPx(c);
+      const mine = { left: px, top: py, right: px + pw, bottom: py + ph };
+      const [pl = 0, pt = 0, pr = 0, pb = 0] = c.pin.pad;
+      const pad = { left: -pl * this.W, top: -pt * this.H, right: pr * this.W, bottom: pb * this.H };
+      for (const side of c.pin.sides) mine[side] = edges[side] + pad[side];
+      const x = Math.round(mine.left);
+      const y = Math.round(mine.top);
+      this.boxOverride.set(c.id, [x, y, Math.max(2, Math.round(mine.right) - x), Math.max(2, Math.round(mine.bottom) - y)]);
+    }
+  }
+
+  private scaleText(): number {
+    return this.textScale ?? this.H / 1080;
+  }
+
+  private scratch(pool: HTMLCanvasElement[], i: number, w: number, h: number): HTMLCanvasElement {
+    while (pool.length <= i) pool.push(document.createElement("canvas"));
+    const c = pool[i]!;
+    if (c.width < w || c.height < h) {
+      c.width = Math.max(c.width, w);
+      c.height = Math.max(c.height, h);
+    }
+    const x = c.getContext("2d")!;
+    x.setTransform(1, 0, 0, 1, 0, 0);
+    x.globalAlpha = 1;
+    x.filter = "none";
+    x.globalCompositeOperation = "source-over";
+    x.clearRect(0, 0, c.width, c.height);
+    return c;
+  }
+
+  /** Graphic layer clipped to (or cut out of) everything drawn beneath it. */
+  private drawMasked(ctx: Ctx2D, tl: Timeline, clip: Clip, f: number, now: number): void {
+    const tmp = this.scratch(this.maskPool, this.depth, this.W, this.H);
+    const t = tmp.getContext("2d")!;
+    this.drawClip(t, tl, clip, f, now);
+    t.globalCompositeOperation = clip.mask === "below-inverse" ? "destination-out" : "destination-in";
+    t.drawImage(ctx.canvas as HTMLCanvasElement, 0, 0);
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalAlpha = 1;
+    ctx.drawImage(tmp, 0, 0);
+    ctx.restore();
+  }
+
+  /** Render a graphic clip's layer stack into its box (port of compositor._graphic). */
+  private graphic(ctx: Ctx2D, tl: Timeline, clip: Clip, fRel: number, bw: number, bh: number, now: number): void {
+    const layers = resolveLayers(clip);
+    if (!layers.length || this.depth > 3) return;
+    bw = Math.max(1, Math.round(bw));
+    bh = Math.max(1, Math.round(bh));
+    const cnv = this.scratch(this.gfxPool, this.depth, bw, bh);
+    const g = cnv.getContext("2d")!;
+    const saved = { W: this.W, H: this.H, textScale: this.textScale, boxOverride: this.boxOverride };
+    this.textScale = this.scaleText();
+    this.W = bw;
+    this.H = bh;
+    this.depth++;
+    try {
+      const tracks: Track[] = layers.map((l, i) => ({ id: `L${i}`, kind: "video", name: "", clips: [l], muted: false, hidden: false, locked: false, solo: false, volume: 1 }));
+      this.drawTracks(g, { ...tl, width: bw, height: bh, tracks }, tracks, fRel, now);
+    } finally {
+      this.depth--;
+      this.W = saved.W;
+      this.H = saved.H;
+      this.textScale = saved.textScale;
+      this.boxOverride = saved.boxOverride;
+    }
+    ctx.drawImage(cnv, 0, 0, bw, bh, -bw / 2, -bh / 2, bw, bh);
+  }
+
+  /** Per-character / word / line animation: each unit's slice of the text image moves on its own. */
+  private textUnits(ctx: Ctx2D, clip: Clip, text: string, img: HTMLCanvasElement, fRel: number, bw: number, bh: number): void {
+    const anim = clip.text_anim!;
+    const cells = unitCells(text, clip.style, bw, bh, this.scaleText(), anim.by);
+    const n = cells.length;
+    const x0 = -bw / 2;
+    const y0 = -bh / 2;
+    cells.forEach(([ax, ay, bx, by], i) => {
+      const p = unitProgress(anim, i, n, fRel, clip.duration);
+      if (p <= 0) return;
+      const [dx, dy, us, uo, reveal] = p >= 1 ? [0, 0, 1, 1, 0] : unitEffect(anim.type, p, by - ay);
+      if (uo <= 0.001) return;
+      const cw = bx - ax;
+      const ch = by - ay;
+      ctx.save();
+      ctx.globalAlpha *= Math.max(0, Math.min(1, uo));
+      ctx.translate(x0 + ax + cw / 2 + dx, y0 + ay + ch / 2 + dy);
+      if (us !== 1) ctx.scale(us, us);
+      if (reveal > 0) {
+        ctx.beginPath();
+        ctx.rect(-cw / 2, -ch / 2, cw, ch);
+        ctx.clip();
+        ctx.drawImage(img, ax, ay, cw, ch, -cw / 2, -ch / 2 + reveal * ch, cw, ch);
+      } else ctx.drawImage(img, ax, ay, cw, ch, -cw / 2, -ch / 2, cw, ch);
+      ctx.restore();
+    });
   }
 
   private drawTrack(ctx: Ctx2D, tl: Timeline, track: Track, f: number, now: number): void {
@@ -219,6 +351,7 @@ export class Preview {
     }
     for (const c of active) {
       if (c.type === "adjustment") this.adjustmentLayer(ctx, tl, c, f);
+      else if (c.mask) this.drawMasked(ctx, tl, c, f, now);
       else this.drawClip(ctx, tl, c, f, now);
     }
   }
@@ -281,6 +414,8 @@ export class Preview {
   }
 
   private boxPx(clip: Clip): [number, number, number, number] {
+    const pinned = this.boxOverride.get(clip.id);
+    if (pinned) return pinned;
     const [x = 0, y = 0, w = 1, hh = 1] = clip.box;
     return [Math.round(x * this.W), Math.round(y * this.H), Math.max(2, Math.round(w * this.W)), Math.max(2, Math.round(hh * this.H))];
   }
@@ -336,7 +471,7 @@ export class Preview {
         else opacity *= p;
       }
     }
-    if (opacity <= 0.001 || scale <= 0.001) return;
+    if (opacity <= 0.001 || scale <= 0.001 || bw <= 0 || bh <= 0) return;
     const cx = bx + bw / 2 + ox * this.W;
     const cy = by + bh / 2 + oy * this.H;
     ctx.save();
@@ -375,7 +510,7 @@ export class Preview {
   private content(ctx: Ctx2D, tl: Timeline, clip: Clip, f: number, fRel: number, bw: number, bh: number, visibleChars: number | null, now: number): void {
     const x0 = -bw / 2;
     const y0 = -bh / 2;
-    const textScale = this.H / 1080;
+    const textScale = this.scaleText();
     switch (clip.type) {
       case "color":
         ctx.fillStyle = css(clip.color, { r: 0, g: 0, b: 0, a: 255 });
@@ -385,10 +520,16 @@ export class Preview {
         drawShape(ctx, clip, x0, y0, bw, bh, textScale);
         return;
       case "text": {
-        const img = renderText(clip.text, clip.style, bw, bh, textScale, visibleChars);
-        if (img) ctx.drawImage(img, x0, y0);
+        const text = counterText(clip.text, clip.counter, fRel);
+        const img = renderText(text, clip.style, bw, bh, textScale, clip.text_anim ? null : visibleChars);
+        if (!img) return;
+        if (clip.text_anim) this.textUnits(ctx, clip, text, img, fRel, bw, bh);
+        else ctx.drawImage(img, x0, y0);
         return;
       }
+      case "graphic":
+        this.graphic(ctx, tl, clip, fRel, bw, bh, now);
+        return;
       case "captions": {
         const img = this.captions(clip, f, bw, bh, textScale, tl.fps);
         if (img) ctx.drawImage(img, x0, y0);
@@ -752,18 +893,36 @@ function drawShape(ctx: Ctx2D, clip: Clip, x: number, y: number, bw: number, bh:
   const path = () => {
     ctx.beginPath();
     if (sh.kind === "ellipse") ctx.ellipse(x + bw / 2, y + bh / 2, bw / 2, bh / 2, 0, 0, Math.PI * 2);
-    else ctx.roundRect(x, y, bw, bh, Math.min(r, bw / 2, bh / 2));
+    else if (sh.kind === "triangle" || sh.kind === "polygon" || sh.kind === "star") {
+      shapePoints(sh.kind, sh.sides, bw, bh).forEach(([px, py], i) => (i ? ctx.lineTo(x + px, y + py) : ctx.moveTo(x + px, y + py)));
+      ctx.closePath();
+    } else ctx.roundRect(x, y, bw, bh, Math.min(r, bw / 2, bh / 2));
   };
-  if (sh.gradient && sh.gradient.length >= 2) {
-    const g = ctx.createLinearGradient(0, y, 0, y + bh);
+  const sw = Math.round(sh.stroke_width * scale);
+  if (sh.gradient && sh.gradient.length >= 2 && sh.kind !== "line") {
+    const a = ((sh.gradient_angle ?? 180) * Math.PI) / 180;
+    const dx = Math.sin(a);
+    const dy = -Math.cos(a);
+    const half = (Math.abs(bw * dx) + Math.abs(bh * dy)) / 2;
+    const gx = x + bw / 2;
+    const gy = y + bh / 2;
+    const g = ctx.createLinearGradient(gx - dx * half, gy - dy * half, gx + dx * half, gy + dy * half);
     g.addColorStop(0, css(sh.gradient[0]));
     g.addColorStop(1, css(sh.gradient[1]));
     ctx.fillStyle = g;
     path();
     ctx.fill();
+    if (sh.stroke && sw > 0) {
+      ctx.save();
+      ctx.clip();
+      ctx.strokeStyle = css(sh.stroke);
+      ctx.lineWidth = sw * 2;
+      path();
+      ctx.stroke();
+      ctx.restore();
+    }
     return;
   }
-  const sw = Math.round(sh.stroke_width * scale);
   if (sh.kind === "line") {
     ctx.strokeStyle = css(sh.stroke ?? sh.fill);
     ctx.lineWidth = Math.max(1, sw || bh);
@@ -787,6 +946,28 @@ function drawShape(ctx: Ctx2D, clip: Clip, x: number, y: number, bw: number, bh:
     ctx.stroke();
     ctx.restore();
   }
+}
+
+/** Vertices of triangle / regular polygon / star shapes (port of compositor.shape_points). */
+export function shapePoints(kind: string, sides: number, w: number, h: number): Array<[number, number]> {
+  const cx = (w - 1) / 2;
+  const cy = (h - 1) / 2;
+  if (kind === "triangle") return [[cx, 0], [w - 1, h - 1], [0, h - 1]];
+  const n = Math.max(3, Math.round(sides || 6));
+  const pts: Array<[number, number]> = [];
+  if (kind === "star") {
+    for (let i = 0; i < n * 2; i++) {
+      const a = -Math.PI / 2 + (Math.PI * i) / n;
+      const k = i % 2 === 0 ? 1 : 0.45;
+      pts.push([cx + cx * k * Math.cos(a), cy + cy * k * Math.sin(a)]);
+    }
+    return pts;
+  }
+  for (let i = 0; i < n; i++) {
+    const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
+    pts.push([cx + cx * Math.cos(a), cy + cy * Math.sin(a)]);
+  }
+  return pts;
 }
 
 function speechRanges(tl: Timeline): Array<[number, number]> {

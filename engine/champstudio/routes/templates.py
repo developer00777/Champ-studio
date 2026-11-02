@@ -54,17 +54,22 @@ async def template_detail(tid: str):
     return {**t, "llm_schema": templates.llm_schema(t)}
 
 
-def _preview_bytes(t: dict, aspect: str, brand_id: str | None, height: int) -> bytes:
+def _preview_bytes(t: dict, aspect: str, brand_id: str | None, height: int, at: float | None = None) -> bytes:
     kit = brands.get(brand_id)
-    key = hashlib.sha1(json.dumps([t, kit, aspect, height], sort_keys=True, default=str).encode()).hexdigest()[:16]
+    key = hashlib.sha1(json.dumps([t, kit, aspect, height, at], sort_keys=True, default=str).encode()).hexdigest()[:16]
     d = data_dir() / "template_previews"
     d.mkdir(exist_ok=True)
     p = d / f"{t['id']}-{key}.jpg"
     if p.exists():
         return p.read_bytes()
     tl = templates.preview_timeline(t, kit, aspect)
+    if t.get("overlay") and len(tl.background) == 9 and tl.background.endswith("00"):
+        tl.background = "#2E3442"  # overlays (lower thirds, callouts) need a backdrop to read in a thumbnail
     first = tl.tracks[0].clips[0] if tl.tracks and tl.tracks[0].clips else None
-    f = int((first.end if first else tl.duration) * 0.7) if tl.duration else 0
+    if at is not None:  # hover-scrub previews: a fraction of the whole template
+        f = min(max(0, tl.duration - 1), int(tl.duration * at))
+    else:
+        f = int((first.end if first else tl.duration) * 0.7) if tl.duration else 0
     w = int(round(tl.width * height / tl.height / 2) * 2)
     img = export.still(tl, f, width=w, height=height)
     buf = io.BytesIO()
@@ -74,9 +79,10 @@ def _preview_bytes(t: dict, aspect: str, brand_id: str | None, height: int) -> b
 
 
 @router.get("/api/templates/{tid}/preview.jpg")
-async def preview(tid: str, aspect: str = "16:9", brand: str | None = None, height: int = 270):
+async def preview(tid: str, aspect: str = "16:9", brand: str | None = None, height: int = 270, at: float | None = None):
     t = _template(tid)
-    data = await run_in_threadpool(_preview_bytes, t, aspect, brand, max(120, min(height, 720)))
+    at = None if at is None else round(max(0.0, min(1.0, at)), 2)
+    data = await run_in_threadpool(_preview_bytes, t, aspect, brand, max(120, min(height, 720)), at)
     return Response(data, media_type="image/jpeg", headers={"Cache-Control": "max-age=300"})
 
 
@@ -221,20 +227,125 @@ class GraphicRequest(BaseModel):
 
 @router.post("/api/templates/{tid}/graphic")
 async def graphic(tid: str, body: GraphicRequest):
-    """Compile a template into editor clips without generating anything
-    (Essential Graphics / MOGRT-style insertion of titles and overlays)."""
+    """Compile a template into ONE graphic clip without generating anything
+    (Essential Graphics / MOGRT-style: slots become the graphic's controls)."""
     t = _template(tid)
     kit = brands.get(body.brand_kit_id)
-    values = templates.with_defaults(t, body.values)
-    tl = templates.compile_timeline(t, {"values": values, "vo": {}, "music_id": None}, kit, body.aspect)
-    tracks = []
-    for tr in tl.video_tracks():
-        clips = []
-        for c in tr.clips:
-            c.start += body.start
-            clips.append(c.model_dump(by_alias=True))
-        tracks.append({"id": tr.id, "clips": clips})
-    return {"tracks": tracks, "duration": tl.duration}
+    clip = templates.graphic_clip(t, body.values, kit, body.aspect, start=body.start)
+    clip = Timeline(tracks=[{"id": "v", "kind": "video", "clips": [clip]}]).tracks[0].clips[0].model_dump(by_alias=True)
+    return {"clip": clip, "duration": clip["duration"]}
+
+
+class SaveGraphic(BaseModel):
+    clip: dict
+    name: str = Field(min_length=3, max_length=60)
+    category: str = "motion-graphics"
+    description: str = ""
+    aspect: str = "16:9"
+
+
+@router.post("/api/templates/from-graphic", dependencies=[editor_only])
+async def from_graphic(body: SaveGraphic, request: Request):
+    """Save a graphic clip from the editor as a team template (Premiere's "Export as Motion Graphics Template")."""
+    try:
+        t = template_from_graphic(body.clip, body.name, body.category, body.description, body.aspect)
+        saved = templates.save_user_template(t)
+    except (templates.TemplateError, ValueError) as e:
+        raise HTTPException(422, str(e)) from e
+    db.audit("template.from_graphic", saved["id"], {}, actor=actor(request)["id"])
+    return saved
+
+
+def template_from_graphic(clip: dict, name: str, category: str, description: str = "", aspect: str = "16:9") -> dict:
+    """Graphic clip → CST template (graphic: true). Controls become slots; layers keep
+    their bindings as {{slot}} placeholders; times go back to seconds."""
+    from ..timeline import Clip as _Clip
+
+    c = _Clip(**clip)
+    if c.type != "graphic" or not c.graphic:
+        raise ValueError("not a graphic clip")
+    fps = 30
+    props: dict = {}
+    defaults: dict = {}
+    for ctl in c.graphic.controls:
+        kind = {"text": "text", "color": "color", "number": "number", "media": "media"}.get(ctl.kind, "text")
+        prop: dict = {"x-kind": kind, "description": ctl.label or ctl.id}
+        if ctl.kind == "choice":
+            prop = {"type": "string", "enum": ctl.options, "description": ctl.label or ctl.id}
+        elif ctl.kind == "toggle":
+            prop = {"type": "boolean", "description": ctl.label or ctl.id}
+        elif kind in ("text",):
+            prop["type"] = "string"
+        elif kind == "number":
+            prop["type"] = "number"
+        elif kind == "color":
+            prop.update(type="string", pattern="^#[0-9A-Fa-f]{6,8}$")
+        props[ctl.id] = prop
+        if ctl.value not in (None, "") and kind != "media":
+            defaults[ctl.id] = ctl.value
+    sec = lambda f: round(f / fps, 3)  # noqa: E731
+    layers = []
+    for i, layer in enumerate(c.graphic.layers):
+        d = layer.model_dump(by_alias=True, exclude_none=True)
+        lid = re.sub(r"[^a-z0-9-]+", "-", (layer.id or f"l{i}").lower()).strip("-") or f"l{i}"
+        out: dict = {"id": lid, "name": layer.name or layer.type, "box": {"*": [round(v, 4) for v in layer.box]},
+                     "start": sec(layer.start), "hold": layer.hold}
+        if not layer.hold:
+            out["end"] = sec(layer.start + layer.duration)
+        bind = layer.bind or {}
+        if layer.type == "text":
+            out.update(type="text", text=bind.get("text", layer.text), style=d.get("style", {}))
+        elif layer.type == "shape":
+            out.update(type="shape", shape=d.get("shape", {}))
+        elif layer.type == "color":
+            out.update(type="color", color=layer.color)
+        elif layer.type in ("image", "video"):
+            slot = re.findall(r"\{\{\s*([a-z0-9_]+)", bind.get("asset_id", ""))
+            out.update(type="media", src={"$slot": slot[0]} if slot else {"asset_id": layer.asset_id},
+                       fit=layer.fit, motion="none")
+        else:
+            continue
+        for path, tmpl in bind.items():  # re-insert placeholders into style/shape paths
+            if path in ("text", "asset_id"):
+                continue
+            node, parts = out, path.split(".")
+            if parts[0] == "gradient":
+                node, parts = out.setdefault("shape", {}), ["gradient", parts[1]]
+                grad = node.get("gradient") or []
+                if int(parts[1]) < len(grad):
+                    grad[int(parts[1])] = tmpl
+                continue
+            for p in parts[:-1]:
+                node = node.setdefault(p, {})
+            node[parts[-1]] = tmpl
+        if layer.transform.model_dump() != {"x": 0.0, "y": 0.0, "scale": 1.0, "rotation": 0.0, "opacity": 1.0}:
+            out["transform"] = layer.transform.model_dump()
+        if layer.keyframes:
+            out["keyframes"] = {k: [[sec(kf.f), kf.v, kf.ease] for kf in v] for k, v in layer.keyframes.items()}
+        for k in ("anim_in", "anim_out"):
+            a = getattr(layer, k)
+            if a:
+                out[k] = {"type": a.type, "sec": sec(a.duration)}
+        if layer.text_anim:
+            ta = layer.text_anim.model_dump()
+            out["text_anim"] = {**ta, "duration": sec(ta["duration"]), "stagger": sec(ta["stagger"]),
+                                "delay": sec(ta["delay"])}
+        if layer.counter:
+            co = layer.counter.model_dump()
+            out["counter"] = {**co, "duration": sec(co["duration"]), "delay": sec(co["delay"])}
+        if layer.pin:
+            out["pin"] = {**layer.pin.model_dump(), "to": re.sub(r"[^a-z0-9-]+", "-", layer.pin.to.lower()).strip("-")}
+        if layer.mask:
+            out["mask"] = layer.mask
+        layers.append(out)
+    tid = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")[:40] or "graphic"
+    return {"cst": "1.0", "id": f"team-{tid}", "name": name, "category": category,
+            "description": description or "Saved from the editor", "tags": ["team", "graphic"],
+            "aspects": [aspect], "overlay": True, "graphic": True,
+            "slots": {"type": "object", "required": [], "properties": props}, "defaults": defaults,
+            "background": "#00000000",
+            "scenes": [{"id": "main", "duration": {"mode": "fixed", "sec": sec(c.duration)}, "layers": layers}],
+            "captions": {"enabled": False}}
 
 
 class SaveTemplate(BaseModel):

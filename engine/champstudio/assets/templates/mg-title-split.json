@@ -1,0 +1,140 @@
+{
+  "cst": "1.0",
+  "id": "mg-title-split",
+  "name": "Split Title",
+  "category": "motion-graphics",
+  "description": "Two-line title: the first line slides in from the left, the accent line from the right.",
+  "tags": [
+    "graphic",
+    "title",
+    "two-line",
+    "typography"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "line_1"
+    ],
+    "properties": {
+      "line_1": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "First line"
+      },
+      "line_2": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Second line (accent)"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "line_1": "Less guessing.",
+    "line_2": "More closing."
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 4.5
+      },
+      "layers": [
+        {
+          "id": "line1",
+          "type": "text",
+          "name": "Line 1",
+          "text": "{{line_1}}",
+          "box": {
+            "*": [
+              0.08,
+              0.33,
+              0.84,
+              0.16
+            ],
+            "vertical": [
+              0.06,
+              0.4,
+              0.88,
+              0.09
+            ]
+          },
+          "style": {
+            "$brand": "styles.title",
+            "shadow": true,
+            "bg_color": "",
+            "size": 110,
+            "color": "#FFFFFF"
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.5
+          },
+          "anim_out": {
+            "type": "slide-left",
+            "sec": 0.35
+          }
+        },
+        {
+          "id": "line2",
+          "type": "text",
+          "name": "Line 2",
+          "text": "{{line_2}}",
+          "box": {
+            "*": [
+              0.08,
+              0.5,
+              0.84,
+              0.16
+            ],
+            "vertical": [
+              0.06,
+              0.5,
+              0.88,
+              0.09
+            ]
+          },
+          "start": 0.2,
+          "style": {
+            "$brand": "styles.title",
+            "shadow": true,
+            "bg_color": "",
+            "size": 110,
+            "color": {
+              "$slot": "accent"
+            }
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.5
+          },
+          "anim_out": {
+            "type": "slide-right",
+            "sec": 0.35
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

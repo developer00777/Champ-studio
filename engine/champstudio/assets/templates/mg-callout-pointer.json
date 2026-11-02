@@ -1,0 +1,265 @@
+{
+  "cst": "1.0",
+  "id": "mg-callout-pointer",
+  "name": "Pointer Callout",
+  "category": "motion-graphics",
+  "description": "A pulsing dot with a leader line and a label that sizes itself — point at anything on screen.",
+  "tags": [
+    "graphic",
+    "callout",
+    "annotation",
+    "explainer"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "label"
+    ],
+    "properties": {
+      "label": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Label"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "label": "Live pipeline view"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "ring",
+          "type": "shape",
+          "name": "Pulse ring",
+          "shape": {
+            "kind": "ellipse",
+            "fill": null,
+            "stroke": {
+              "$slot": "accent"
+            },
+            "stroke_width": 3
+          },
+          "box": {
+            "*": [
+              0.285,
+              0.5345,
+              0.04,
+              0.0711
+            ],
+            "vertical": [
+              0.235,
+              0.52,
+              0.08,
+              0.045
+            ]
+          },
+          "keyframes": {
+            "scale": [
+              [
+                0,
+                0.4,
+                "ease-out"
+              ],
+              [
+                1.0,
+                1.5
+              ]
+            ],
+            "opacity": [
+              [
+                0,
+                1,
+                "ease-in"
+              ],
+              [
+                1.0,
+                0
+              ]
+            ]
+          }
+        },
+        {
+          "id": "dot",
+          "type": "shape",
+          "name": "Dot",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$slot": "accent"
+            },
+            "stroke": "#FFFFFF",
+            "stroke_width": 3
+          },
+          "box": {
+            "*": [
+              0.295,
+              0.5523,
+              0.02,
+              0.0356
+            ],
+            "vertical": [
+              0.255,
+              0.5313,
+              0.04,
+              0.0225
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "line",
+          "type": "shape",
+          "name": "Leader",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "start": 0.2,
+          "box": {
+            "*": [
+              0.315,
+              0.568,
+              0.14,
+              0.004
+            ],
+            "vertical": [
+              0.295,
+              0.5413,
+              0.12,
+              0.0025
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "pill",
+          "type": "shape",
+          "name": "Label box",
+          "shape": {
+            "kind": "rect",
+            "fill": "#111318EB",
+            "radius": 0.3
+          },
+          "start": 0.4,
+          "box": {
+            "*": [
+              0.47,
+              0.54,
+              0.4,
+              0.056
+            ],
+            "vertical": [
+              0.43,
+              0.525,
+              0.5,
+              0.034
+            ]
+          },
+          "pin": {
+            "to": "label",
+            "pad": [
+              0.014,
+              0.01,
+              0.014,
+              0.01
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.25
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "label",
+          "type": "text",
+          "name": "Label",
+          "text": "{{label}}",
+          "start": 0.45,
+          "box": {
+            "*": [
+              0.47,
+              0.54,
+              0.4,
+              0.056
+            ],
+            "vertical": [
+              0.43,
+              0.525,
+              0.5,
+              0.034
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 34,
+            "weight": 700,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "text_anim": {
+            "by": "char",
+            "type": "fade",
+            "duration": 0.2,
+            "stagger": 0.02,
+            "delay": 0.0,
+            "order": "forward",
+            "out": false
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

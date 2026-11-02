@@ -1,0 +1,243 @@
+{
+  "cst": "1.0",
+  "id": "mg-cta-swipe-up",
+  "name": "Swipe Up",
+  "category": "motion-graphics",
+  "description": "Bouncing chevrons above a short call to action — made for stories and reels.",
+  "tags": [
+    "graphic",
+    "cta",
+    "social",
+    "vertical"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "cta"
+    ],
+    "properties": {
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "cta": "Swipe up to learn more"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 4
+      },
+      "layers": [
+        {
+          "id": "chev0",
+          "type": "shape",
+          "name": "Chevron 1",
+          "shape": {
+            "kind": "triangle",
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.48,
+              0.66,
+              0.04,
+              0.04
+            ],
+            "vertical": [
+              0.45,
+              0.7,
+              0.1,
+              0.028
+            ]
+          },
+          "start": 0.0,
+          "keyframes": {
+            "y": [
+              [
+                0,
+                0,
+                "ease"
+              ],
+              [
+                0.4,
+                -0.015,
+                "ease"
+              ],
+              [
+                0.8,
+                0,
+                "ease"
+              ],
+              [
+                1.2,
+                -0.015,
+                "ease"
+              ],
+              [
+                1.6,
+                0,
+                "ease"
+              ],
+              [
+                2.0,
+                -0.015,
+                "ease"
+              ],
+              [
+                2.4,
+                0
+              ]
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "chev1",
+          "type": "shape",
+          "name": "Chevron 2",
+          "shape": {
+            "kind": "triangle",
+            "fill": "#FFFFFFB3"
+          },
+          "box": {
+            "*": [
+              0.48,
+              0.7050000000000001,
+              0.04,
+              0.04
+            ],
+            "vertical": [
+              0.45,
+              0.73,
+              0.1,
+              0.028
+            ]
+          },
+          "start": 0.1,
+          "keyframes": {
+            "y": [
+              [
+                0,
+                0,
+                "ease"
+              ],
+              [
+                0.4,
+                -0.015,
+                "ease"
+              ],
+              [
+                0.8,
+                0,
+                "ease"
+              ],
+              [
+                1.2,
+                -0.015,
+                "ease"
+              ],
+              [
+                1.6,
+                0,
+                "ease"
+              ],
+              [
+                2.0,
+                -0.015,
+                "ease"
+              ],
+              [
+                2.4,
+                0
+              ]
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "cta",
+          "type": "text",
+          "name": "Call to action",
+          "text": "{{cta}}",
+          "box": {
+            "*": [
+              0.2,
+              0.78,
+              0.6,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.77,
+              0.84,
+              0.045
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "size": 40,
+            "weight": 800,
+            "color": "#FFFFFF"
+          },
+          "text_anim": {
+            "by": "word",
+            "type": "rise",
+            "duration": 0.3,
+            "stagger": 0.06,
+            "delay": 0.2,
+            "order": "forward",
+            "out": false
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

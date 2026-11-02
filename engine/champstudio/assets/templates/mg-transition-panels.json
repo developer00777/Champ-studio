@@ -1,0 +1,159 @@
+{
+  "cst": "1.0",
+  "id": "mg-transition-panels",
+  "name": "Panel Wipe",
+  "category": "motion-graphics",
+  "description": "Two brand panels sweep across the frame — drop it over a cut.",
+  "tags": [
+    "graphic",
+    "transition",
+    "wipe",
+    "stinger"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [],
+    "properties": {
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      },
+      "second": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Second panel colour"
+      }
+    }
+  },
+  "defaults": {
+    "second": "#111318"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 1.2
+      },
+      "layers": [
+        {
+          "id": "p1",
+          "type": "shape",
+          "name": "Panel 1",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "box": {
+            "*": [
+              0,
+              0,
+              1,
+              1
+            ],
+            "vertical": [
+              0,
+              0,
+              1,
+              1
+            ]
+          },
+          "keyframes": {
+            "x": [
+              [
+                0,
+                -1.0,
+                "ease-out"
+              ],
+              [
+                0.45,
+                0,
+                "hold"
+              ],
+              [
+                0.6,
+                0,
+                "ease-in"
+              ],
+              [
+                1.1,
+                1.0
+              ]
+            ]
+          }
+        },
+        {
+          "id": "p2",
+          "type": "shape",
+          "name": "Panel 2",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "second"
+            }
+          },
+          "box": {
+            "*": [
+              0,
+              0,
+              1,
+              1
+            ],
+            "vertical": [
+              0,
+              0,
+              1,
+              1
+            ]
+          },
+          "keyframes": {
+            "x": [
+              [
+                0,
+                -1.0,
+                "ease-out"
+              ],
+              [
+                0.15,
+                -1.0,
+                "ease-out"
+              ],
+              [
+                0.55,
+                0,
+                "hold"
+              ],
+              [
+                0.65,
+                0,
+                "ease-in"
+              ],
+              [
+                1.15,
+                1.0
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

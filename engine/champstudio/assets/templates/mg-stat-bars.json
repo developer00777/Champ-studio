@@ -1,0 +1,487 @@
+{
+  "cst": "1.0",
+  "id": "mg-stat-bars",
+  "name": "Bar Chart",
+  "category": "motion-graphics",
+  "description": "Three horizontal bars that grow to their values (0–100) with counting labels.",
+  "tags": [
+    "graphic",
+    "stat",
+    "data",
+    "chart"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [],
+    "properties": {
+      "title": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Chart title"
+      },
+      "label_1": {
+        "type": "string",
+        "maxLength": 20,
+        "x-kind": "text",
+        "description": "Bar 1 label"
+      },
+      "label_2": {
+        "type": "string",
+        "maxLength": 20,
+        "x-kind": "text",
+        "description": "Bar 2 label"
+      },
+      "label_3": {
+        "type": "string",
+        "maxLength": 20,
+        "x-kind": "text",
+        "description": "Bar 3 label"
+      },
+      "value_1": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "x-kind": "number",
+        "description": "Bar 1 value (0–100)"
+      },
+      "value_2": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "x-kind": "number",
+        "description": "Bar 2 value (0–100)"
+      },
+      "value_3": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "x-kind": "number",
+        "description": "Bar 3 value (0–100)"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "title": "Win rate by segment",
+    "label_1": "Enterprise",
+    "value_1": 64,
+    "label_2": "Mid-market",
+    "value_2": 48,
+    "label_3": "SMB",
+    "value_3": 31
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 6
+      },
+      "layers": [
+        {
+          "id": "title",
+          "type": "text",
+          "name": "Title",
+          "text": "{{title}}",
+          "if": "title",
+          "box": {
+            "*": [
+              0.08,
+              0.2,
+              0.84,
+              0.1
+            ],
+            "vertical": [
+              0.06,
+              0.3,
+              0.88,
+              0.05
+            ]
+          },
+          "style": {
+            "$brand": "styles.title",
+            "shadow": true,
+            "bg_color": "",
+            "size": 64,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "text_anim": {
+            "by": "word",
+            "type": "rise",
+            "duration": 0.3,
+            "stagger": 0.06,
+            "delay": 0.0,
+            "order": "forward",
+            "out": false
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "lab0",
+          "type": "text",
+          "name": "Label 1",
+          "text": "{{label_1}}",
+          "start": 0.3,
+          "box": {
+            "*": [
+              0.08,
+              0.36,
+              0.19,
+              0.08
+            ],
+            "vertical": [
+              0.06,
+              0.39,
+              0.22,
+              0.04
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 34,
+            "weight": 600,
+            "color": "#FFFFFFD9",
+            "align": "right"
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "bar0",
+          "type": "shape",
+          "name": "Bar 1",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            },
+            "radius": 0.2
+          },
+          "start": 0.35,
+          "box": {
+            "*": [
+              0.29,
+              0.37,
+              0.3,
+              0.06
+            ],
+            "vertical": [
+              0.3,
+              0.395,
+              0.3,
+              0.03
+            ]
+          },
+          "bind": {
+            "box.2": "{{value_1}} * 0.0055"
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.9
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "val0",
+          "type": "text",
+          "name": "Value 1",
+          "text": "{{value_1}}",
+          "start": 0.35,
+          "box": {
+            "*": [
+              0.85,
+              0.36,
+              0.1,
+              0.08
+            ],
+            "vertical": [
+              0.86,
+              0.39,
+              0.12,
+              0.04
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 40,
+            "weight": 800,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "counter": {
+            "start": 0,
+            "duration": 0.9
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "lab1",
+          "type": "text",
+          "name": "Label 2",
+          "text": "{{label_2}}",
+          "start": 0.55,
+          "box": {
+            "*": [
+              0.08,
+              0.49,
+              0.19,
+              0.08
+            ],
+            "vertical": [
+              0.06,
+              0.465,
+              0.22,
+              0.04
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 34,
+            "weight": 600,
+            "color": "#FFFFFFD9",
+            "align": "right"
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "bar1",
+          "type": "shape",
+          "name": "Bar 2",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            },
+            "radius": 0.2
+          },
+          "start": 0.6,
+          "box": {
+            "*": [
+              0.29,
+              0.5,
+              0.3,
+              0.06
+            ],
+            "vertical": [
+              0.3,
+              0.47000000000000003,
+              0.3,
+              0.03
+            ]
+          },
+          "bind": {
+            "box.2": "{{value_2}} * 0.0055"
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.9
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "val1",
+          "type": "text",
+          "name": "Value 2",
+          "text": "{{value_2}}",
+          "start": 0.6,
+          "box": {
+            "*": [
+              0.85,
+              0.49,
+              0.1,
+              0.08
+            ],
+            "vertical": [
+              0.86,
+              0.465,
+              0.12,
+              0.04
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 40,
+            "weight": 800,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "counter": {
+            "start": 0,
+            "duration": 0.9
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "lab2",
+          "type": "text",
+          "name": "Label 3",
+          "text": "{{label_3}}",
+          "start": 0.8,
+          "box": {
+            "*": [
+              0.08,
+              0.62,
+              0.19,
+              0.08
+            ],
+            "vertical": [
+              0.06,
+              0.54,
+              0.22,
+              0.04
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 34,
+            "weight": 600,
+            "color": "#FFFFFFD9",
+            "align": "right"
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "bar2",
+          "type": "shape",
+          "name": "Bar 3",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            },
+            "radius": 0.2
+          },
+          "start": 0.85,
+          "box": {
+            "*": [
+              0.29,
+              0.63,
+              0.3,
+              0.06
+            ],
+            "vertical": [
+              0.3,
+              0.545,
+              0.3,
+              0.03
+            ]
+          },
+          "bind": {
+            "box.2": "{{value_3}} * 0.0055"
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.9
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "val2",
+          "type": "text",
+          "name": "Value 3",
+          "text": "{{value_3}}",
+          "start": 0.85,
+          "box": {
+            "*": [
+              0.85,
+              0.62,
+              0.1,
+              0.08
+            ],
+            "vertical": [
+              0.86,
+              0.54,
+              0.12,
+              0.04
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 40,
+            "weight": 800,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "counter": {
+            "start": 0,
+            "duration": 0.9
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

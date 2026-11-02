@@ -1,0 +1,297 @@
+{
+  "cst": "1.0",
+  "id": "mg-social-follow",
+  "name": "Follow Button",
+  "category": "motion-graphics",
+  "description": "A button that pulses while a cursor taps it, with your handle underneath.",
+  "tags": [
+    "graphic",
+    "social",
+    "cta",
+    "subscribe"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "cta"
+    ],
+    "properties": {
+      "cta": {
+        "type": "string",
+        "maxLength": 20,
+        "x-kind": "text",
+        "description": "Button text"
+      },
+      "handle": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Handle or channel"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "cta": "Follow",
+    "handle": "@championsgroup"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 4.5
+      },
+      "layers": [
+        {
+          "id": "button",
+          "type": "shape",
+          "name": "Button",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$slot": "accent"
+            },
+            "radius": 0.5
+          },
+          "box": {
+            "*": [
+              0.4,
+              0.74,
+              0.2,
+              0.08
+            ],
+            "vertical": [
+              0.3,
+              0.72,
+              0.4,
+              0.045
+            ]
+          },
+          "pin": {
+            "to": "cta",
+            "pad": [
+              0.035,
+              0.018,
+              0.035,
+              0.018
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "keyframes": {
+            "scale": [
+              [
+                1.0,
+                1
+              ],
+              [
+                1.12,
+                0.9,
+                "ease-out"
+              ],
+              [
+                1.3,
+                1.06
+              ],
+              [
+                1.5,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "id": "cta",
+          "type": "text",
+          "name": "Button text",
+          "text": "{{cta}}",
+          "box": {
+            "*": [
+              0.4,
+              0.74,
+              0.2,
+              0.08
+            ],
+            "vertical": [
+              0.3,
+              0.72,
+              0.4,
+              0.045
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 46,
+            "weight": 800,
+            "color": "#FFFFFF"
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "keyframes": {
+            "scale": [
+              [
+                1.0,
+                1
+              ],
+              [
+                1.12,
+                0.9,
+                "ease-out"
+              ],
+              [
+                1.3,
+                1.06
+              ],
+              [
+                1.5,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "id": "cursor",
+          "type": "shape",
+          "name": "Cursor",
+          "shape": {
+            "kind": "triangle",
+            "fill": "#FFFFFF",
+            "stroke": "#111318",
+            "stroke_width": 3
+          },
+          "box": {
+            "*": [
+              0.52,
+              0.79,
+              0.022,
+              0.05
+            ],
+            "vertical": [
+              0.56,
+              0.75,
+              0.045,
+              0.03
+            ]
+          },
+          "start": 0.3,
+          "transform": {
+            "rotation": -25
+          },
+          "keyframes": {
+            "x": [
+              [
+                0,
+                0.16
+              ],
+              [
+                0.8,
+                0,
+                "ease-out"
+              ]
+            ],
+            "y": [
+              [
+                0,
+                0.12
+              ],
+              [
+                0.8,
+                0
+              ]
+            ],
+            "scale": [
+              [
+                0.8,
+                1
+              ],
+              [
+                0.85,
+                0.8
+              ],
+              [
+                1.0,
+                1
+              ]
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.2
+          },
+          "end": 2.0
+        },
+        {
+          "id": "handle",
+          "type": "text",
+          "name": "Handle",
+          "text": "{{handle}}",
+          "if": "handle",
+          "start": 0.6,
+          "box": {
+            "*": [
+              0.3,
+              0.84,
+              0.4,
+              0.05
+            ],
+            "vertical": [
+              0.15,
+              0.8,
+              0.7,
+              0.03
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "size": 30,
+            "weight": 600,
+            "color": "#FFFFFF"
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

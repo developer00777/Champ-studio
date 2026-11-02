@@ -96,6 +96,117 @@ function roundRect(ctx: Ctx, x1: number, y1: number, x2: number, y2: number, r: 
 
 const cache = new Map<string, HTMLCanvasElement>();
 
+export interface TextLayout {
+  lines: string[];
+  size: number;
+  spacing: number;
+  ascent: number;
+  descent: number;
+  placements: Array<{ x: number; y: number; word: string; idx: number; line: number }>;
+  boxes: Array<[number, number, number, number]>;
+  font: string;
+}
+
+const layouts = new Map<string, TextLayout>();
+
+/** Where every word and line lands in a w×h box (port of text.layout). */
+export function textLayout(text: string, style: TextStyle, w: number, h: number, scale: number): TextLayout {
+  w = Math.max(1, Math.round(w));
+  h = Math.max(1, Math.round(h));
+  const key = JSON.stringify([text, style, w, h, scale]);
+  const hit = layouts.get(key);
+  if (hit) return hit;
+  if (layouts.size > 400) layouts.clear();
+  const ctx = mctx();
+  if (style.uppercase) text = text.toUpperCase();
+  const { lines, size, spacing } = fit(ctx, text, style, w, h, scale);
+  ctx.font = fontString(style, size);
+  const m = ctx.measureText("Hg");
+  const ascent = m.fontBoundingBoxAscent || size * 0.9;
+  const descent = m.fontBoundingBoxDescent || size * 0.25;
+  const lh = size * style.line_height;
+  const blockH = lh * (lines.length - 1) + ascent + descent;
+  const y0 = style.valign === "top" ? 0 : style.valign === "bottom" ? h - blockH : (h - blockH) / 2;
+  const padX = style.bg_color ? style.bg_padding * size : 0;
+  const placements: TextLayout["placements"] = [];
+  const boxes: TextLayout["boxes"] = [];
+  let wi = 0;
+  lines.forEach((line, i) => {
+    const lw = textWidth(ctx, line, spacing);
+    const x = style.align === "left" ? padX : style.align === "right" ? w - lw - padX : (w - lw) / 2;
+    const y = y0 + i * lh;
+    boxes.push([x, y, x + lw, y + ascent + descent]);
+    let cursor = x;
+    for (const word of line.split(" ")) {
+      placements.push({ x: cursor, y, word, idx: wi++, line: i });
+      cursor += textWidth(ctx, `${word} `, spacing);
+    }
+  });
+  const out = { lines, size, spacing, ascent, descent, placements, boxes, font: fontString(style, size) };
+  layouts.set(key, out);
+  return out;
+}
+
+/** Bounds of laid-out text including its background pill, in box px (pins wrap this). */
+export function contentBbox(text: string, style: TextStyle, w: number, h: number, scale: number): [number, number, number, number] | null {
+  if (!text.trim()) return null;
+  const lay = textLayout(text, style, w, h, scale);
+  const boxes = lay.boxes.filter((b) => b[2] - b[0] >= 1);
+  if (!boxes.length) return null;
+  let x0 = Math.min(...boxes.map((b) => b[0]));
+  let y0 = Math.min(...boxes.map((b) => b[1]));
+  let x1 = Math.max(...boxes.map((b) => b[2]));
+  let y1 = Math.max(...boxes.map((b) => b[3]));
+  if (style.bg_color) {
+    const pad = style.bg_padding * lay.size;
+    x0 -= pad;
+    x1 += pad;
+    y0 -= pad * 0.6;
+    y1 += pad * 0.6;
+  }
+  return [x0, y0, x1, y1];
+}
+
+/** One cell per char / word / line, tiling the w×h text image exactly (port of text.unit_cells). */
+export function unitCells(text: string, style: TextStyle, w: number, h: number, scale: number, by: "char" | "word" | "line"): Array<[number, number, number, number]> {
+  w = Math.max(1, Math.round(w));
+  h = Math.max(1, Math.round(h));
+  if (!text.trim()) return [];
+  const lay = textLayout(text, style, w, h, scale);
+  const ctx = mctx();
+  ctx.font = lay.font;
+  const ext = lay.ascent + lay.descent;
+  let rows: Array<Array<[number, number]>> = lay.boxes.map(() => []);
+  if (by === "line") rows = lay.boxes.map((b) => (b[2] - b[0] >= 1 ? [[b[0], b[2]] as [number, number]] : []));
+  else
+    for (const p of lay.placements) {
+      if (by === "word") {
+        if (p.word) rows[p.line]!.push([p.x, p.x + textWidth(ctx, p.word, lay.spacing)]);
+        continue;
+      }
+      let cx = p.x;
+      for (const ch of p.word) {
+        const cw = ctx.measureText(ch).width;
+        if (ch.trim()) rows[p.line]!.push([cx, cx + cw]);
+        cx += cw + lay.spacing;
+      }
+    }
+  const tops = lay.boxes.map((b) => b[1]);
+  const cells: Array<[number, number, number, number]> = [];
+  rows.forEach((units, li) => {
+    const ya = li === 0 ? 0 : Math.round((tops[li - 1]! + ext + tops[li]!) / 2);
+    const yb = li === rows.length - 1 ? h : Math.round((tops[li]! + ext + tops[li + 1]!) / 2);
+    units.sort((a, b) => a[0] - b[0]);
+    units.forEach(([a, b], ui) => {
+      let xa = ui === 0 ? 0 : Math.round((units[ui - 1]![1] + a) / 2);
+      let xb = ui === units.length - 1 ? w : Math.round((b + units[ui + 1]![0]) / 2);
+      if (by === "line") [xa, xb] = [0, w];
+      if (xb > xa && yb > ya) cells.push([xa, ya, xb, yb]);
+    });
+  });
+  return cells;
+}
+
 /** Rasterize text into a w×h canvas (cached). */
 export function renderText(text: string, style: TextStyle, w: number, h: number, scale: number, visibleChars: number | null = null, highlightWord: number | null = null): HTMLCanvasElement | null {
   w = Math.max(1, Math.round(w));

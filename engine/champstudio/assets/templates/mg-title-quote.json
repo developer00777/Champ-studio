@@ -1,0 +1,197 @@
+{
+  "cst": "1.0",
+  "id": "mg-title-quote",
+  "name": "Quote Card",
+  "category": "motion-graphics",
+  "description": "Large serif quote that fades in word by word, with an accent quote mark and attribution.",
+  "tags": [
+    "graphic",
+    "title",
+    "quote",
+    "testimonial",
+    "social"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "quote"
+    ],
+    "properties": {
+      "quote": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "text",
+        "description": "Quote"
+      },
+      "author": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Who said it"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "quote": "We cut our forecasting time in half and finally trust the number.",
+    "author": "Dana Lee, CRO at Northwind"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 6
+      },
+      "layers": [
+        {
+          "id": "mark",
+          "type": "text",
+          "name": "Quote mark",
+          "text": "“",
+          "box": {
+            "*": [
+              0.12,
+              0.1,
+              0.14,
+              0.26
+            ],
+            "vertical": [
+              0.08,
+              0.17,
+              0.3,
+              0.17
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "font": "Playfair Display",
+            "size": 240,
+            "weight": 700,
+            "color": {
+              "$slot": "accent"
+            },
+            "align": "left",
+            "valign": "top",
+            "fit": "none"
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "quote",
+          "type": "text",
+          "name": "Quote",
+          "text": "{{quote}}",
+          "box": {
+            "*": [
+              0.15,
+              0.3,
+              0.7,
+              0.32
+            ],
+            "vertical": [
+              0.1,
+              0.34,
+              0.8,
+              0.22
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "font": "Playfair Display",
+            "size": 62,
+            "weight": 700,
+            "color": "#FFFFFF",
+            "align": "left",
+            "line_height": 1.2
+          },
+          "text_anim": {
+            "by": "word",
+            "type": "fade",
+            "duration": 0.3,
+            "stagger": 0.05,
+            "delay": 0.25,
+            "order": "forward",
+            "out": false
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "author",
+          "type": "text",
+          "name": "Author",
+          "text": "— {{author}}",
+          "if": "author",
+          "start": 1.2,
+          "box": {
+            "*": [
+              0.15,
+              0.65,
+              0.7,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.58,
+              0.8,
+              0.035
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 30,
+            "weight": 700,
+            "color": {
+              "$slot": "accent"
+            },
+            "align": "left",
+            "uppercase": true,
+            "letter_spacing": 0.08
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

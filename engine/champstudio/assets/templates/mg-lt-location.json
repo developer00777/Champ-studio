@@ -1,0 +1,220 @@
+{
+  "cst": "1.0",
+  "id": "mg-lt-location",
+  "name": "Location Tag",
+  "category": "motion-graphics",
+  "description": "Map-pin marker that drops in beside a place name and a detail line.",
+  "tags": [
+    "graphic",
+    "lower third",
+    "location",
+    "event"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "place"
+    ],
+    "properties": {
+      "place": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Place"
+      },
+      "detail": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Detail, e.g. date or venue"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "place": "Austin, Texas",
+    "detail": "SaaS Summit · Day 2"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "tip",
+          "type": "shape",
+          "name": "Pin tip",
+          "shape": {
+            "kind": "triangle",
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.072,
+              0.758,
+              0.022,
+              0.03
+            ],
+            "vertical": [
+              0.083,
+              0.682,
+              0.04,
+              0.018
+            ]
+          },
+          "transform": {
+            "rotation": 180
+          },
+          "anim_in": {
+            "type": "slide-down",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "head",
+          "type": "shape",
+          "name": "Pin head",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$slot": "accent"
+            },
+            "stroke": "#FFFFFF",
+            "stroke_width": 4
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.72,
+              0.026,
+              0.0462
+            ],
+            "vertical": [
+              0.08,
+              0.66,
+              0.046,
+              0.026
+            ]
+          },
+          "anim_in": {
+            "type": "slide-down",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "place",
+          "type": "text",
+          "name": "Place",
+          "text": "{{place}}",
+          "box": {
+            "*": [
+              0.105,
+              0.712,
+              0.6,
+              0.068
+            ],
+            "vertical": [
+              0.14,
+              0.655,
+              0.78,
+              0.04
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "size": 50,
+            "weight": 800,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "text_anim": {
+            "by": "word",
+            "type": "rise",
+            "duration": 0.35,
+            "stagger": 0.08,
+            "delay": 0.2,
+            "order": "forward",
+            "out": false
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "detail",
+          "type": "text",
+          "name": "Detail",
+          "text": "{{detail}}",
+          "box": {
+            "*": [
+              0.105,
+              0.783,
+              0.6,
+              0.045
+            ],
+            "vertical": [
+              0.14,
+              0.698,
+              0.78,
+              0.026
+            ]
+          },
+          "start": 0.5,
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "size": 26,
+            "weight": 600,
+            "color": "#FFFFFFD0",
+            "align": "left",
+            "uppercase": true,
+            "letter_spacing": 0.1
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

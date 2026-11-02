@@ -22,6 +22,7 @@ from PIL import Image, ImageDraw
 
 from .. import library
 from ..config import data_dir
+from .. import graphics as gfx
 from ..timeline import Clip, Timeline, Track, prop
 from . import media, text as textmod
 
@@ -219,13 +220,13 @@ class Compositor:
     """Evaluate `timeline` at output size (defaults to the timeline's own size)."""
 
     def __init__(self, timeline: Timeline, *, width: int | None = None, height: int | None = None,
-                 sequential: bool = False) -> None:
+                 sequential: bool = False, text_scale: float | None = None) -> None:
         self.tl = timeline
         self.W = int(width or timeline.width)
         self.H = int(height or timeline.height)
         self.W -= self.W % 2
         self.H -= self.H % 2
-        self.text_scale = self.H / 1080.0
+        self.text_scale = text_scale or self.H / 1080.0
         self.sequential = sequential
         self.fps = timeline.fps
         self._readers: dict[str, media.FrameReader] = {}
@@ -233,6 +234,8 @@ class Compositor:
         self._text: dict[tuple, np.ndarray] = {}
         self._sources: dict[str, str | None] = {}
         self._nested: dict[str, Compositor] = {}
+        self._graphics: dict[str, tuple[str, Compositor]] = {}
+        self._box_override: dict[str, tuple[int, int, int, int]] = {}
         self._caption_lines: dict[str, list[list[int]]] = {}
         self._bbox: dict[int, tuple] = {}
         self._bg_frame: np.ndarray | None = None
@@ -258,6 +261,7 @@ class Compositor:
 
     def draw(self, canvas: np.ndarray, f: int) -> None:
         tracks = [t for t in self.tl.video_tracks() if not t.hidden]
+        self._resolve_pins(tracks, f)
         for track in tracks:
             self._draw_track(canvas, track, f)
 
@@ -267,6 +271,8 @@ class Compositor:
         self._readers.clear()
         for n in self._nested.values():
             n.close()
+        for _, g in self._graphics.values():
+            g.close()
 
     # ── tracks / transitions ──
 
@@ -288,8 +294,50 @@ class Compositor:
         for c in active:  # overlapping clips on one track: later start draws on top
             if c.type == "adjustment":
                 self._apply_adjustment_layer(canvas, c, f)
+            elif c.mask:
+                self._draw_masked(canvas, c, f)
             else:
                 self._draw_clip(canvas, c, f)
+
+    def _draw_masked(self, canvas: np.ndarray, clip: Clip, f: int) -> None:
+        """Graphic layer clipped to (or cut out of) everything drawn beneath it."""
+        tmp = np.zeros_like(canvas)
+        self._draw_clip(tmp, clip, f)
+        below = canvas[..., 3].astype(np.float32) / 255.0
+        k = below if clip.mask == "below" else 1.0 - below
+        tmp[..., 3] = (tmp[..., 3].astype(np.float32) * k).astype(np.uint8)
+        over(canvas, tmp, 0, 0)
+
+    def _resolve_pins(self, tracks: list[Track], f: int) -> None:
+        """Responsive layout: pinned layers wrap the current content of their target."""
+        self._box_override.clear()
+        active = {c.id: c for t in tracks for c in t.clips if c.enabled and c.start <= f < c.end}
+        for c in active.values():
+            if not c.pin or c.pin.to not in active:
+                continue
+            target = active[c.pin.to]
+            tx, ty, tw, th = self._box_px(target)
+            f_rel = f - target.start
+            ox = prop(target, "x", f_rel, target.transform.x) * self.W
+            oy = prop(target, "y", f_rel, target.transform.y) * self.H
+            bb = None
+            if target.type == "text":
+                text = gfx.counter_text(target.text, target.counter, f_rel)
+                bb = textmod.content_bbox(text, target.style, tw, th, self.text_scale)
+                if bb is None:  # empty text: collapse the pinned layer
+                    self._box_override[c.id] = (0, 0, 0, 0)
+                    continue
+            x0, y0, x1, y1 = bb or (0, 0, tw, th)
+            edges = {"left": tx + x0 + ox, "top": ty + y0 + oy, "right": tx + x1 + ox, "bottom": ty + y1 + oy}
+            px, py, pw, ph = self._box_px(c)
+            mine = {"left": px, "top": py, "right": px + pw, "bottom": py + ph}
+            pl, pt, pr, pb = (list(c.pin.pad) + [0, 0, 0, 0])[:4]
+            pad = {"left": -pl * self.W, "top": -pt * self.H, "right": pr * self.W, "bottom": pb * self.H}
+            for side in c.pin.sides:
+                mine[side] = edges[side] + pad[side]
+            x, y = int(round(mine["left"])), int(round(mine["top"]))
+            self._box_override[c.id] = (x, y, max(2, int(round(mine["right"])) - x),
+                                        max(2, int(round(mine["bottom"])) - y))
 
     def _draw_transition(self, canvas, a: Clip | None, b: Clip, f: int, kind: str, t: float) -> None:
         A = np.zeros((self.H, self.W, 4), np.uint8)
@@ -343,6 +391,8 @@ class Compositor:
     # ── clips ──
 
     def _box_px(self, clip: Clip) -> tuple[int, int, int, int]:
+        if clip.id in self._box_override:
+            return self._box_override[clip.id]
         x, y, w, h = (clip.box + [0, 0, 1, 1])[:4]
         bw = max(2, int(round(w * self.W)))
         bh = max(2, int(round(h * self.H)))
@@ -405,7 +455,7 @@ class Compositor:
                 if phase == "out":
                     opacity *= p
 
-        if opacity <= 0.001:
+        if opacity <= 0.001 or bw <= 0 or bh <= 0:
             return
         layer = self._content(clip, f, f_rel, bw, bh, visible_chars)
         if layer is None:
@@ -418,6 +468,9 @@ class Compositor:
             layer[:, cut:, 3] = 0
         cx = bx + bw / 2 + ox * self.W
         cy = by + bh / 2 + oy * self.H
+        if clip.type == "text" and clip.text_anim and wipe >= 1.0:
+            self._draw_text_units(canvas, clip, f_rel, layer, cx, cy, scale, rotation, opacity)
+            return
         if clip.type in ("text", "captions", "shape") and wipe >= 1.0:
             # most of a text/shape box is transparent: composite only the inked part
             key = id(layer)
@@ -464,16 +517,19 @@ class Compositor:
         if t == "shape":
             return self._shape(clip, bw, bh)
         if t == "text":
-            key = ("text", clip.text, clip.style.model_dump_json(), bw, bh, visible_chars)
+            text = gfx.counter_text(clip.text, clip.counter, f_rel)
+            key = ("text", text, clip.style.model_dump_json(), bw, bh, visible_chars)
             if key not in self._text:
                 if len(self._text) > 256:
                     self._text.clear()
-                img = textmod.render_text(clip.text, clip.style, bw, bh, scale=self.text_scale,
+                img = textmod.render_text(text, clip.style, bw, bh, scale=self.text_scale,
                                           visible_chars=visible_chars)
                 self._text[key] = np.asarray(img)
             return self._text[key]
         if t == "captions":
             return self._captions(clip, f, bw, bh)
+        if t == "graphic":
+            return self._graphic(clip, f_rel, bw, bh)
         if t == "image":
             return self._image(clip, bw, bh, f_rel)
         if t == "video":
@@ -488,33 +544,22 @@ class Compositor:
             return self._images[key]
         sh = clip.shape
         img = Image.new("RGBA", (bw, bh), (0, 0, 0, 0))
-        if sh.gradient and len(sh.gradient) >= 2:
-            top, bot = hex_rgba(sh.gradient[0]), hex_rgba(sh.gradient[1])
-            ramp = np.linspace(0, 1, bh, dtype=np.float32)[:, None]
-            grad = np.empty((bh, bw, 4), np.uint8)
-            for i in range(4):
-                grad[..., i] = (top[i] * (1 - ramp) + bot[i] * ramp).astype(np.uint8)
-            fill_img = Image.fromarray(grad, "RGBA")
-            mask = Image.new("L", (bw, bh), 0)
-            md = ImageDraw.Draw(mask)
-            r = sh.radius * min(bw, bh)
-            if sh.kind == "ellipse":
-                md.ellipse((0, 0, bw - 1, bh - 1), fill=255)
-            else:
-                md.rounded_rectangle((0, 0, bw - 1, bh - 1), radius=r, fill=255)
-            img.paste(fill_img, (0, 0), mask)
-        else:
+        sw = int(round(sh.stroke_width * self.text_scale))
+        stroke = hex_rgba(sh.stroke) if sh.stroke else None
+        if sh.kind == "line":
             d = ImageDraw.Draw(img)
-            fill = hex_rgba(sh.fill) if sh.fill else None
-            stroke = hex_rgba(sh.stroke) if sh.stroke else None
-            sw = int(round(sh.stroke_width * self.text_scale))
-            if sh.kind == "ellipse":
-                d.ellipse((0, 0, bw - 1, bh - 1), fill=fill, outline=stroke, width=sw)
-            elif sh.kind == "line":
-                d.line((0, bh // 2, bw, bh // 2), fill=stroke or fill, width=max(1, sw or bh))
-            else:
-                d.rounded_rectangle((0, 0, bw - 1, bh - 1), radius=sh.radius * min(bw, bh),
-                                    fill=fill, outline=stroke, width=sw)
+            d.line((0, bh // 2, bw, bh // 2), fill=stroke or (hex_rgba(sh.fill) if sh.fill else None),
+                   width=max(1, sw or bh))
+        else:
+            mask = Image.new("L", (bw, bh), 0)
+            shape_outline(ImageDraw.Draw(mask), sh, bw, bh, fill=255)
+            if sh.gradient and len(sh.gradient) >= 2:
+                fill_img = Image.fromarray(gradient_rgba(sh.gradient, sh.gradient_angle, bw, bh), "RGBA")
+                img.paste(fill_img, (0, 0), mask)
+            elif sh.fill:
+                img.paste(Image.new("RGBA", (bw, bh), hex_rgba(sh.fill)), (0, 0), mask)
+            if stroke and sw > 0:
+                shape_outline(ImageDraw.Draw(img), sh, bw, bh, outline=stroke, width=sw)
         arr = np.asarray(img)
         self._images[key] = arr
         return arr
@@ -575,6 +620,60 @@ class Compositor:
             comp = Compositor(Timeline(**clip.nest), width=bw, height=bh, sequential=False)
             self._nested[clip.id] = comp
         return comp.frame_rgba(clip.in_ + int(f_rel * clip.speed))
+
+    def _graphic(self, clip: Clip, f_rel: int, bw: int, bh: int) -> np.ndarray | None:
+        """Render a graphic clip's layer stack (each layer on its own track) into its box."""
+        if not clip.graphic or not clip.graphic.layers:
+            return None
+        sig = clip.graphic.model_dump_json() + f"|{clip.duration}|{bw}x{bh}"
+        hit = self._graphics.get(clip.id)
+        if hit is None or hit[0] != sig:
+            if hit:
+                hit[1].close()
+            layers = gfx.resolve_layers(clip)
+            tl = Timeline(fps=self.fps, width=bw, height=bh, background="#00000000",
+                          tracks=[{"id": f"L{i}", "kind": "video", "clips": [layer]} for i, layer in enumerate(layers)])
+            comp = Compositor(tl, width=bw, height=bh, text_scale=self.text_scale)
+            comp.W, comp.H = bw, bh  # keep odd sizes: the graphic fills its box exactly
+            self._graphics[clip.id] = hit = (sig, comp)
+        return hit[1].frame_rgba(f_rel)
+
+    def _draw_text_units(self, canvas: np.ndarray, clip: Clip, f_rel: int, layer: np.ndarray, cx: float, cy: float,
+                         scale: float, rotation: float, opacity: float) -> None:
+        """Per-character / word / line animation: each unit's slice of the text image moves on its own."""
+        anim = clip.text_anim
+        h0, w0 = layer.shape[:2]
+        text = gfx.counter_text(clip.text, clip.counter, f_rel)
+        key = ("cells", text, clip.style.model_dump_json(), w0, h0, anim.by)
+        cells = self._text.get(key)
+        if cells is None:
+            cells = self._text[key] = textmod.unit_cells(text, clip.style, w0, h0, self.text_scale, anim.by)
+        n = len(cells)
+        rad = math.radians(rotation)
+        cos, sin = math.cos(rad), math.sin(rad)
+        for i, (x0, y0, x1, y1) in enumerate(cells):
+            p = gfx.unit_progress(anim, i, n, f_rel, clip.duration)
+            if p <= 0:
+                continue
+            piece = layer[y0:y1, x0:x1]
+            if p >= 1:
+                dx = dy = reveal = 0.0
+                us = uo = 1.0
+            else:
+                dx, dy, us, uo, reveal = gfx.unit_effect(anim.type, p, y1 - y0)
+            if uo <= 0.001:
+                continue
+            if reveal > 0:
+                shift = int(round(reveal * (y1 - y0)))
+                moved = np.zeros_like(piece)
+                if shift < piece.shape[0]:
+                    moved[shift:] = piece[: piece.shape[0] - shift]
+                piece = moved
+            lx = (x0 + x1) / 2 - w0 / 2 + dx
+            ly = (y0 + y1) / 2 - h0 / 2 + dy
+            px = cx + (lx * cos - ly * sin) * scale
+            py = cy + (lx * sin + ly * cos) * scale
+            place(canvas, piece, px, py, scale * us, rotation, max(0.0, min(1.0, opacity * uo)))
 
     def _captions(self, clip: Clip, f: int, bw: int, bh: int) -> np.ndarray | None:
         cap = clip.captions
@@ -645,3 +744,48 @@ def _crop_reframe(frame: np.ndarray, bw: int, center_x: float) -> np.ndarray:
     cx = center_x * fw
     x0 = int(round(min(max(0, cx - bw / 2), fw - bw)))
     return frame[:, x0 : x0 + bw]
+
+
+def shape_points(kind: str, sides: int, w: int, h: int) -> list[tuple[float, float]]:
+    """Vertices of triangle / regular polygon / star shapes filling a w×h box."""
+    cx, cy, rx, ry = (w - 1) / 2, (h - 1) / 2, (w - 1) / 2, (h - 1) / 2
+    if kind == "triangle":
+        return [(cx, 0.0), (w - 1.0, h - 1.0), (0.0, h - 1.0)]
+    n = max(3, int(sides))
+    if kind == "star":
+        pts = []
+        for i in range(n * 2):
+            a = -math.pi / 2 + math.pi * i / n
+            k = 1.0 if i % 2 == 0 else 0.45
+            pts.append((cx + rx * k * math.cos(a), cy + ry * k * math.sin(a)))
+        return pts
+    return [(cx + rx * math.cos(-math.pi / 2 + 2 * math.pi * i / n),
+             cy + ry * math.sin(-math.pi / 2 + 2 * math.pi * i / n)) for i in range(n)]
+
+
+def shape_outline(d: ImageDraw.ImageDraw, sh, w: int, h: int, **kw) -> None:
+    if sh.kind == "ellipse":
+        d.ellipse((0, 0, w - 1, h - 1), **kw)
+    elif sh.kind in ("triangle", "polygon", "star"):
+        pts = shape_points(sh.kind, sh.sides, w, h)
+        if "outline" in kw:
+            d.line(pts + [pts[0]], fill=kw["outline"], width=kw.get("width", 1), joint="curve")
+        else:
+            d.polygon(pts, **kw)
+    else:
+        d.rounded_rectangle((0, 0, w - 1, h - 1), radius=sh.radius * min(w, h), **kw)
+
+
+def gradient_rgba(colors: list[str], angle: float, w: int, h: int) -> np.ndarray:
+    """Linear gradient at a CSS-style angle (180 = top→bottom, 90 = left→right)."""
+    a = math.radians(angle)
+    dx, dy = math.sin(a), -math.cos(a)
+    span = abs(w * dx) + abs(h * dy) or 1.0
+    xs = np.arange(w, dtype=np.float32)[None, :] - (w - 1) / 2
+    ys = np.arange(h, dtype=np.float32)[:, None] - (h - 1) / 2
+    t = np.clip((xs * dx + ys * dy) / span + 0.5, 0, 1)
+    c0, c1 = hex_rgba(colors[0]), hex_rgba(colors[1])
+    out = np.empty((h, w, 4), np.uint8)
+    for i in range(4):
+        out[..., i] = (c0[i] * (1 - t) + c1[i] * t).astype(np.uint8)
+    return out

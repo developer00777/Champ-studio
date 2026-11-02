@@ -49,13 +49,17 @@ export interface TextStyle {
   [extra: string]: unknown;
 }
 
+export type ShapeKind = "rect" | "ellipse" | "line" | "triangle" | "polygon" | "star";
+
 export interface Shape {
-  kind: "rect" | "ellipse" | "line";
+  kind: ShapeKind;
   fill: string | null;
   radius: number;
   stroke: string | null;
   stroke_width: number;
   gradient: string[] | null;
+  gradient_angle: number;
+  sides: number;
 }
 
 export interface Adjust {
@@ -82,7 +86,53 @@ export interface Captions {
   max_lines: number;
 }
 
-export type ClipType = "video" | "image" | "text" | "shape" | "color" | "audio" | "captions" | "adjustment";
+export interface TextAnim {
+  by: "char" | "word" | "line";
+  type: "fade" | "rise" | "drop" | "pop" | "slide-left" | "slide-right" | "reveal";
+  duration: number;
+  stagger: number;
+  delay: number;
+  order: "forward" | "reverse" | "center" | "random";
+  out: boolean;
+}
+
+export interface Counter {
+  start: number;
+  duration: number;
+  delay: number;
+  ease: Ease;
+}
+
+export type PinSide = "left" | "top" | "right" | "bottom";
+
+export interface Pin {
+  to: string;
+  pad: number[];
+  sides: PinSide[];
+}
+
+export type ControlKind = "text" | "color" | "number" | "toggle" | "choice" | "media";
+
+/** An exposed "master property" of a graphic (MOGRT-style). */
+export interface Control {
+  id: string;
+  label: string;
+  kind: ControlKind;
+  value: string | number | boolean | { asset_id: string } | null;
+  options: string[];
+  min?: number | null;
+  max?: number | null;
+  multiline?: boolean;
+}
+
+/** Essential Graphics: a stack of layers (bottom first), timed relative to the graphic clip. */
+export interface Graphic {
+  layers: Clip[];
+  controls: Control[];
+  template: string | null;
+}
+
+export type ClipType = "video" | "image" | "text" | "shape" | "color" | "audio" | "captions" | "adjustment" | "graphic";
 export type AudioRole = "dialogue" | "vo" | "music" | "sfx" | "ambience";
 export type Fit = "cover" | "contain" | "fill" | "reframe";
 
@@ -120,6 +170,14 @@ export interface Clip {
   linked: string | null;
   source: Record<string, unknown>;
   nest: Timeline | null;
+  graphic: Graphic | null;
+  text_anim: TextAnim | null;
+  counter: Counter | null;
+  pin: Pin | null;
+  mask: "below" | "below-inverse" | null;
+  bind: Record<string, string>;
+  hold: boolean;
+  locked: boolean;
   [extra: string]: unknown;
 }
 
@@ -191,7 +249,12 @@ export const defaultShape = (): Shape => ({
   stroke: null,
   stroke_width: 0,
   gradient: null,
+  gradient_angle: 180,
+  sides: 6,
 });
+
+export const defaultTextAnim = (): TextAnim => ({ by: "word", type: "rise", duration: 10, stagger: 2, delay: 0, order: "forward", out: false });
+export const defaultCounter = (): Counter => ({ start: 0, duration: 30, delay: 0, ease: "ease-out" });
 
 export const defaultAdjust = (): Adjust => ({
   exposure: 0,
@@ -246,6 +309,14 @@ export function makeClip(partial: Partial<Clip> & { type: ClipType }): Clip {
     linked: null,
     source: {},
     nest: null,
+    graphic: null,
+    text_anim: null,
+    counter: null,
+    pin: null,
+    mask: null,
+    bind: {},
+    hold: true,
+    locked: false,
   };
   return normalizeClip({ ...base, ...partial } as Clip);
 }
@@ -286,6 +357,20 @@ export function normalizeClip(c: Clip): Clip {
     linked: raw.linked ?? null,
     source: raw.source ?? {},
     nest: raw.nest ?? null,
+    graphic: raw.graphic
+      ? {
+          layers: (raw.graphic.layers ?? []).map((l) => normalizeClip(l)),
+          controls: (raw.graphic.controls ?? []).map((k) => ({ ...k, label: k.label ?? k.id, kind: k.kind ?? "text", value: k.value ?? "", options: k.options ?? [] })),
+          template: raw.graphic.template ?? null,
+        }
+      : null,
+    text_anim: raw.text_anim ? { ...defaultTextAnim(), ...raw.text_anim } : null,
+    counter: raw.counter ? { ...defaultCounter(), ...raw.counter } : null,
+    pin: raw.pin ? { ...raw.pin, pad: raw.pin.pad ?? [0.02, 0.012, 0.02, 0.012], sides: raw.pin.sides ?? ["left", "top", "right", "bottom"] } : null,
+    mask: raw.mask ?? null,
+    bind: raw.bind ?? {},
+    hold: raw.hold ?? true,
+    locked: raw.locked ?? false,
   };
   return out;
 }

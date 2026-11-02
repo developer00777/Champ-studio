@@ -1,0 +1,183 @@
+{
+  "cst": "1.0",
+  "id": "mg-stat-counter",
+  "name": "Big Number",
+  "category": "motion-graphics",
+  "description": "A headline number that counts up, with a label that rises in beneath an accent rule.",
+  "tags": [
+    "graphic",
+    "stat",
+    "data",
+    "counter"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "value"
+    ],
+    "properties": {
+      "value": {
+        "type": "string",
+        "maxLength": 14,
+        "x-kind": "text",
+        "description": "Number with symbols, e.g. $4.2M, 87%, 12,000+"
+      },
+      "label": {
+        "type": "string",
+        "maxLength": 60,
+        "x-kind": "text",
+        "description": "What it measures"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "value": "87%",
+    "label": "of buyers research before talking to sales"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "value",
+          "type": "text",
+          "name": "Number",
+          "text": "{{value}}",
+          "box": {
+            "*": [
+              0.1,
+              0.27,
+              0.8,
+              0.3
+            ],
+            "vertical": [
+              0.05,
+              0.33,
+              0.9,
+              0.16
+            ]
+          },
+          "style": {
+            "$brand": "styles.stat",
+            "shadow": false,
+            "bg_color": "",
+            "size": 240,
+            "color": {
+              "$slot": "accent"
+            }
+          },
+          "counter": {
+            "start": 0,
+            "duration": 1.3,
+            "delay": 0.1,
+            "ease": "ease-out"
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.2
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "rule",
+          "type": "shape",
+          "name": "Rule",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF66"
+          },
+          "start": 0.5,
+          "box": {
+            "*": [
+              0.42,
+              0.6,
+              0.16,
+              0.004
+            ],
+            "vertical": [
+              0.35,
+              0.51,
+              0.3,
+              0.0025
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "label",
+          "type": "text",
+          "name": "Label",
+          "text": "{{label}}",
+          "box": {
+            "*": [
+              0.15,
+              0.63,
+              0.7,
+              0.1
+            ],
+            "vertical": [
+              0.08,
+              0.53,
+              0.84,
+              0.08
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "size": 44,
+            "weight": 600,
+            "color": "#FFFFFF"
+          },
+          "text_anim": {
+            "by": "word",
+            "type": "rise",
+            "duration": 0.3,
+            "stagger": 0.05,
+            "delay": 0.6,
+            "order": "forward",
+            "out": false
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

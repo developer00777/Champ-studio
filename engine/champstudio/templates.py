@@ -26,7 +26,7 @@ from pathlib import Path
 
 import jsonschema
 
-from . import brands, db, library, llm, producers
+from . import brands, db, graphics, library, llm, producers
 from .providers.base import ProviderError
 from .render import media
 from .timeline import Timeline, canvas_for
@@ -47,6 +47,7 @@ CATEGORIES = {
     "sales-enablement": "Lead gen & sales enablement",
     "brand-utility": "Brand utilities",
     "company-news": "Seasonal & company news",
+    "motion-graphics": "Motion graphics",
 }
 
 LAYER_TYPES = ["media", "text", "shape", "logo", "color", "list", "stat"]
@@ -79,6 +80,7 @@ TEMPLATE_SCHEMA = {
         "audio": {"type": "object"},
         "captions": {"type": "object"},
         "overlay": {"type": "boolean"},
+        "graphic": {"type": "boolean"},
     },
 }
 
@@ -126,6 +128,8 @@ def get(tid: str) -> dict:
 
 def summary(t: dict) -> dict:
     return {k: t.get(k) for k in ("id", "name", "category", "description", "tags", "aspects", "origin")} | {
+        "overlay": bool(t.get("overlay")),
+        "graphic": bool(t.get("graphic")),
         "scenes": len(t.get("scenes", [])),
         "slots": list((t.get("slots") or {}).get("properties", {}).keys()),
         "duration_hint": estimate_duration(t),
@@ -407,7 +411,136 @@ def _on_brand_colour(layers_below: list[dict]) -> bool:
     return False
 
 
+def _sec(v) -> int:
+    return int(round(float(v) * FPS))
+
+
+def _motion_extras(base: dict, layer: dict, scene_id: str) -> None:
+    """Motion-graphics layer fields (authored in seconds) → clip fields (frames)."""
+    if layer.get("transform"):
+        base["transform"] = {**base.get("transform", {}), **layer["transform"]}
+    if layer.get("keyframes"):  # {"scale": [[sec, value, ease?], ...]}, relative to the layer start
+        base["keyframes"] = {name: [{"f": _sec(k[0]), "v": k[1], "ease": k[2] if len(k) > 2 else "ease"} for k in kfs]
+                             for name, kfs in layer["keyframes"].items()}
+    for key in ("text_anim", "counter"):
+        if layer.get(key):
+            spec = dict(layer[key])
+            for k in ("duration", "stagger", "delay"):
+                if k in spec:
+                    spec[k] = _sec(spec[k])
+            base[key] = spec
+    if layer.get("pin"):
+        base["pin"] = {**layer["pin"], "to": f"{scene_id}-{layer['pin']['to']}"}
+    for key in ("mask", "hold", "bind"):
+        if key in layer:
+            base[key] = layer[key]
+
+
+# ── graphics (MOGRT-style) ───────────────────────────────────────────
+
+_CONTROL_KINDS = ("text", "number", "color")
+
+
+def _control_kind(prop: dict) -> str:
+    if prop.get("enum"):
+        return "choice"
+    if prop.get("type") == "boolean":
+        return "toggle"
+    kind = prop.get("x-kind", "text")
+    if kind in ("media", "logo"):
+        return "media"
+    if kind == "color":
+        return "color"
+    if kind == "number" or prop.get("type") in ("number", "integer"):
+        return "number"
+    return "text"
+
+
+def graphic_controls(t: dict, values: dict, kit: dict) -> list[dict]:
+    """One exposed control per slot, seeded with the slot's current value."""
+    out = []
+    for name, prop in t["slots"]["properties"].items():
+        kind = _control_kind(prop)
+        if prop.get("x-kind") in ("voiceover", "music", "audio"):
+            continue
+        v = values.get(name)
+        if v is None:
+            v = {"color": kit["colors"].get("primary", "#FF6B35"), "number": 0, "toggle": False}.get(kind, "")
+            if kind == "media":
+                v = None
+        if isinstance(v, list):
+            v = "\n".join(str(x) for x in v)
+        out.append({"id": name, "label": prop.get("description") or name.replace("_", " ").capitalize(), "kind": kind,
+                    "value": v, "options": list(prop.get("enum") or []),
+                    "multiline": prop.get("x-kind") == "list" or int(prop.get("maxLength") or 0) > 60,
+                    **({"min": prop["minimum"]} if "minimum" in prop else {}),
+                    **({"max": prop["maximum"]} if "maximum" in prop else {})})
+    return out
+
+
+def _placeholder_values(t: dict, values: dict) -> dict:
+    out = dict(values)
+    for name, prop in t["slots"]["properties"].items():
+        if _control_kind(prop) in (*_CONTROL_KINDS, "choice", "toggle") and prop.get("x-kind") != "list":
+            out[name] = "{{" + name + "}}"
+    return out
+
+
+def _collect_binds(node, path: str, out: dict) -> None:
+    if isinstance(node, dict):
+        for k, v in node.items():
+            if k in ("id", "source", "bind", "keyframes", "graphic", "pin"):
+                continue
+            _collect_binds(v, f"{path}.{k}" if path else k, out)
+    elif isinstance(node, list) and path == "shape.gradient":
+        for i, v in enumerate(node):
+            if isinstance(v, str) and "{{" in v:
+                out[f"gradient.{i}"] = v
+    elif isinstance(node, str) and "{{" in node:
+        out[path] = node
+
+
+def graphic_clip(t: dict, values: dict, kit: dict, aspect: str = "16:9", *, start: int = 0) -> dict:
+    """Compile a template into ONE graphic clip whose slots are exposed controls
+    (what Premiere does when a .mogrt is dropped on the timeline)."""
+    values = with_defaults(t, values)
+    tl = _compile_timeline(t, {"values": _placeholder_values(t, values), "vo": {}, "music_id": None}, kit, aspect)
+    # layers the template leaves out for these values ("if" / "unless") stay out of the graphic
+    real = _compile_timeline(t, {"values": values, "vo": {}, "music_id": None}, kit, aspect)
+    keep = {c.id for tr in real.video_tracks() for c in tr.clips}
+    clips = [c.model_dump(by_alias=True) for tr in tl.video_tracks() if tr.id != "captions" for c in tr.clips
+             if c.id in keep]
+    controls = graphic_controls(t, values, kit)
+    current = {c["id"]: c["value"] for c in controls}
+    used: set[str] = set()
+    for c in clips:
+        bind: dict = dict(c.get("bind") or {})  # explicit template binds (e.g. bar lengths)
+        _collect_binds(c, "", bind)
+        slot = (c.get("source") or {}).get("slot")
+        if slot and c["type"] in ("image", "video"):
+            bind["asset_id"] = "{{" + slot + "}}"
+        used |= {m for v in bind.values() for m in re.findall(r"\{\{\s*([a-zA-Z0-9_]+)", v)}
+        c.update(graphics.apply_bindings({**c, "bind": bind}, current))
+        c["bind"] = bind
+    duration = max((c["start"] + c["duration"] for c in clips), default=_frames(estimate_duration(t)))
+    g = graphics.pack(clips, start=0, duration=duration, controls=[c for c in controls if c["id"] in used],
+                      name=t["name"], template=t["id"], clip_id=f"g-{t['id']}")
+    g["start"] = start
+    return g
+
+
 def compile_timeline(t: dict, prepared: dict, kit: dict, aspect: str = "16:9") -> Timeline:
+    tl = _compile_timeline(t, prepared, kit, aspect)
+    if not t.get("graphic"):
+        return tl
+    g = graphic_clip(t, prepared["values"], kit, aspect)
+    rest = [tr.model_dump(by_alias=True) for tr in tl.tracks if tr.kind == "audio" or tr.id == "captions"]
+    data = tl.model_dump(by_alias=True)
+    data["tracks"] = [{"id": "v1", "kind": "video", "name": "V1", "clips": [g]}] + rest
+    return Timeline(**data)
+
+
+def _compile_timeline(t: dict, prepared: dict, kit: dict, aspect: str = "16:9") -> Timeline:
     values = prepared["values"]
     vo = prepared.get("vo") or {}
     w, h = canvas_for(aspect)
@@ -442,7 +575,7 @@ def compile_timeline(t: dict, prepared: dict, kit: dict, aspect: str = "16:9") -
             end_sec = layer.get("end")
             ldur = (_frames(end_sec) if end_sec is not None else dur) - (start - t0)
             ldur = max(1, min(ldur, t0 + dur - start))
-            base = {"id": f"{scene['id']}-{li}", "start": start, "duration": ldur,
+            base = {"id": f"{scene['id']}-{layer.get('id', li)}", "start": start, "duration": ldur,
                     "box": _box(layer.get("box"), aspect), "name": layer.get("name") or layer["type"],
                     "source": {"template": t["id"], "scene": scene["id"], "layer": li,
                                "slot": (layer.get("src") or {}).get("$slot") if isinstance(layer.get("src"), dict) else None}}
@@ -451,6 +584,7 @@ def compile_timeline(t: dict, prepared: dict, kit: dict, aspect: str = "16:9") -
                     base[k] = {"type": layer[k]["type"], "duration": _frames(layer[k].get("sec", 0.4))}
             if "opacity" in layer:
                 base["transform"] = {"opacity": layer["opacity"]}
+            _motion_extras(base, layer, scene["id"])
             if li == 0 and si > 0 and trans and trans.get("type", "cut") != "cut":
                 base["transition_in"] = {"type": trans["type"], "duration": _frames(trans.get("sec", 0.4))}
             track = f"v{li + 1}"

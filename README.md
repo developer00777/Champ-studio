@@ -27,6 +27,14 @@ Bring your own keys; everything runs on your machine.
   roll, J/L cuts, snapping, markers, keyframes, transitions, titles, colour, audio mixing, JKL, undo,
   autosave + versions, edit locks, exports (H.264, ProRes, DNxHR, WebM, review copies), SRT/VTT,
   Premiere XML / EDL / OTIO interchange.
+- **Motion graphics** (Essential Graphics) — graphic clips that hold a stack of text, shape (rect,
+  ellipse, line, triangle, polygon, star, angled gradients) and image layers, each with its own
+  keyframes and in/out animations. Per-character / word / line text animators, number count-ups,
+  responsive pins (a bar that grows with the name typed into it), masks, and exposed "master
+  properties" so editors change a graphic's fields without opening its layers. Browse 30+
+  motion-graphics templates (lower thirds, titles, callouts, stats and charts, CTAs, end cards,
+  transitions) with hover previews; select and drag layers directly in the Program monitor; group
+  clips into a graphic, ungroup, or save any graphic as a team template (like a .mogrt).
 - **AI editing** — text-based editing, silence and filler removal (captions re-timed correctly),
   auto captions, auto ducking, auto reframe to vertical, scene detection, speech enhancement,
   B-roll, chat commands, AI rough cut from raw footage.

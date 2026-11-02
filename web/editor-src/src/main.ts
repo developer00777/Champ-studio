@@ -121,7 +121,7 @@ function build(): void {
   const leftTabs = tabs(
     [
       ["project", "Project", null],
-      ["graphics", "Graphics", null],
+      ["graphics", "Essential Graphics", null],
       ["comments", "Comments", commentCount],
     ],
     (id) => {
@@ -130,6 +130,11 @@ function build(): void {
     },
   );
   const left = h("section", { class: "panel panel-left", "aria-label": "Project" }, leftTabs, leftBody);
+  store.on("panel", () => {
+    if (store.wantPanel !== "graphics") return;
+    (leftTabs.querySelector('[data-id="graphics"]') as HTMLButtonElement | null)?.click();
+    graphics.setMode("edit");
+  });
   const right = h("section", { class: "panel panel-right", "aria-label": "Effect controls" }, h("div", { class: "panel-head" }, h("h2", null, "Effect Controls")), h("div", { class: "panel-body scroll" }, inspector.el));
 
   // timeline

@@ -1,0 +1,426 @@
+{
+  "cst": "1.0",
+  "id": "mg-social-handles",
+  "name": "Social Handles",
+  "category": "motion-graphics",
+  "description": "Three contact lines (LinkedIn, Instagram, website) sliding in one after another; empty lines hide.",
+  "tags": [
+    "graphic",
+    "social",
+    "lower third",
+    "contact"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [],
+    "properties": {
+      "linkedin": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "LinkedIn"
+      },
+      "instagram": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Instagram"
+      },
+      "website": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Website"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "linkedin": "/company/championsgroup",
+    "instagram": "@championsgroup",
+    "website": "championsgroup.com"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 5
+      },
+      "layers": [
+        {
+          "id": "dot0",
+          "type": "shape",
+          "name": "linkedin badge",
+          "shape": {
+            "kind": "rect",
+            "radius": 0.3,
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "bind": {
+            "enabled": "{{linkedin}}"
+          },
+          "start": 0.0,
+          "box": {
+            "*": [
+              0.07,
+              0.62,
+              0.038,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.62,
+              0.075,
+              0.034
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "tag0",
+          "type": "text",
+          "name": "linkedin label",
+          "text": "in",
+          "bind": {
+            "enabled": "{{linkedin}}"
+          },
+          "start": 0.0,
+          "box": {
+            "*": [
+              0.07,
+              0.62,
+              0.038,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.62,
+              0.075,
+              0.034
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 22,
+            "weight": 800,
+            "color": "#FFFFFF",
+            "uppercase": true,
+            "fit": "shrink"
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "txt0",
+          "type": "text",
+          "name": "Linkedin",
+          "text": "{{linkedin}}",
+          "start": 0.1,
+          "box": {
+            "*": [
+              0.12,
+              0.62,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.175,
+              0.62,
+              0.75,
+              0.034
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "size": 34,
+            "weight": 600,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "dot1",
+          "type": "shape",
+          "name": "instagram badge",
+          "shape": {
+            "kind": "rect",
+            "radius": 0.3,
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "bind": {
+            "enabled": "{{instagram}}"
+          },
+          "start": 0.15,
+          "box": {
+            "*": [
+              0.07,
+              0.7,
+              0.038,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.665,
+              0.075,
+              0.034
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "tag1",
+          "type": "text",
+          "name": "instagram label",
+          "text": "ig",
+          "bind": {
+            "enabled": "{{instagram}}"
+          },
+          "start": 0.15,
+          "box": {
+            "*": [
+              0.07,
+              0.7,
+              0.038,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.665,
+              0.075,
+              0.034
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 22,
+            "weight": 800,
+            "color": "#FFFFFF",
+            "uppercase": true,
+            "fit": "shrink"
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "txt1",
+          "type": "text",
+          "name": "Instagram",
+          "text": "{{instagram}}",
+          "start": 0.25,
+          "box": {
+            "*": [
+              0.12,
+              0.7,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.175,
+              0.665,
+              0.75,
+              0.034
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "size": 34,
+            "weight": 600,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "dot2",
+          "type": "shape",
+          "name": "website badge",
+          "shape": {
+            "kind": "rect",
+            "radius": 0.3,
+            "fill": {
+              "$slot": "accent"
+            }
+          },
+          "bind": {
+            "enabled": "{{website}}"
+          },
+          "start": 0.3,
+          "box": {
+            "*": [
+              0.07,
+              0.78,
+              0.038,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.71,
+              0.075,
+              0.034
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "tag2",
+          "type": "text",
+          "name": "website label",
+          "text": "www",
+          "bind": {
+            "enabled": "{{website}}"
+          },
+          "start": 0.3,
+          "box": {
+            "*": [
+              0.07,
+              0.78,
+              0.038,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.71,
+              0.075,
+              0.034
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 22,
+            "weight": 800,
+            "color": "#FFFFFF",
+            "uppercase": true,
+            "fit": "shrink"
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.3
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "txt2",
+          "type": "text",
+          "name": "Website",
+          "text": "{{website}}",
+          "start": 0.4,
+          "box": {
+            "*": [
+              0.12,
+              0.78,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.175,
+              0.71,
+              0.75,
+              0.034
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": true,
+            "bg_color": "",
+            "size": 34,
+            "weight": 600,
+            "color": "#FFFFFF",
+            "align": "left"
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

@@ -151,6 +151,114 @@ def _fit(text: str, style: TextStyle, w: int, h: int, scale: float):
         size = max(min_size, int(size * 0.92))
 
 
+_layouts: dict[tuple, dict] = {}
+
+
+def layout(text: str, style: TextStyle, w: int, h: int, scale: float = 1.0) -> dict:
+    """Where every word and line of `text` lands inside a w×h box (shared by the
+    rasterizer, per-unit text animators and responsive pins)."""
+    key = (text, style.model_dump_json(), w, h, round(scale, 6))
+    hit = _layouts.get(key)
+    if hit is None:
+        if len(_layouts) > 512:
+            _layouts.clear()
+        hit = _layouts[key] = _layout(text, style, w, h, scale)
+    return hit
+
+
+def _layout(text: str, style: TextStyle, w: int, h: int, scale: float) -> dict:
+    if style.uppercase:
+        text = text.upper()
+    font, lines, size, spacing = _fit(text, style, w, h, scale)
+    lh = size * style.line_height
+    ascent, descent = font.getmetrics()
+    block_h = lh * (len(lines) - 1) + ascent + descent
+    if style.valign == "top":
+        y0 = 0.0
+    elif style.valign == "bottom":
+        y0 = h - block_h
+    else:
+        y0 = (h - block_h) / 2
+    word_index = 0
+    placements: list[tuple[float, float, str, int]] = []  # x, y, word, index
+    line_boxes: list[tuple[float, float, float, float]] = []
+    line_of: list[int] = []
+    for i, line in enumerate(lines):
+        lw = _text_width(font, line, spacing)
+        if style.align == "left":
+            x = 0.0 if not style.bg_color else style.bg_padding * size
+        elif style.align == "right":
+            x = w - lw - (style.bg_padding * size if style.bg_color else 0)
+        else:
+            x = (w - lw) / 2
+        y = y0 + i * lh
+        line_boxes.append((x, y, x + lw, y + ascent + descent))
+        cursor = x
+        for word in line.split(" "):
+            placements.append((cursor, y, word, word_index))
+            line_of.append(i)
+            cursor += _text_width(font, word + " ", spacing)
+            word_index += 1
+    return {"font": font, "lines": lines, "size": size, "spacing": spacing, "ascent": ascent,
+            "descent": descent, "placements": placements, "line_boxes": line_boxes, "line_of": line_of}
+
+
+def content_bbox(text: str, style: TextStyle, w: int, h: int, scale: float = 1.0) -> tuple[float, float, float, float] | None:
+    """Ink-ish bounds of laid-out text (including its background pill) in box px."""
+    if not text.strip():
+        return None
+    lay = layout(text, style, w, h, scale)
+    boxes = [b for b in lay["line_boxes"] if b[2] - b[0] >= 1]
+    if not boxes:
+        return None
+    x0, y0 = min(b[0] for b in boxes), min(b[1] for b in boxes)
+    x1, y1 = max(b[2] for b in boxes), max(b[3] for b in boxes)
+    if style.bg_color:
+        pad = style.bg_padding * lay["size"]
+        x0, x1, y0, y1 = x0 - pad, x1 + pad, y0 - pad * 0.6, y1 + pad * 0.6
+    return x0, y0, x1, y1
+
+
+def unit_cells(text: str, style: TextStyle, w: int, h: int, scale: float, by: str) -> list[tuple[int, int, int, int]]:
+    """Partition the w×h text image into one cell per character, word or line
+    (cells tile the image exactly, so slicing them never drops or doubles ink)."""
+    if not text.strip():
+        return []
+    lay = layout(text, style, w, h, scale)
+    font, spacing = lay["font"], lay["spacing"]
+    ext = lay["ascent"] + lay["descent"]
+    rows: list[list[tuple[float, float]]] = [[] for _ in lay["line_boxes"]]
+    for (x, _y, word, _idx), li in zip(lay["placements"], lay["line_of"]):
+        if by == "line":
+            continue
+        if by == "word":
+            if word:
+                rows[li].append((x, x + _text_width(font, word, spacing)))
+            continue
+        cx = x
+        for ch in word:
+            cw = font.getlength(ch)
+            if ch.strip():
+                rows[li].append((cx, cx + cw))
+            cx += cw + spacing
+    if by == "line":
+        rows = [[(b[0], b[2])] if b[2] - b[0] >= 1 else [] for b in lay["line_boxes"]]
+    tops = [b[1] for b in lay["line_boxes"]]
+    cells: list[tuple[int, int, int, int]] = []
+    for li, units in enumerate(rows):
+        ya = 0 if li == 0 else int(round((tops[li - 1] + ext + tops[li]) / 2))
+        yb = h if li == len(rows) - 1 else int(round((tops[li] + ext + tops[li + 1]) / 2))
+        units = sorted(units)
+        for ui, (a, b) in enumerate(units):
+            xa = 0 if ui == 0 else int(round((units[ui - 1][1] + a) / 2))
+            xb = w if ui == len(units) - 1 else int(round((b + units[ui + 1][0]) / 2))
+            if by == "line":
+                xa, xb = 0, w
+            if xb > xa and yb > ya:
+                cells.append((xa, ya, xb, yb))
+    return cells
+
+
 def render_text(
     text: str,
     style: TextStyle,
@@ -170,18 +278,10 @@ def render_text(
     img = Image.new("RGBA", (max(1, w), max(1, h)), (0, 0, 0, 0))
     if not text.strip():
         return img
-    if style.uppercase:
-        text = text.upper()
-    font, lines, size, spacing = _fit(text, style, w, h, scale)
-    lh = size * style.line_height
-    ascent, descent = font.getmetrics()
-    block_h = lh * (len(lines) - 1) + ascent + descent
-    if style.valign == "top":
-        y0 = 0.0
-    elif style.valign == "bottom":
-        y0 = h - block_h
-    else:
-        y0 = (h - block_h) / 2
+    lay = layout(text, style, w, h, scale)
+    font, size, spacing = lay["font"], lay["size"], lay["spacing"]
+    ascent, descent = lay["ascent"], lay["descent"]
+    placements, line_boxes = lay["placements"], lay["line_boxes"]
 
     draw = ImageDraw.Draw(img)
     fill = parse_color(style.color)
@@ -189,27 +289,7 @@ def render_text(
     stroke_fill = parse_color(style.stroke_color, (0, 0, 0, 255)) if style.stroke_color else None
     hl_fill = parse_color(style.highlight_color) if style.highlight_color else None
     hl_bg = parse_color(style.highlight_bg) if style.highlight_bg else None
-
-    # word positions for highlight/background boxes
     shown = 0
-    word_index = 0
-    placements: list[tuple[float, float, str, int]] = []  # x, y, word, index
-    line_boxes: list[tuple[float, float, float, float]] = []
-    for i, line in enumerate(lines):
-        lw = _text_width(font, line, spacing)
-        if style.align == "left":
-            x = 0.0 if not style.bg_color else style.bg_padding * size
-        elif style.align == "right":
-            x = w - lw - (style.bg_padding * size if style.bg_color else 0)
-        else:
-            x = (w - lw) / 2
-        y = y0 + i * lh
-        line_boxes.append((x, y, x + lw, y + ascent + descent))
-        cursor = x
-        for word in line.split(" "):
-            placements.append((cursor, y, word, word_index))
-            cursor += _text_width(font, word + " ", spacing)
-            word_index += 1
 
     if style.bg_color:
         pad = style.bg_padding * size

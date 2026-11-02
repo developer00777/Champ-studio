@@ -1,0 +1,396 @@
+{
+  "cst": "1.0",
+  "id": "mg-stat-kpis",
+  "name": "KPI Trio",
+  "category": "motion-graphics",
+  "description": "Three headline metrics that count up in sequence, separated by thin dividers.",
+  "tags": [
+    "graphic",
+    "stat",
+    "data",
+    "results"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "kpi_1"
+    ],
+    "properties": {
+      "kpi_1": {
+        "type": "string",
+        "maxLength": 10,
+        "x-kind": "text",
+        "description": "Metric 1"
+      },
+      "kpi_2": {
+        "type": "string",
+        "maxLength": 10,
+        "x-kind": "text",
+        "description": "Metric 2"
+      },
+      "kpi_3": {
+        "type": "string",
+        "maxLength": 10,
+        "x-kind": "text",
+        "description": "Metric 3"
+      },
+      "label_1": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Metric 1 label"
+      },
+      "label_2": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Metric 2 label"
+      },
+      "label_3": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Metric 3 label"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "kpi_1": "3.2x",
+    "label_1": "pipeline coverage",
+    "kpi_2": "41%",
+    "label_2": "faster ramp",
+    "kpi_3": "$18M",
+    "label_3": "influenced revenue"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 6
+      },
+      "layers": [
+        {
+          "id": "k0",
+          "type": "text",
+          "name": "Metric 1",
+          "text": "{{kpi_1}}",
+          "start": 0.0,
+          "box": {
+            "*": [
+              0.06,
+              0.36,
+              0.28,
+              0.17
+            ],
+            "vertical": [
+              0.1,
+              0.25,
+              0.8,
+              0.09
+            ]
+          },
+          "style": {
+            "$brand": "styles.stat",
+            "shadow": false,
+            "bg_color": "",
+            "size": 130,
+            "color": {
+              "$slot": "accent"
+            }
+          },
+          "counter": {
+            "start": 0,
+            "duration": 1.0
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.2
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "l0",
+          "type": "text",
+          "name": "Label 1",
+          "text": "{{label_1}}",
+          "start": 0.4,
+          "box": {
+            "*": [
+              0.06,
+              0.54,
+              0.28,
+              0.07
+            ],
+            "vertical": [
+              0.1,
+              0.34,
+              0.8,
+              0.04
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 32,
+            "weight": 600,
+            "color": "#FFFFFFD9"
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "k1",
+          "type": "text",
+          "name": "Metric 2",
+          "text": "{{kpi_2}}",
+          "start": 0.3,
+          "box": {
+            "*": [
+              0.36,
+              0.36,
+              0.28,
+              0.17
+            ],
+            "vertical": [
+              0.1,
+              0.45,
+              0.8,
+              0.09
+            ]
+          },
+          "style": {
+            "$brand": "styles.stat",
+            "shadow": false,
+            "bg_color": "",
+            "size": 130,
+            "color": {
+              "$slot": "accent"
+            }
+          },
+          "counter": {
+            "start": 0,
+            "duration": 1.0
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.2
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "l1",
+          "type": "text",
+          "name": "Label 2",
+          "text": "{{label_2}}",
+          "start": 0.7,
+          "box": {
+            "*": [
+              0.36,
+              0.54,
+              0.28,
+              0.07
+            ],
+            "vertical": [
+              0.1,
+              0.54,
+              0.8,
+              0.04
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 32,
+            "weight": 600,
+            "color": "#FFFFFFD9"
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "k2",
+          "type": "text",
+          "name": "Metric 3",
+          "text": "{{kpi_3}}",
+          "start": 0.6,
+          "box": {
+            "*": [
+              0.6599999999999999,
+              0.36,
+              0.28,
+              0.17
+            ],
+            "vertical": [
+              0.1,
+              0.65,
+              0.8,
+              0.09
+            ]
+          },
+          "style": {
+            "$brand": "styles.stat",
+            "shadow": false,
+            "bg_color": "",
+            "size": 130,
+            "color": {
+              "$slot": "accent"
+            }
+          },
+          "counter": {
+            "start": 0,
+            "duration": 1.0
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.2
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "l2",
+          "type": "text",
+          "name": "Label 3",
+          "text": "{{label_3}}",
+          "start": 1.0,
+          "box": {
+            "*": [
+              0.6599999999999999,
+              0.54,
+              0.28,
+              0.07
+            ],
+            "vertical": [
+              0.1,
+              0.74,
+              0.8,
+              0.04
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 32,
+            "weight": 600,
+            "color": "#FFFFFFD9"
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "div0",
+          "type": "shape",
+          "name": "Divider 1",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF40"
+          },
+          "start": 0.2,
+          "box": {
+            "*": [
+              0.355,
+              0.38,
+              0.002,
+              0.22
+            ],
+            "vertical": [
+              0.3,
+              0.425,
+              0.4,
+              0.0015
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "id": "div1",
+          "type": "shape",
+          "name": "Divider 2",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF40"
+          },
+          "start": 0.5,
+          "box": {
+            "*": [
+              0.655,
+              0.38,
+              0.002,
+              0.22
+            ],
+            "vertical": [
+              0.3,
+              0.625,
+              0.4,
+              0.0015
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

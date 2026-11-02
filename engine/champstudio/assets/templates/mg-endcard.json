@@ -1,0 +1,236 @@
+{
+  "cst": "1.0",
+  "id": "mg-endcard",
+  "name": "End Card",
+  "category": "motion-graphics",
+  "description": "Full-frame brand gradient end card with logo, a headline that pops in word by word, and contact line.",
+  "tags": [
+    "graphic",
+    "cta",
+    "end card",
+    "outro"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": false,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "headline"
+    ],
+    "properties": {
+      "headline": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Headline"
+      },
+      "detail": {
+        "type": "string",
+        "maxLength": 60,
+        "x-kind": "text",
+        "description": "Website or contact"
+      }
+    }
+  },
+  "defaults": {
+    "headline": "Thanks for watching",
+    "detail": "championsgroup.com"
+  },
+  "background": {
+    "$brand": "colors.dark"
+  },
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 6
+      },
+      "layers": [
+        {
+          "id": "bg",
+          "type": "shape",
+          "name": "Background",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            },
+            "gradient_angle": 135
+          },
+          "box": {
+            "*": [
+              0,
+              0,
+              1,
+              1
+            ],
+            "vertical": [
+              0,
+              0,
+              1,
+              1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "id": "ring",
+          "type": "shape",
+          "name": "Ring",
+          "shape": {
+            "kind": "ellipse",
+            "fill": null,
+            "stroke": "#FFFFFF33",
+            "stroke_width": 6
+          },
+          "box": {
+            "*": [
+              0.62,
+              -0.25,
+              0.6,
+              1.0667
+            ],
+            "vertical": [
+              0.4,
+              -0.1,
+              1.0,
+              0.5625
+            ]
+          },
+          "keyframes": {
+            "rotation": [
+              [
+                0,
+                0,
+                "linear"
+              ],
+              [
+                6,
+                30
+              ]
+            ],
+            "scale": [
+              [
+                0,
+                0.8,
+                "ease-out"
+              ],
+              [
+                1.5,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "id": "logo",
+          "type": "logo",
+          "name": "Logo",
+          "box": {
+            "*": [
+              0.38,
+              0.2,
+              0.24,
+              0.16
+            ],
+            "vertical": [
+              0.25,
+              0.25,
+              0.5,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "zoom-in",
+            "sec": 0.5
+          }
+        },
+        {
+          "id": "headline",
+          "type": "text",
+          "name": "Headline",
+          "text": "{{headline}}",
+          "start": 0.4,
+          "box": {
+            "*": [
+              0.1,
+              0.42,
+              0.8,
+              0.16
+            ],
+            "vertical": [
+              0.06,
+              0.42,
+              0.88,
+              0.1
+            ]
+          },
+          "style": {
+            "$brand": "styles.title",
+            "shadow": false,
+            "bg_color": "",
+            "size": 100,
+            "color": "#FFFFFF"
+          },
+          "text_anim": {
+            "by": "word",
+            "type": "pop",
+            "duration": 0.35,
+            "stagger": 0.12,
+            "delay": 0.0,
+            "order": "forward",
+            "out": false
+          }
+        },
+        {
+          "id": "detail",
+          "type": "text",
+          "name": "Detail",
+          "text": "{{detail}}",
+          "if": "detail",
+          "start": 1.2,
+          "box": {
+            "*": [
+              0.2,
+              0.62,
+              0.6,
+              0.07
+            ],
+            "vertical": [
+              0.1,
+              0.55,
+              0.8,
+              0.04
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 40,
+            "weight": 600,
+            "color": "#FFFFFFE6"
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

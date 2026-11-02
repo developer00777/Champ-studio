@@ -10,6 +10,7 @@ import { store } from "../store";
 import { h, icon, iconButton, promptDialog, toast } from "../ui";
 import { name as assetName } from "./project";
 import * as actions from "../actions";
+import { TransformOverlay } from "./transform-overlay";
 
 export type MonitorId = "source" | "program";
 export let activeMonitor: MonitorId = "program";
@@ -258,6 +259,7 @@ export class ProgramMonitor {
   private playBtn: HTMLButtonElement;
   private viewport: HTMLElement;
   private safe: HTMLElement;
+  private overlay: TransformOverlay;
 
   constructor() {
     const canvas = h("canvas", { class: "program-canvas", "aria-label": "Program monitor" });
@@ -265,7 +267,8 @@ export class ProgramMonitor {
     this.exactBadge = h("span", { class: "badge badge-exact", style: "display:none" }, "Exact frame");
     this.proxyBadge = h("span", { class: "badge badge-warn", style: "display:none" }, "Building proxies…");
     this.safe = h("div", { class: "safe-guides", style: "display:none" });
-    const stage = h("div", { class: "program-stage" }, canvas, exact, this.safe);
+    this.overlay = new TransformOverlay(canvas);
+    const stage = h("div", { class: "program-stage" }, canvas, exact, this.safe, this.overlay.el);
     this.viewport = h("div", { class: "monitor-viewport" }, stage, h("div", { class: "badges" }, this.exactBadge, this.proxyBadge));
     this.preview = new Preview(canvas, exact);
     this.tcEl = h("button", { class: "tc mono tc-btn", type: "button", "data-tip": "Click to go to a timecode" }, "00:00:00:00");
@@ -335,6 +338,7 @@ export class ProgramMonitor {
     const c = this.preview.canvas;
     this.safe.style.width = c.style.width;
     this.safe.style.height = c.style.height;
+    requestAnimationFrame(() => this.overlay.sync());
   }
 
   private syncTc(): void {

@@ -1,0 +1,146 @@
+{
+  "cst": "1.0",
+  "id": "mg-title-cascade",
+  "name": "Cascade Title",
+  "category": "motion-graphics",
+  "description": "Uppercase headline whose letters drop in from the centre out, under a spaced-out kicker.",
+  "tags": [
+    "graphic",
+    "title",
+    "kinetic",
+    "typography"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "graphic": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "headline"
+    ],
+    "properties": {
+      "kicker": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Small line above"
+      },
+      "headline": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Headline"
+      },
+      "accent": {
+        "type": "string",
+        "pattern": "^#[0-9A-Fa-f]{6}$",
+        "x-kind": "color",
+        "description": "Accent colour"
+      }
+    }
+  },
+  "defaults": {
+    "kicker": "Introducing",
+    "headline": "Signal Studio"
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "main",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 4.5
+      },
+      "layers": [
+        {
+          "id": "kicker",
+          "type": "text",
+          "name": "Kicker",
+          "text": "{{kicker}}",
+          "box": {
+            "*": [
+              0.2,
+              0.33,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.38,
+              0.8,
+              0.035
+            ]
+          },
+          "style": {
+            "$brand": "styles.subtitle",
+            "shadow": false,
+            "bg_color": "",
+            "size": 30,
+            "weight": 700,
+            "color": {
+              "$slot": "accent"
+            },
+            "uppercase": true,
+            "letter_spacing": 0.3
+          },
+          "text_anim": {
+            "by": "char",
+            "type": "fade",
+            "duration": 0.2,
+            "stagger": 0.02,
+            "delay": 0.0,
+            "order": "forward",
+            "out": false
+          }
+        },
+        {
+          "id": "headline",
+          "type": "text",
+          "name": "Headline",
+          "text": "{{headline}}",
+          "box": {
+            "*": [
+              0.06,
+              0.4,
+              0.88,
+              0.2
+            ],
+            "vertical": [
+              0.05,
+              0.42,
+              0.9,
+              0.12
+            ]
+          },
+          "style": {
+            "$brand": "styles.title",
+            "shadow": true,
+            "bg_color": "",
+            "size": 130,
+            "color": "#FFFFFF",
+            "uppercase": true,
+            "letter_spacing": 0.03
+          },
+          "text_anim": {
+            "by": "char",
+            "type": "drop",
+            "duration": 0.3,
+            "stagger": 0.03,
+            "delay": 0.25,
+            "order": "center",
+            "out": true
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}
