@@ -7,6 +7,7 @@ Every generation and transform lands here. `parent_id` builds lineage chains
 from __future__ import annotations
 
 import json
+import shutil
 import sqlite3
 import threading
 import uuid
@@ -72,6 +73,53 @@ def save_asset(
     asset_id = uuid.uuid4().hex[:12]
     filename = f"{asset_id}{suffix_for(mime)}"
     (data_dir() / "assets" / filename).write_bytes(data)
+    row = {
+        "id": asset_id,
+        "kind": kind_for_mime(mime),
+        "mime": mime,
+        "filename": filename,
+        "prompt": prompt,
+        "model": model,
+        "provider": provider,
+        "tool": tool,
+        "params": json.dumps(params or {}),
+        "parent_id": parent_id,
+        "cost": cost,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    with _lock, _db() as conn:
+        conn.execute(
+            """INSERT INTO assets (id, kind, mime, filename, prompt, model, provider,
+               tool, params, parent_id, cost, created_at)
+               VALUES (:id, :kind, :mime, :filename, :prompt, :model, :provider,
+               :tool, :params, :parent_id, :cost, :created_at)""",
+            row,
+        )
+    return _public(row)
+
+
+def save_asset_file(
+    src: str | Path,
+    mime: str,
+    *,
+    prompt: str = "",
+    model: str = "",
+    provider: str = "",
+    tool: str = "",
+    params: dict | None = None,
+    parent_id: str | None = None,
+    cost: float | None = None,
+    move: bool = True,
+) -> dict:
+    """Like save_asset, but takes a file on disk (renders, large uploads) without
+    loading it into memory."""
+    asset_id = uuid.uuid4().hex[:12]
+    filename = f"{asset_id}{suffix_for(mime)}"
+    dest = data_dir() / "assets" / filename
+    if move:
+        shutil.move(str(src), dest)
+    else:
+        shutil.copyfile(src, dest)
     row = {
         "id": asset_id,
         "kind": kind_for_mime(mime),

@@ -1,0 +1,615 @@
+{
+  "cst": "1.0",
+  "id": "problem-solution-ad",
+  "name": "Problem → Solution Ad",
+  "category": "social-ads",
+  "description": "Name the pain over a moody visual, flip to your fix with a product shot, back it with proof, close on a CTA.",
+  "tags": [
+    "ad",
+    "problem solution",
+    "linkedin",
+    "paid social",
+    "pas"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "problem",
+      "solution",
+      "cta",
+      "bg_problem"
+    ],
+    "properties": {
+      "problem": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "The pain point as a hook, ≤7 words"
+      },
+      "solution_kicker": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Short label for the fix, e.g. MEET THE FIX"
+      },
+      "solution": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Your solution in one line"
+      },
+      "solution_body": {
+        "type": "string",
+        "maxLength": 90,
+        "x-kind": "text",
+        "description": "One sentence on how it works"
+      },
+      "proof": {
+        "type": "string",
+        "maxLength": 56,
+        "x-kind": "text",
+        "description": "Proof point, e.g. Trusted by 2,000+ sales teams"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "bg_problem": {
+        "x-kind": "media",
+        "description": "Moody visual of the problem (frustrated team, cluttered pipeline)"
+      },
+      "product": {
+        "x-kind": "media",
+        "description": "Product screenshot or solution visual"
+      },
+      "vo_problem": {
+        "type": "string",
+        "maxLength": 130,
+        "x-kind": "voiceover",
+        "description": "Voiceover naming the problem"
+      },
+      "vo_solution": {
+        "type": "string",
+        "maxLength": 200,
+        "x-kind": "voiceover",
+        "description": "Voiceover introducing the solution"
+      },
+      "vo_proof": {
+        "type": "string",
+        "maxLength": 120,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the proof point"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "problem": "Half your leads never answer?",
+    "solution_kicker": "Meet the fix",
+    "solution": "Verified contacts, refreshed monthly",
+    "solution_body": "Every record is checked against live signals before it reaches your CRM.",
+    "proof": "Trusted by 2,000+ revenue teams",
+    "cta_headline": "Fill your pipeline with people who pick up",
+    "cta": "Get a free sample",
+    "music": "corporate-upbeat"
+  },
+  "scenes": [
+    {
+      "id": "problem",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_problem"
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "bg_problem"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000055",
+              "#000000DD"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "THE PROBLEM",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 28,
+            "uppercase": true
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.5,
+              0.065
+            ],
+            "vertical": [
+              0.08,
+              0.33,
+              0.84,
+              0.056
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.35
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{problem}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 100,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.39,
+              0.8,
+              0.32
+            ],
+            "vertical": [
+              0.08,
+              0.39,
+              0.84,
+              0.24
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "role": "solution",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_solution"
+      },
+      "transition": {
+        "type": "wipe-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "media",
+          "src": {
+            "$slot": "product"
+          },
+          "motion": "pan-left",
+          "box": {
+            "*": [
+              0.5,
+              0.0,
+              0.5,
+              1.0
+            ],
+            "vertical": [
+              0.0,
+              0.0,
+              1.0,
+              0.44
+            ],
+            "1:1": [
+              0.0,
+              0.0,
+              1.0,
+              0.44
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{solution_kicker}}",
+          "if": "solution_kicker",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.26,
+              0.4,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.5,
+              0.84,
+              0.035
+            ],
+            "1:1": [
+              0.08,
+              0.5,
+              0.84,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.35
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{solution}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 72,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.33,
+              0.4,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.545,
+              0.84,
+              0.16
+            ],
+            "1:1": [
+              0.08,
+              0.56,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.25
+        },
+        {
+          "type": "text",
+          "text": "{{solution_body}}",
+          "if": "solution_body",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "weight": 500,
+            "size": 34,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.65,
+              0.38,
+              0.18
+            ],
+            "vertical": [
+              0.08,
+              0.71,
+              0.84,
+              0.08
+            ],
+            "1:1": [
+              0.08,
+              0.75,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.5
+        }
+      ]
+    },
+    {
+      "id": "proof",
+      "role": "proof",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_proof"
+      },
+      "transition": {
+        "type": "dip-black",
+        "sec": 0.3
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.44,
+              0.34,
+              0.12,
+              0.01
+            ],
+            "vertical": [
+              0.38,
+              0.38,
+              0.24,
+              0.006
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{proof}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 76
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.38,
+              0.8,
+              0.26
+            ],
+            "vertical": [
+              0.08,
+              0.4,
+              0.84,
+              0.2
+            ]
+          },
+          "anim_in": {
+            "type": "zoom-in",
+            "sec": 0.45
+          },
+          "start": 0.15
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

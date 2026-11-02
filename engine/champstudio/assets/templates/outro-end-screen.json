@@ -1,0 +1,346 @@
+{
+  "cst": "1.0",
+  "id": "outro-end-screen",
+  "name": "Outro End Screen",
+  "category": "brand-utility",
+  "description": "A YouTube-style end screen: thank-you beat, then logo, CTA, website and two 'watch next' tiles to place end-screen links on.",
+  "tags": [
+    "outro",
+    "end screen",
+    "youtube",
+    "subscribe",
+    "closing"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "cta"
+    ],
+    "properties": {
+      "thanks": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Thank-you line"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "handle": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Social handle or channel, e.g. @championsgroup"
+      },
+      "next_label": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Label above the tiles, e.g. Watch next"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "thanks": "Thanks for watching",
+    "cta": "Subscribe",
+    "handle": "@championsgroup",
+    "next_label": "Watch next",
+    "music": "corporate-upbeat"
+  },
+  "scenes": [
+    {
+      "id": "thanks",
+      "role": "thanks",
+      "duration": {
+        "mode": "fixed",
+        "sec": 1.6
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{thanks}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 110
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.34,
+              0.84,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.38,
+              0.84,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "zoom-in",
+            "sec": 0.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "role": "end-screen",
+      "duration": {
+        "mode": "fixed",
+        "sec": 8.0
+      },
+      "transition": {
+        "type": "slide-up",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.06,
+              0.16,
+              0.3,
+              0.14
+            ],
+            "vertical": [
+              0.15,
+              0.06,
+              0.7,
+              0.07
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.36,
+              0.3,
+              0.13
+            ],
+            "vertical": [
+              0.15,
+              0.15,
+              0.7,
+              0.09
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 600,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.62,
+              0.34,
+              0.07
+            ],
+            "vertical": [
+              0.15,
+              0.295,
+              0.7,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.4
+        },
+        {
+          "type": "text",
+          "text": "{{handle}}",
+          "if": "handle",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 600,
+            "align": "left",
+            "color": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.54,
+              0.34,
+              0.07
+            ],
+            "vertical": [
+              0.15,
+              0.255,
+              0.7,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.5
+        },
+        {
+          "type": "text",
+          "text": "{{next_label}}",
+          "if": "next_label",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.accent"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.46,
+              0.12,
+              0.48,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.33,
+              0.84,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.3
+        },
+        {
+          "type": "shape",
+          "name": "Tile 1",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF14",
+            "radius": 0.06,
+            "stroke": {
+              "$brand": "colors.primary"
+            },
+            "stroke_width": 3
+          },
+          "box": {
+            "*": [
+              0.46,
+              0.2,
+              0.48,
+              0.33
+            ],
+            "vertical": [
+              0.08,
+              0.37,
+              0.84,
+              0.25
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.4
+          },
+          "start": 0.4
+        },
+        {
+          "type": "shape",
+          "name": "Tile 2",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF14",
+            "radius": 0.06,
+            "stroke": "#FFFFFF66",
+            "stroke_width": 3
+          },
+          "box": {
+            "*": [
+              0.46,
+              0.57,
+              0.48,
+              0.33
+            ],
+            "vertical": [
+              0.08,
+              0.65,
+              0.84,
+              0.25
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.4
+          },
+          "start": 0.55
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.5,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": false
+  }
+}

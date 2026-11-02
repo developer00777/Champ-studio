@@ -1,0 +1,898 @@
+{
+  "cst": "1.0",
+  "id": "kinetic-explainer",
+  "name": "Kinetic Explainer (60s)",
+  "category": "explainers",
+  "description": "Sixty-second kinetic-typography explainer: hook word, challenge, the shift, your solution, proof and CTA, paced by voiceover.",
+  "tags": [
+    "explainer",
+    "kinetic typography",
+    "motion text",
+    "60 seconds",
+    "voiceover"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "hook_word",
+      "challenge",
+      "shift_from",
+      "shift_to",
+      "solution",
+      "keywords",
+      "cta"
+    ],
+    "properties": {
+      "hook_word": {
+        "type": "string",
+        "maxLength": 18,
+        "x-kind": "text",
+        "description": "One or two huge hook words, e.g. Guesswork."
+      },
+      "hook_line": {
+        "type": "string",
+        "maxLength": 56,
+        "x-kind": "text",
+        "description": "Line under the hook word"
+      },
+      "challenge": {
+        "type": "string",
+        "maxLength": 64,
+        "x-kind": "text",
+        "description": "The challenge in one sentence"
+      },
+      "shift_from": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "The old way, e.g. Buying static lists"
+      },
+      "shift_to": {
+        "type": "string",
+        "maxLength": 36,
+        "x-kind": "text",
+        "description": "The new way, e.g. Acting on live signals"
+      },
+      "solution": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Your solution in one line"
+      },
+      "keywords": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "description": "Three one-word pillars of the solution"
+      },
+      "stat": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "Proof number, e.g. 3x"
+      },
+      "stat_label": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "What the number means"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_hook": {
+        "type": "string",
+        "maxLength": 220,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the hook (~8 s)"
+      },
+      "vo_challenge": {
+        "type": "string",
+        "maxLength": 260,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the challenge (~10 s)"
+      },
+      "vo_shift": {
+        "type": "string",
+        "maxLength": 260,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the shift (~10 s)"
+      },
+      "vo_solution": {
+        "type": "string",
+        "maxLength": 320,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the solution (~12 s)"
+      },
+      "vo_proof": {
+        "type": "string",
+        "maxLength": 220,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the proof (~9 s)"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 200,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA (~8 s)"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "hook_word": "Guesswork.",
+    "hook_line": "It's how most B2B teams still pick their next account.",
+    "challenge": "Static lists go stale before the campaign even launches.",
+    "shift_from": "Buying static lists",
+    "shift_to": "Acting on live signals",
+    "solution": "One data layer that never sleeps",
+    "keywords": [
+      "Verified",
+      "Enriched",
+      "Activated"
+    ],
+    "stat": "3x",
+    "stat_label": "more meetings booked per rep",
+    "cta_headline": "Stop guessing. Start growing.",
+    "cta": "Book a demo",
+    "music": "inspiring"
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 8,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_hook"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{hook_word}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 200
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.24,
+              0.88,
+              0.36
+            ],
+            "vertical": [
+              0.06,
+              0.3,
+              0.88,
+              0.2
+            ]
+          },
+          "anim_in": {
+            "type": "typewriter",
+            "sec": 0.9
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.42,
+              0.62,
+              0.16,
+              0.012
+            ],
+            "vertical": [
+              0.35,
+              0.52,
+              0.3,
+              0.006
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.5
+          },
+          "start": 1.0
+        },
+        {
+          "type": "text",
+          "text": "{{hook_line}}",
+          "if": "hook_line",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 500,
+            "size": 44,
+            "align": "center",
+            "color": "#FFFFFFCC"
+          },
+          "box": {
+            "*": [
+              0.14,
+              0.67,
+              0.72,
+              0.12
+            ],
+            "vertical": [
+              0.08,
+              0.55,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.5
+          },
+          "start": 1.4
+        }
+      ]
+    },
+    {
+      "id": "challenge",
+      "role": "problem",
+      "duration": {
+        "mode": "voiceover",
+        "min": 10,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_challenge"
+      },
+      "transition": {
+        "type": "slide-up",
+        "sec": 0.45
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.primary"
+          }
+        },
+        {
+          "type": "text",
+          "text": "The challenge",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.26,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.3,
+              0.84,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{challenge}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 104,
+            "align": "left",
+            "valign": "top",
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.34,
+              0.84,
+              0.42
+            ],
+            "vertical": [
+              0.08,
+              0.35,
+              0.84,
+              0.32
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.6
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "shift",
+      "role": "shift",
+      "duration": {
+        "mode": "voiceover",
+        "min": 10,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_shift"
+      },
+      "transition": {
+        "type": "wipe-left",
+        "sec": 0.45
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "From",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.2,
+              0.3,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.24,
+              0.84,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{shift_from}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "shadow": false,
+            "size": 72,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.27,
+              0.84,
+              0.16
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.45
+          },
+          "start": 0.2
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.47,
+              0.84,
+              0.006
+            ],
+            "vertical": [
+              0.08,
+              0.43,
+              0.84,
+              0.004
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.8
+          },
+          "start": 1.5
+        },
+        {
+          "type": "text",
+          "text": "To",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.52,
+              0.3,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.47,
+              0.84,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 2.2
+        },
+        {
+          "type": "text",
+          "text": "{{shift_to}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 110,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.59,
+              0.84,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.51,
+              0.84,
+              0.2
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          },
+          "start": 2.4
+        }
+      ]
+    },
+    {
+      "id": "solution",
+      "role": "solution",
+      "duration": {
+        "mode": "voiceover",
+        "min": 12,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_solution"
+      },
+      "transition": {
+        "type": "dip-black",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{solution}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 76,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.84,
+              0.22
+            ],
+            "vertical": [
+              0.08,
+              0.16,
+              0.84,
+              0.16
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "list",
+          "name": "Numbers",
+          "items": [
+            "01",
+            "02",
+            "03"
+          ],
+          "stagger": 1.6,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.accent"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 110
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.42,
+              0.18,
+              0.46
+            ],
+            "vertical": [
+              0.08,
+              0.4,
+              0.26,
+              0.4
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 1.2
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "keywords"
+          },
+          "stagger": 1.6,
+          "style": {
+            "$brand": "styles.title",
+            "size": 110,
+            "align": "left",
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.26,
+              0.42,
+              0.66,
+              0.46
+            ],
+            "vertical": [
+              0.34,
+              0.4,
+              0.6,
+              0.4
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.4
+          },
+          "start": 1.2
+        }
+      ]
+    },
+    {
+      "id": "proof",
+      "role": "proof",
+      "duration": {
+        "mode": "voiceover",
+        "min": 9,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_proof"
+      },
+      "transition": {
+        "type": "zoom",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "stat",
+          "text": "{{stat}}",
+          "style": {
+            "$brand": "styles.stat",
+            "size": 280
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.16,
+              0.8,
+              0.44
+            ],
+            "vertical": [
+              0.08,
+              0.24,
+              0.84,
+              0.24
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{stat_label}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 700,
+            "size": 52,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.62,
+              0.8,
+              0.14
+            ],
+            "vertical": [
+              0.08,
+              0.5,
+              0.84,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.5
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 8,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.25,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

@@ -1,0 +1,550 @@
+{
+  "cst": "1.0",
+  "id": "review-rating",
+  "name": "Review Rating",
+  "category": "social-proof",
+  "description": "Your star rating as a hero number, a featured review on a card, and a CTA. Built for G2, Capterra or Google reviews.",
+  "tags": [
+    "reviews",
+    "rating",
+    "stars",
+    "g2",
+    "social proof"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "rating",
+      "platform",
+      "review",
+      "reviewer",
+      "cta"
+    ],
+    "properties": {
+      "rating": {
+        "type": "string",
+        "maxLength": 4,
+        "x-kind": "text",
+        "description": "Rating, e.g. 4.8"
+      },
+      "platform": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Where and how many, e.g. on G2 · 340 reviews"
+      },
+      "review": {
+        "type": "string",
+        "maxLength": 150,
+        "x-kind": "text",
+        "description": "A featured review"
+      },
+      "reviewer": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Reviewer name or title"
+      },
+      "badge": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Optional award line, e.g. Leader · Fall 2026"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_rating": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the rating"
+      },
+      "vo_review": {
+        "type": "string",
+        "maxLength": 300,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the review"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "rating": "4.8",
+    "platform": "on G2 · 340 verified reviews",
+    "badge": "Leader · Fall 2026",
+    "review": "The most accurate healthcare contact data we've used. Setup took a day and support is outstanding.",
+    "reviewer": "Marketing Director, mid-market healthcare",
+    "cta_headline": "See why teams rate us 4.8",
+    "cta": "Read all reviews",
+    "music": "corporate-upbeat"
+  },
+  "scenes": [
+    {
+      "id": "rating",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_rating"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{rating}}",
+          "style": {
+            "$brand": "styles.stat",
+            "size": 260,
+            "color": "#FFFFFF"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.84,
+              0.36
+            ],
+            "vertical": [
+              0.06,
+              0.24,
+              0.88,
+              0.17
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "★★★★★",
+          "style": {
+            "$brand": "styles.title",
+            "size": 88,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "shadow": false,
+            "letter_spacing": 0.08
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.5,
+              0.6,
+              0.12
+            ],
+            "vertical": [
+              0.08,
+              0.42,
+              0.84,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.8
+          },
+          "start": 0.4
+        },
+        {
+          "type": "text",
+          "text": "{{platform}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 500,
+            "size": 40,
+            "align": "center",
+            "color": "#FFFFFFCC"
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.64,
+              0.76,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.5,
+              0.84,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.9
+        },
+        {
+          "type": "text",
+          "text": "{{badge}}",
+          "if": "badge",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 30,
+            "uppercase": true,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.76,
+              0.4,
+              0.08
+            ],
+            "vertical": [
+              0.1,
+              0.58,
+              0.8,
+              0.056
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 1.2
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "role": "review",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_review"
+      },
+      "transition": {
+        "type": "slide-up",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.surface"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF",
+            "radius": 0.06
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.14,
+              0.76,
+              0.72
+            ],
+            "vertical": [
+              0.06,
+              0.2,
+              0.88,
+              0.56
+            ]
+          },
+          "anim_in": {
+            "type": "zoom-in",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "★★★★★",
+          "style": {
+            "$brand": "styles.title",
+            "size": 48,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "shadow": false,
+            "align": "left",
+            "letter_spacing": 0.06
+          },
+          "box": {
+            "*": [
+              0.17,
+              0.2,
+              0.4,
+              0.08
+            ],
+            "vertical": [
+              0.12,
+              0.24,
+              0.76,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.5
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{review}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 52,
+            "align": "left",
+            "valign": "top",
+            "line_height": 1.25
+          },
+          "box": {
+            "*": [
+              0.17,
+              0.31,
+              0.66,
+              0.38
+            ],
+            "vertical": [
+              0.12,
+              0.3,
+              0.76,
+              0.34
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.6
+          },
+          "start": 0.3
+        },
+        {
+          "type": "text",
+          "text": "— {{reviewer}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "weight": 500,
+            "size": 32,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.17,
+              0.72,
+              0.66,
+              0.07
+            ],
+            "vertical": [
+              0.12,
+              0.67,
+              0.76,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.8
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

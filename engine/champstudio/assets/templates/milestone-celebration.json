@@ -1,0 +1,761 @@
+{
+  "cst": "1.0",
+  "id": "milestone-celebration",
+  "name": "Milestone Celebration",
+  "category": "company-news",
+  "description": "Celebrate a company milestone: a giant number with confetti, the story behind it over a visual, thank-yous, and a sign-off.",
+  "tags": [
+    "milestone",
+    "anniversary",
+    "celebration",
+    "company news",
+    "thank you"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "number",
+      "unit",
+      "signoff"
+    ],
+    "properties": {
+      "number": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "The milestone number, e.g. 10 or 1,000"
+      },
+      "unit": {
+        "type": "string",
+        "maxLength": 28,
+        "x-kind": "text",
+        "description": "What it counts, e.g. years of growth"
+      },
+      "story": {
+        "type": "string",
+        "maxLength": 80,
+        "x-kind": "text",
+        "description": "One line on how you got here"
+      },
+      "photo": {
+        "x-kind": "media",
+        "description": "Team, office or archive visual"
+      },
+      "thanks": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "description": "Three groups to thank, e.g. Our clients"
+      },
+      "signoff": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Sign-off line, e.g. Here's to the next ten"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_number": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the milestone"
+      },
+      "vo_story": {
+        "type": "string",
+        "maxLength": 260,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the story"
+      },
+      "vo_thanks": {
+        "type": "string",
+        "maxLength": 220,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the thank-yous"
+      },
+      "vo_signoff": {
+        "type": "string",
+        "maxLength": 120,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the sign-off"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "number": "10",
+    "unit": "years of building growth",
+    "story": "From a two-person data desk to twelve ventures across four continents.",
+    "thanks": [
+      "Our clients",
+      "Our 900+ people",
+      "Our partners"
+    ],
+    "signoff": "Here's to the next ten",
+    "cta": "Read our story",
+    "music": "inspiring"
+  },
+  "scenes": [
+    {
+      "id": "number",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_number"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Confetti",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.18,
+              0.02,
+              0.035555555555555556
+            ],
+            "vertical": [
+              0.182,
+              0.138,
+              0.032,
+              0.018000000000000002
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 0.3
+        },
+        {
+          "type": "shape",
+          "name": "Confetti",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.84,
+              0.14,
+              0.03,
+              0.05333333333333333
+            ],
+            "vertical": [
+              0.14600000000000002,
+              0.786,
+              0.048,
+              0.027
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 0.38
+        },
+        {
+          "type": "shape",
+          "name": "Confetti",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.9,
+              0.62,
+              0.018,
+              0.032
+            ],
+            "vertical": [
+              0.5780000000000001,
+              0.8400000000000001,
+              0.0288,
+              0.0162
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 0.45999999999999996
+        },
+        {
+          "type": "shape",
+          "name": "Confetti",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.7,
+              0.026,
+              0.04622222222222222
+            ],
+            "vertical": [
+              0.65,
+              0.09300000000000001,
+              0.0416,
+              0.023399999999999997
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 0.54
+        },
+        {
+          "type": "shape",
+          "name": "Confetti",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.22,
+              0.86,
+              0.014,
+              0.02488888888888889
+            ],
+            "vertical": [
+              0.794,
+              0.228,
+              0.022400000000000003,
+              0.012600000000000002
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 0.62
+        },
+        {
+          "type": "shape",
+          "name": "Confetti",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.74,
+              0.86,
+              0.022,
+              0.03911111111111111
+            ],
+            "vertical": [
+              0.794,
+              0.6960000000000001,
+              0.0352,
+              0.0198
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 0.7
+        },
+        {
+          "type": "shape",
+          "name": "Confetti",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.1,
+              0.012,
+              0.021333333333333333
+            ],
+            "vertical": [
+              0.11000000000000001,
+              0.30000000000000004,
+              0.019200000000000002,
+              0.0108
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 0.78
+        },
+        {
+          "type": "shape",
+          "name": "Confetti",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.64,
+              0.08,
+              0.016,
+              0.028444444444444446
+            ],
+            "vertical": [
+              0.09200000000000001,
+              0.6060000000000001,
+              0.0256,
+              0.014400000000000001
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 0.8600000000000001
+        },
+        {
+          "type": "text",
+          "text": "{{number}}",
+          "style": {
+            "$brand": "styles.stat",
+            "size": 380
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.12,
+              0.84,
+              0.5
+            ],
+            "vertical": [
+              0.06,
+              0.26,
+              0.88,
+              0.24
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.6
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{unit}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 64
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.62,
+              0.8,
+              0.12
+            ],
+            "vertical": [
+              0.08,
+              0.5,
+              0.84,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.5
+        }
+      ]
+    },
+    {
+      "id": "story",
+      "role": "story",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4.5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_story"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.5
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "photo"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000022",
+              "#000000DD"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{story}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 72,
+            "align": "left",
+            "valign": "bottom"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.5,
+              0.84,
+              0.32
+            ],
+            "vertical": [
+              0.08,
+              0.46,
+              0.84,
+              0.26
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          },
+          "start": 0.2
+        }
+      ]
+    },
+    {
+      "id": "thanks",
+      "role": "list",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_thanks"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Thank you",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 36,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.84,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.2,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "name": "Hearts",
+          "items": [
+            "♥",
+            "♥",
+            "♥"
+          ],
+          "stagger": 0.8,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 56
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.26,
+              0.07,
+              0.56
+            ],
+            "vertical": [
+              0.08,
+              0.27,
+              0.12,
+              0.44
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.35
+          },
+          "start": 0.3
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "thanks"
+          },
+          "stagger": 0.8,
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 68,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.16,
+              0.26,
+              0.76,
+              0.56
+            ],
+            "vertical": [
+              0.22,
+              0.27,
+              0.7,
+              0.44
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_signoff"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{signoff}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.4,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": false
+  }
+}

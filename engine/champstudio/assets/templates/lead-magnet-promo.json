@@ -1,0 +1,696 @@
+{
+  "cst": "1.0",
+  "id": "lead-magnet-promo",
+  "name": "Lead Magnet Promo",
+  "category": "sales-enablement",
+  "description": "Promote a gated guide or ebook: hook, a branded cover mock-up with what's inside, and a download CTA.",
+  "tags": [
+    "lead magnet",
+    "ebook",
+    "guide",
+    "gated content",
+    "download"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "hook",
+      "guide_title",
+      "inside",
+      "cta"
+    ],
+    "properties": {
+      "hook": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Hook question or promise"
+      },
+      "guide_type": {
+        "type": "string",
+        "maxLength": 16,
+        "x-kind": "text",
+        "description": "Format, e.g. FREE GUIDE"
+      },
+      "guide_title": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Guide title, shown on the cover"
+      },
+      "inside": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "description": "Three things inside"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_hook": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the hook"
+      },
+      "vo_guide": {
+        "type": "string",
+        "maxLength": 320,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the guide and what's inside"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "hook": "Is your CRM quietly decaying?",
+    "guide_type": "Free guide",
+    "guide_title": "The B2B Data Hygiene Playbook",
+    "inside": [
+      "A 15-minute CRM health audit",
+      "Decay benchmarks by industry",
+      "A 90-day clean-up plan"
+    ],
+    "cta_headline": "Get the playbook free",
+    "cta": "Download now",
+    "music": "calm-tech"
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_hook"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.012,
+              0.36
+            ],
+            "vertical": [
+              0.08,
+              0.32,
+              0.02,
+              0.26
+            ]
+          },
+          "anim_in": {
+            "type": "slide-down",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{hook}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 104,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.3,
+              0.78,
+              0.36
+            ],
+            "vertical": [
+              0.13,
+              0.32,
+              0.79,
+              0.26
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.1
+        }
+      ]
+    },
+    {
+      "id": "guide",
+      "role": "guide",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5.5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_guide"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.surface"
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Cover shadow",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary_dark"
+            },
+            "radius": 0.03
+          },
+          "box": {
+            "*": [
+              0.09,
+              0.13,
+              0.27,
+              0.76
+            ],
+            "vertical": [
+              0.27,
+              0.07,
+              0.48,
+              0.38
+            ],
+            "1:1": [
+              0.07,
+              0.15,
+              0.36,
+              0.7
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Cover",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            },
+            "radius": 0.03
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.11,
+              0.27,
+              0.76
+            ],
+            "vertical": [
+              0.25,
+              0.06,
+              0.48,
+              0.38
+            ],
+            "1:1": [
+              0.06,
+              0.13,
+              0.36,
+              0.7
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Spine",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary_dark"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.11,
+              0.018,
+              0.76
+            ],
+            "vertical": [
+              0.25,
+              0.06,
+              0.03,
+              0.38
+            ],
+            "1:1": [
+              0.06,
+              0.13,
+              0.024,
+              0.7
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{guide_type}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 24,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.115,
+              0.17,
+              0.22,
+              0.05
+            ],
+            "vertical": [
+              0.3,
+              0.09,
+              0.4,
+              0.025
+            ],
+            "1:1": [
+              0.1,
+              0.19,
+              0.3,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.4
+        },
+        {
+          "type": "text",
+          "text": "{{guide_title}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 56,
+            "align": "left",
+            "valign": "top",
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.115,
+              0.25,
+              0.21,
+              0.4
+            ],
+            "vertical": [
+              0.3,
+              0.13,
+              0.4,
+              0.2
+            ],
+            "1:1": [
+              0.1,
+              0.26,
+              0.3,
+              0.4
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.5
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.115,
+              0.76,
+              0.14,
+              0.06
+            ],
+            "vertical": [
+              0.3,
+              0.38,
+              0.25,
+              0.03
+            ],
+            "1:1": [
+              0.1,
+              0.74,
+              0.2,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.6,
+          "fallback_text": false
+        },
+        {
+          "type": "text",
+          "text": "Inside",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.42,
+              0.2,
+              0.5,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.5,
+              0.84,
+              0.035
+            ],
+            "1:1": [
+              0.5,
+              0.18,
+              0.44,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.6
+        },
+        {
+          "type": "list",
+          "name": "Numbers",
+          "items": [
+            "01",
+            "02",
+            "03"
+          ],
+          "stagger": 1.0,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 46
+          },
+          "box": {
+            "*": [
+              0.42,
+              0.28,
+              0.07,
+              0.5
+            ],
+            "vertical": [
+              0.08,
+              0.55,
+              0.12,
+              0.3
+            ],
+            "1:1": [
+              0.5,
+              0.26,
+              0.08,
+              0.56
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.8
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "inside"
+          },
+          "stagger": 1.0,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 44,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.49,
+              0.28,
+              0.45,
+              0.5
+            ],
+            "vertical": [
+              0.2,
+              0.55,
+              0.74,
+              0.3
+            ],
+            "1:1": [
+              0.58,
+              0.26,
+              0.38,
+              0.56
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.8
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

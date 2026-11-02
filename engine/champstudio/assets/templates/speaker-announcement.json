@@ -1,0 +1,563 @@
+{
+  "cst": "1.0",
+  "id": "speaker-announcement",
+  "name": "Speaker Announcement",
+  "category": "events",
+  "description": "Announce a speaker: branded reveal, headshot with name, title and talk, then a get-your-ticket CTA.",
+  "tags": [
+    "speaker",
+    "event",
+    "conference",
+    "announcement",
+    "lineup"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "event",
+      "name",
+      "role",
+      "cta"
+    ],
+    "properties": {
+      "event": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Event name"
+      },
+      "headshot": {
+        "x-kind": "media",
+        "description": "Speaker headshot",
+        "x-media": [
+          "image"
+        ]
+      },
+      "name": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Speaker name"
+      },
+      "role": {
+        "type": "string",
+        "maxLength": 52,
+        "x-kind": "text",
+        "description": "Speaker title and company"
+      },
+      "talk": {
+        "type": "string",
+        "maxLength": 70,
+        "x-kind": "text",
+        "description": "Talk title"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_reveal": {
+        "type": "string",
+        "maxLength": 120,
+        "x-kind": "voiceover",
+        "description": "Voiceover teasing the announcement"
+      },
+      "vo_speaker": {
+        "type": "string",
+        "maxLength": 240,
+        "x-kind": "voiceover",
+        "description": "Voiceover introducing the speaker and talk"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "event": "Champions Growth Summit 2026",
+    "name": "Dr. Lena Hartmann",
+    "role": "Chief Data Officer, Meridian Health",
+    "talk": "Fixing healthcare's data problem, one record at a time",
+    "cta_headline": "Hear Lena live in London",
+    "cta": "Get your ticket",
+    "music": "energetic"
+  },
+  "scenes": [
+    {
+      "id": "reveal",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.2,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_reveal"
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "text",
+          "text": "Speaker announcement",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 34,
+            "weight": 800,
+            "uppercase": true,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.38,
+              0.8,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.4,
+              0.84,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF"
+          },
+          "box": {
+            "*": [
+              0.46,
+              0.49,
+              0.08,
+              0.008
+            ],
+            "vertical": [
+              0.4,
+              0.47,
+              0.2,
+              0.004
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          },
+          "start": 0.3
+        },
+        {
+          "type": "text",
+          "text": "{{event}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 56,
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.52,
+              0.8,
+              0.12
+            ],
+            "vertical": [
+              0.08,
+              0.49,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.4
+        }
+      ]
+    },
+    {
+      "id": "speaker",
+      "role": "speaker",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_speaker"
+      },
+      "transition": {
+        "type": "wipe-right",
+        "sec": 0.45
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "media",
+          "src": {
+            "$slot": "headshot"
+          },
+          "motion": "kenburns-in",
+          "box": {
+            "*": [
+              0.0,
+              0.0,
+              0.46,
+              1.0
+            ],
+            "vertical": [
+              0.0,
+              0.0,
+              1.0,
+              0.46
+            ],
+            "1:1": [
+              0.0,
+              0.0,
+              1.0,
+              0.42
+            ]
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.46,
+              0.0,
+              0.008,
+              1.0
+            ],
+            "vertical": [
+              0.0,
+              0.46,
+              1.0,
+              0.005
+            ],
+            "1:1": [
+              0.0,
+              0.42,
+              1.0,
+              0.006
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{name}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.52,
+              0.22,
+              0.42,
+              0.22
+            ],
+            "vertical": [
+              0.08,
+              0.5,
+              0.84,
+              0.1
+            ],
+            "1:1": [
+              0.08,
+              0.46,
+              0.84,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.45
+          },
+          "start": 0.3
+        },
+        {
+          "type": "text",
+          "text": "{{role}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 700,
+            "size": 36,
+            "align": "left",
+            "color": {
+              "$brand": "colors.accent"
+            },
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.52,
+              0.45,
+              0.42,
+              0.12
+            ],
+            "vertical": [
+              0.08,
+              0.6,
+              0.84,
+              0.06
+            ],
+            "1:1": [
+              0.08,
+              0.59,
+              0.84,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.5
+        },
+        {
+          "type": "text",
+          "text": "{{talk}}",
+          "if": "talk",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 500,
+            "size": 40,
+            "align": "left",
+            "color": "#FFFFFFDD",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.52,
+              0.6,
+              0.42,
+              0.2
+            ],
+            "vertical": [
+              0.08,
+              0.67,
+              0.84,
+              0.1
+            ],
+            "1:1": [
+              0.08,
+              0.68,
+              0.84,
+              0.14
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.8
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

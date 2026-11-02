@@ -1,0 +1,391 @@
+{
+  "cst": "1.0",
+  "id": "b2b-stat-ad",
+  "name": "Single Stat Ad",
+  "category": "social-ads",
+  "description": "Hook question, one big number, proof line and CTA. Built for LinkedIn and paid social.",
+  "tags": [
+    "linkedin",
+    "data",
+    "stat",
+    "ad"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "hook",
+      "stat",
+      "stat_label",
+      "cta",
+      "bg"
+    ],
+    "properties": {
+      "hook": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Pain-point question, ≤7 words"
+      },
+      "stat": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "The number, e.g. 99% or 120M+"
+      },
+      "stat_label": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "What the number means"
+      },
+      "proof": {
+        "type": "string",
+        "maxLength": 60,
+        "x-kind": "text",
+        "description": "Short supporting line"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "bg": {
+        "x-kind": "media",
+        "description": "Background visual for the hook scene"
+      },
+      "vo_hook": {
+        "type": "string",
+        "maxLength": 120,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the hook"
+      },
+      "vo_stat": {
+        "type": "string",
+        "maxLength": 160,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the stat"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 100,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "hook": "Still chasing bounced emails?",
+    "stat": "99%",
+    "stat_label": "contact accuracy, verified monthly",
+    "proof": "120M+ B2B contacts across 7M companies",
+    "cta": "Book a demo",
+    "music": "corporate-upbeat"
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_hook"
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "bg"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000033",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{hook}}",
+          "style": {
+            "$brand": "styles.title"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.32,
+              0.84,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.36,
+              0.84,
+              0.26
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          }
+        }
+      ]
+    },
+    {
+      "id": "stat",
+      "role": "stat",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_stat"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.0,
+              0.0,
+              0.018,
+              1.0
+            ]
+          }
+        },
+        {
+          "type": "stat",
+          "text": "{{stat}}",
+          "style": {
+            "$brand": "styles.stat"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.16,
+              0.84,
+              0.42
+            ],
+            "vertical": [
+              0.08,
+              0.24,
+              0.84,
+              0.24
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{stat_label}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            }
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.58,
+              0.8,
+              0.14
+            ],
+            "vertical": [
+              0.08,
+              0.5,
+              0.84,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.3
+        },
+        {
+          "type": "text",
+          "text": "{{proof}}",
+          "if": "proof",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 34,
+            "color": {
+              "$brand": "colors.text_muted"
+            }
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.74,
+              0.8,
+              0.1
+            ],
+            "vertical": [
+              0.08,
+              0.64,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.35
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.35,
+              0.18,
+              0.3,
+              0.2
+            ],
+            "vertical": [
+              0.25,
+              0.22,
+              0.5,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.56,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.15,
+              0.5,
+              0.7,
+              0.09
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.25
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.76,
+              0.6,
+              0.08
+            ],
+            "vertical": [
+              0.1,
+              0.62,
+              0.8,
+              0.06
+            ]
+          },
+          "start": 0.5
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.35,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true
+  }
+}

@@ -47,3 +47,34 @@ Assets + settings live in the `champ-data` volume. Backup:
 ```bash
 git pull && docker compose up -d --build
 ```
+
+
+## Team mode: single sign-on, roles, budgets
+
+Set these in `.env` (all optional; without them the server uses the shared access token above):
+
+| Variable | Purpose |
+|---|---|
+| `CHAMP_OIDC_ISSUER` | Your identity provider, e.g. `https://login.microsoftonline.com/<tenant>/v2.0` or `https://accounts.google.com` |
+| `CHAMP_OIDC_CLIENT_ID` / `CHAMP_OIDC_CLIENT_SECRET` | App registration; redirect URI `<CHAMP_PUBLIC_URL>/api/auth/callback` |
+| `CHAMP_PUBLIC_URL` | e.g. `https://studio.example.com` (HTTPS makes session cookies `Secure`) |
+| `CHAMP_ADMIN_EMAILS` | Comma-separated; these become admins on first login |
+| `CHAMP_DEFAULT_ROLE` | Role for everyone else: `viewer`, `reviewer`, `editor` (default) or `admin` |
+| `CHAMP_ALLOWED_DOMAINS` | Optional e-mail domain allowlist, e.g. `championsmail.com` |
+| `CHAMP_RENDER_WORKERS` | Renders allowed at once (default 2); the rest queue |
+| `CHAMP_MAX_UPLOAD_MB` | Upload limit (default 4096) |
+
+Roles: **viewer** (watch), **reviewer** (+ comment, approve), **editor** (+ create and edit),
+**admin** (+ users, brand-kit deletion, audit log). Admins change roles in Settings → Team.
+Every create/save/render/approve/login is written to the audit log.
+
+Budgets: Settings → Usage & budget sets a monthly cap and a per-project cap. Every paid call is
+estimated first and refused (HTTP 402) when it would cross a cap; actual costs land in the ledger.
+
+Review links (`/review.html?t=…`) let clients watch a render, comment at exact frames and approve or
+request changes without an account. Treat the link like a password; delete the project to revoke.
+
+Storage and database: one SQLite database (WAL) plus files in the `champ-data` volume. That is
+plenty for a marketing team on one server; back up the volume (`docker run --rm -v
+champ_studio_champ-data:/data -v $PWD:/b alpine tar czf /b/champ-backup.tgz /data`). A Postgres +
+S3/MinIO profile is on the roadmap for multi-server deployments.

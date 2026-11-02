@@ -1,0 +1,680 @@
+{
+  "cst": "1.0",
+  "id": "ten-ways-client",
+  "name": "10 Ways [Client] Can Use Data",
+  "category": "sales-enablement",
+  "description": "Personalised listicle for a named prospect: ten concrete use cases in two pages, framed by an intro and a booking CTA.",
+  "tags": [
+    "10 ways",
+    "listicle",
+    "personalized",
+    "use cases",
+    "proposal",
+    "account based"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "company",
+      "title",
+      "ways_1",
+      "ways_2",
+      "cta"
+    ],
+    "properties": {
+      "company": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Client company name (or {company} for batch)"
+      },
+      "title": {
+        "type": "string",
+        "maxLength": 56,
+        "x-kind": "text",
+        "description": "Title, e.g. 10 ways {company} can grow with B2B data"
+      },
+      "subtitle": {
+        "type": "string",
+        "maxLength": 70,
+        "x-kind": "text",
+        "description": "Line under the title"
+      },
+      "bg": {
+        "x-kind": "media",
+        "description": "Visual of the client's industry"
+      },
+      "ways_1": {
+        "type": "array",
+        "minItems": 5,
+        "maxItems": 5,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 44
+        },
+        "description": "Use cases 1–5"
+      },
+      "ways_2": {
+        "type": "array",
+        "minItems": 5,
+        "maxItems": 5,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 44
+        },
+        "description": "Use cases 6–10"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_intro": {
+        "type": "string",
+        "maxLength": 200,
+        "x-kind": "voiceover",
+        "description": "Voiceover introducing the list"
+      },
+      "vo_ways_1": {
+        "type": "string",
+        "maxLength": 500,
+        "x-kind": "voiceover",
+        "description": "Voiceover for use cases 1–5"
+      },
+      "vo_ways_2": {
+        "type": "string",
+        "maxLength": 500,
+        "x-kind": "voiceover",
+        "description": "Voiceover for use cases 6–10"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "company": "{company}",
+    "title": "10 ways {company} can grow with B2B data",
+    "subtitle": "Ideas tailored to your market, built on verified data.",
+    "ways_1": [
+      "Map your total addressable market",
+      "Find look-alikes of your best clients",
+      "Reach full buying groups",
+      "Time outreach with intent signals",
+      "Enrich every inbound lead"
+    ],
+    "ways_2": [
+      "Clean and de-duplicate your CRM",
+      "Launch account-based ad audiences",
+      "Spot champions changing jobs",
+      "Enter new regions with confidence",
+      "Measure pipeline by segment"
+    ],
+    "cta_headline": "Let's pick your top three",
+    "cta": "Book a strategy call",
+    "music": "calm-tech"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_intro"
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "bg"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000033",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "Prepared for {{company}}",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 28,
+            "uppercase": true
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.27,
+              0.6,
+              0.065
+            ],
+            "vertical": [
+              0.08,
+              0.3,
+              0.84,
+              0.056
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{title}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 92,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.36,
+              0.8,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.36,
+              0.84,
+              0.24
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{subtitle}}",
+          "if": "subtitle",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 500,
+            "size": 38,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.67,
+              0.66,
+              0.12
+            ],
+            "vertical": [
+              0.08,
+              0.61,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.45
+        }
+      ]
+    },
+    {
+      "id": "ways1",
+      "role": "list",
+      "duration": {
+        "mode": "voiceover",
+        "min": 7,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_ways_1"
+      },
+      "transition": {
+        "type": "wipe-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "10 ways for {{company}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.08,
+              0.84,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.13,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "name": "Numbers",
+          "items": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05"
+          ],
+          "stagger": 0.9,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 44
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.18,
+              0.08,
+              0.72
+            ],
+            "vertical": [
+              0.08,
+              0.19,
+              0.14,
+              0.6
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.3
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "ways_1"
+          },
+          "stagger": 0.9,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 44,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.16,
+              0.18,
+              0.78,
+              0.72
+            ],
+            "vertical": [
+              0.22,
+              0.19,
+              0.72,
+              0.6
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "ways2",
+      "role": "list",
+      "duration": {
+        "mode": "voiceover",
+        "min": 7,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_ways_2"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.surface"
+          }
+        },
+        {
+          "type": "text",
+          "text": "10 ways for {{company}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.08,
+              0.84,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.13,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "name": "Numbers",
+          "items": [
+            "06",
+            "07",
+            "08",
+            "09",
+            "10"
+          ],
+          "stagger": 0.9,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 44
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.18,
+              0.08,
+              0.72
+            ],
+            "vertical": [
+              0.08,
+              0.19,
+              0.14,
+              0.6
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.3
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "ways_2"
+          },
+          "stagger": 0.9,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 44,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.16,
+              0.18,
+              0.78,
+              0.72
+            ],
+            "vertical": [
+              0.22,
+              0.19,
+              0.72,
+              0.6
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.2,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

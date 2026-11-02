@@ -1,0 +1,614 @@
+{
+  "cst": "1.0",
+  "id": "we-are-hiring",
+  "name": "We're Hiring",
+  "category": "recruitment",
+  "description": "Hiring announcement: bold headline over a team visual, open roles, three reasons to join, and an apply CTA.",
+  "tags": [
+    "hiring",
+    "recruitment",
+    "careers",
+    "jobs",
+    "employer brand"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "headline",
+      "roles",
+      "reasons",
+      "cta"
+    ],
+    "properties": {
+      "headline": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Hiring headline"
+      },
+      "team": {
+        "x-kind": "media",
+        "description": "Team or office visual"
+      },
+      "roles_title": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Heading above the roles"
+      },
+      "roles": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 5,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "description": "Open roles, e.g. Data Analyst · Remote"
+      },
+      "reasons": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "description": "Three reasons to join"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_intro": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the headline"
+      },
+      "vo_roles": {
+        "type": "string",
+        "maxLength": 260,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the roles"
+      },
+      "vo_reasons": {
+        "type": "string",
+        "maxLength": 260,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the reasons"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "headline": "Build the data behind B2B growth",
+    "roles_title": "Open roles",
+    "roles": [
+      "Senior Data Engineer · Remote",
+      "Account Executive · London",
+      "Research Analyst · Chennai",
+      "Product Designer · Hybrid"
+    ],
+    "reasons": [
+      "Ship work used by 2,000+ companies",
+      "Learning budget from day one",
+      "Flexible, remote-friendly teams"
+    ],
+    "cta_headline": "Your next chapter starts here",
+    "cta": "Apply now",
+    "music": "energetic"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_intro"
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "team"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000033",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "We're hiring",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 28,
+            "uppercase": true
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.27,
+              0.6,
+              0.065
+            ],
+            "vertical": [
+              0.08,
+              0.3,
+              0.84,
+              0.056
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 100,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.36,
+              0.8,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.36,
+              0.84,
+              0.24
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          },
+          "start": 0.15
+        }
+      ]
+    },
+    {
+      "id": "roles",
+      "role": "list",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5.5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_roles"
+      },
+      "transition": {
+        "type": "wipe-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.12,
+              0.006,
+              0.76
+            ],
+            "vertical": [
+              0.06,
+              0.18,
+              0.012,
+              0.62
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{roles_title}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.12,
+              0.6,
+              0.07
+            ],
+            "vertical": [
+              0.1,
+              0.18,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "roles"
+          },
+          "stagger": 0.7,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 50,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.22,
+              0.82,
+              0.66
+            ],
+            "vertical": [
+              0.1,
+              0.24,
+              0.82,
+              0.54
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          }
+        }
+      ]
+    },
+    {
+      "id": "reasons",
+      "role": "reasons",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4.5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_reasons"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Why join us",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.accent"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.84,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.2,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "name": "Numbers",
+          "items": [
+            "01",
+            "02",
+            "03"
+          ],
+          "stagger": 1.0,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 50
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.26,
+              0.08,
+              0.56
+            ],
+            "vertical": [
+              0.08,
+              0.27,
+              0.14,
+              0.44
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.3
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "reasons"
+          },
+          "stagger": 1.0,
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 600,
+            "size": 50,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.16,
+              0.26,
+              0.76,
+              0.56
+            ],
+            "vertical": [
+              0.22,
+              0.27,
+              0.7,
+              0.44
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

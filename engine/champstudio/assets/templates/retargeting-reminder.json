@@ -1,0 +1,518 @@
+{
+  "cst": "1.0",
+  "id": "retargeting-reminder",
+  "name": "Retargeting Reminder",
+  "category": "social-ads",
+  "description": "For warm audiences who visited but didn't convert: a friendly nudge, three objection-busters and an urgent CTA.",
+  "tags": [
+    "ad",
+    "retargeting",
+    "remarketing",
+    "reminder"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "nudge",
+      "reasons",
+      "cta"
+    ],
+    "properties": {
+      "nudge": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Friendly reminder headline"
+      },
+      "nudge_sub": {
+        "type": "string",
+        "maxLength": 70,
+        "x-kind": "text",
+        "description": "One line on what they looked at"
+      },
+      "reasons": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "description": "Three objection-busters (risk, effort, proof)"
+      },
+      "urgency": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Urgency line, e.g. Offer ends Friday"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_nudge": {
+        "type": "string",
+        "maxLength": 120,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the reminder"
+      },
+      "vo_reasons": {
+        "type": "string",
+        "maxLength": 220,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the three reasons"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "nudge": "Still weighing your data options?",
+    "nudge_sub": "You checked out our healthcare contact database.",
+    "reasons": [
+      "No contract for the first 30 days",
+      "Live in your CRM by tomorrow",
+      "Accuracy guaranteed or refunded"
+    ],
+    "urgency": "Free onboarding ends Friday",
+    "cta": "Claim your free month",
+    "music": "corporate-upbeat"
+  },
+  "scenes": [
+    {
+      "id": "nudge",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_nudge"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.primary"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.7,
+              -0.2,
+              0.5,
+              0.9
+            ],
+            "vertical": [
+              0.45,
+              -0.08,
+              0.9,
+              0.5
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "STILL THINKING IT OVER?",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.32,
+              0.84,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{nudge}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 96,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.37,
+              0.7,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.37,
+              0.84,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{nudge_sub}}",
+          "if": "nudge_sub",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 500,
+            "size": 38,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.69,
+              0.66,
+              0.1
+            ],
+            "vertical": [
+              0.08,
+              0.6,
+              0.84,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.5
+        }
+      ]
+    },
+    {
+      "id": "reasons",
+      "role": "reasons",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_reasons"
+      },
+      "transition": {
+        "type": "wipe-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Three reasons to say yes",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.84,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.2,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "items": [
+            "✓",
+            "✓",
+            "✓"
+          ],
+          "stagger": 0.9,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 56
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.26,
+              0.07,
+              0.5
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.12,
+              0.38
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.35
+          },
+          "start": 0.3
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "reasons"
+          },
+          "stagger": 0.9,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 52,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.16,
+              0.26,
+              0.76,
+              0.5
+            ],
+            "vertical": [
+              0.2,
+              0.28,
+              0.72,
+              0.38
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{urgency}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

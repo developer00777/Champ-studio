@@ -1,0 +1,531 @@
+{
+  "cst": "1.0",
+  "id": "hook-benefits-cta",
+  "name": "Hook · Benefits · CTA",
+  "category": "social-ads",
+  "description": "A bold one-line hook, three numbered benefits and a CTA. The workhorse paid-social format.",
+  "tags": [
+    "ad",
+    "benefits",
+    "hook",
+    "paid social",
+    "linkedin"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "hook",
+      "benefits",
+      "cta"
+    ],
+    "properties": {
+      "hook": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Scroll-stopping hook, ≤7 words"
+      },
+      "hook_sub": {
+        "type": "string",
+        "maxLength": 60,
+        "x-kind": "text",
+        "description": "Optional line under the hook"
+      },
+      "benefits_title": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Heading above the benefits"
+      },
+      "benefits": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "description": "Exactly three short benefits"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_hook": {
+        "type": "string",
+        "maxLength": 120,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the hook"
+      },
+      "vo_benefits": {
+        "type": "string",
+        "maxLength": 260,
+        "x-kind": "voiceover",
+        "description": "Voiceover walking through the three benefits"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "hook": "Your next 100 customers are already searching",
+    "hook_sub": "Reach them before your competitors do.",
+    "benefits_title": "Why teams switch to us",
+    "benefits": [
+      "Intent signals updated daily",
+      "Direct dials that connect",
+      "CRM sync in one click"
+    ],
+    "cta_headline": "Start reaching in-market buyers",
+    "cta": "Book a demo",
+    "music": "corporate-upbeat"
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_hook"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.012,
+              0.36
+            ],
+            "vertical": [
+              0.08,
+              0.32,
+              0.02,
+              0.26
+            ]
+          },
+          "anim_in": {
+            "type": "slide-down",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{hook}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 100,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.3,
+              0.78,
+              0.28
+            ],
+            "vertical": [
+              0.13,
+              0.32,
+              0.79,
+              0.2
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.1
+        },
+        {
+          "type": "text",
+          "text": "{{hook_sub}}",
+          "if": "hook_sub",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 500,
+            "size": 40,
+            "align": "left",
+            "color": "#FFFFFFCC",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.6,
+              0.7,
+              0.08
+            ],
+            "vertical": [
+              0.13,
+              0.53,
+              0.79,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.5
+        }
+      ]
+    },
+    {
+      "id": "benefits",
+      "role": "benefits",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_benefits"
+      },
+      "transition": {
+        "type": "slide-up",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{benefits_title}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 34,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.84,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.2,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.surface"
+            },
+            "radius": 0.06
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.26,
+              0.88,
+              0.54
+            ],
+            "vertical": [
+              0.05,
+              0.27,
+              0.9,
+              0.42
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "list",
+          "name": "Numbers",
+          "items": [
+            "01",
+            "02",
+            "03"
+          ],
+          "stagger": 1.0,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 54
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.08,
+              0.46
+            ],
+            "vertical": [
+              0.09,
+              0.3,
+              0.14,
+              0.36
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.3
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "benefits"
+          },
+          "stagger": 1.0,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 54,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.18,
+              0.3,
+              0.72,
+              0.46
+            ],
+            "vertical": [
+              0.23,
+              0.3,
+              0.68,
+              0.36
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

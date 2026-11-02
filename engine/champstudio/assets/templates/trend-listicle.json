@@ -1,0 +1,384 @@
+{
+  "cst": "1.0",
+  "id": "trend-listicle",
+  "name": "Market Trends Listicle",
+  "category": "data-leadership",
+  "description": "Title card, three to five trends revealed one by one, takeaway and CTA. Thought leadership for LinkedIn.",
+  "tags": [
+    "listicle",
+    "trends",
+    "thought leadership",
+    "linkedin"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "title",
+      "items",
+      "takeaway",
+      "cta"
+    ],
+    "properties": {
+      "kicker": {
+        "type": "string",
+        "maxLength": 28,
+        "x-kind": "text",
+        "description": "Small label above the title, e.g. 2027 OUTLOOK"
+      },
+      "title": {
+        "type": "string",
+        "maxLength": 52,
+        "x-kind": "text",
+        "description": "Listicle title, e.g. 5 trends reshaping B2B data"
+      },
+      "items": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 5,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 42
+        },
+        "description": "One short line per trend"
+      },
+      "takeaway": {
+        "type": "string",
+        "maxLength": 70,
+        "x-kind": "text",
+        "description": "One-line conclusion"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "bg": {
+        "x-kind": "media",
+        "description": "Abstract background visual for the title card"
+      },
+      "vo_intro": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover introducing the topic"
+      },
+      "vo_list": {
+        "type": "string",
+        "maxLength": 420,
+        "x-kind": "voiceover",
+        "description": "Voiceover narrating every trend in order"
+      },
+      "vo_outro": {
+        "type": "string",
+        "maxLength": 160,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the takeaway and CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "kicker": "2027 OUTLOOK",
+    "title": "5 trends reshaping B2B data",
+    "items": [
+      "Intent data goes real-time",
+      "AI enrichment at the source",
+      "Privacy-first targeting",
+      "Healthcare data unifies",
+      "Buying groups over leads"
+    ],
+    "takeaway": "Teams that act on fresh data win the quarter.",
+    "cta": "Get the full report",
+    "music": "calm-tech"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "role": "intro",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_intro"
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "bg"
+          },
+          "motion": "pan-left"
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#000000AA",
+              "#000000DD"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{kicker}}",
+          "if": "kicker",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 30
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.26,
+              0.4,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.3,
+              0.6,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{title}}",
+          "style": {
+            "$brand": "styles.title",
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.36,
+              0.8,
+              0.34
+            ],
+            "vertical": [
+              0.08,
+              0.37,
+              0.84,
+              0.24
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          },
+          "start": 0.2
+        }
+      ]
+    },
+    {
+      "id": "list",
+      "role": "list",
+      "duration": {
+        "mode": "voiceover",
+        "min": 6,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_list"
+      },
+      "transition": {
+        "type": "wipe-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.12,
+              0.006,
+              0.76
+            ],
+            "vertical": [
+              0.06,
+              0.18,
+              0.012,
+              0.64
+            ]
+          }
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "items"
+          },
+          "stagger": 1.1,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "align": "left",
+            "size": 50
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.12,
+              0.82,
+              0.76
+            ],
+            "vertical": [
+              0.1,
+              0.18,
+              0.82,
+              0.64
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          }
+        }
+      ]
+    },
+    {
+      "id": "outro",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_outro"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{takeaway}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 72
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.22,
+              0.8,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.26,
+              0.84,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.32,
+              0.62,
+              0.36,
+              0.13
+            ],
+            "vertical": [
+              0.15,
+              0.56,
+              0.7,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.5
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.42,
+              0.82,
+              0.16,
+              0.1
+            ],
+            "vertical": [
+              0.35,
+              0.82,
+              0.3,
+              0.06
+            ]
+          },
+          "fallback_text": false
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 10
+  },
+  "captions": {
+    "enabled": false
+  }
+}

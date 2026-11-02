@@ -1,0 +1,41 @@
+{
+  "cst": "1.0",
+  "id": "lower-third",
+  "name": "Lower Third",
+  "category": "brand-utility",
+  "description": "Name and title bar that slides in over footage. Drop it on any track in the editor.",
+  "tags": ["overlay", "lower third", "name", "interview", "graphics"],
+  "aspects": ["16:9", "9:16", "1:1", "4:5"],
+  "overlay": true,
+  "slots": {
+    "type": "object",
+    "required": ["name"],
+    "properties": {
+      "name": {"type": "string", "maxLength": 32, "x-kind": "text", "description": "Person's name"},
+      "role": {"type": "string", "maxLength": 44, "x-kind": "text", "description": "Job title and company"},
+      "accent": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "x-kind": "color", "description": "Bar colour"}
+    }
+  },
+  "defaults": {"name": "Alex Morgan", "role": "VP Revenue Operations, Northwind"},
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "bar", "role": "overlay",
+      "duration": {"mode": "fixed", "sec": 5},
+      "layers": [
+        {"type": "shape", "name": "Bar", "shape": {"kind": "rect", "fill": {"$brand": "colors.primary"}},
+         "box": {"*": [0.06, 0.74, 0.012, 0.13], "vertical": [0.06, 0.7, 0.02, 0.08]},
+         "anim_in": {"type": "fade", "sec": 0.25}, "anim_out": {"type": "fade", "sec": 0.3}},
+        {"type": "text", "name": "Name", "text": "{{name}}",
+         "style": {"$brand": "styles.lower_third", "bg_color": null, "size": 52, "shadow": true},
+         "box": {"*": [0.085, 0.735, 0.6, 0.08], "vertical": [0.1, 0.695, 0.84, 0.045]},
+         "anim_in": {"type": "slide-right", "sec": 0.4}, "anim_out": {"type": "fade", "sec": 0.3}},
+        {"type": "text", "name": "Role", "text": "{{role}}", "if": "role",
+         "style": {"$brand": "styles.subtitle", "size": 32, "align": "left", "shadow": true},
+         "box": {"*": [0.085, 0.81, 0.6, 0.06], "vertical": [0.1, 0.74, 0.84, 0.035]},
+         "anim_in": {"type": "slide-right", "sec": 0.45}, "start": 0.15, "anim_out": {"type": "fade", "sec": 0.3}}
+      ]
+    }
+  ],
+  "captions": {"enabled": false}
+}

@@ -1,0 +1,907 @@
+{
+  "cst": "1.0",
+  "id": "integration-showcase",
+  "name": "Integration Showcase",
+  "category": "product-promo",
+  "description": "Your product as the hub with up to six integrations around it, a benefit line and a CTA.",
+  "tags": [
+    "integrations",
+    "ecosystem",
+    "saas",
+    "partners",
+    "api"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "headline",
+      "tool_1",
+      "tool_2",
+      "tool_3",
+      "cta"
+    ],
+    "properties": {
+      "headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Headline, e.g. Plugs into the stack you already use"
+      },
+      "tool_1": {
+        "type": "string",
+        "maxLength": 18,
+        "x-kind": "text",
+        "description": "Integration 1 name"
+      },
+      "tool_2": {
+        "type": "string",
+        "maxLength": 18,
+        "x-kind": "text",
+        "description": "Integration 2 name"
+      },
+      "tool_3": {
+        "type": "string",
+        "maxLength": 18,
+        "x-kind": "text",
+        "description": "Integration 3 name"
+      },
+      "tool_4": {
+        "type": "string",
+        "maxLength": 18,
+        "x-kind": "text",
+        "description": "Integration 4 name"
+      },
+      "tool_5": {
+        "type": "string",
+        "maxLength": 18,
+        "x-kind": "text",
+        "description": "Integration 5 name"
+      },
+      "tool_6": {
+        "type": "string",
+        "maxLength": 18,
+        "x-kind": "text",
+        "description": "Integration 6 name"
+      },
+      "benefit": {
+        "type": "string",
+        "maxLength": 60,
+        "x-kind": "text",
+        "description": "What the integrations unlock"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_intro": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the headline"
+      },
+      "vo_hub": {
+        "type": "string",
+        "maxLength": 220,
+        "x-kind": "voiceover",
+        "description": "Voiceover naming the integrations"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "headline": "Plugs into the stack you already use",
+    "tool_1": "Salesforce",
+    "tool_2": "HubSpot",
+    "tool_3": "Outreach",
+    "tool_4": "Slack",
+    "tool_5": "Marketo",
+    "tool_6": "Snowflake",
+    "benefit": "Fresh data flows wherever your team works.",
+    "cta_headline": "Connect your first tool in minutes",
+    "cta": "See all integrations",
+    "music": "calm-tech"
+  },
+  "scenes": [
+    {
+      "id": "hub",
+      "role": "hub",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_hub"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.surface"
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 60
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.05,
+              0.8,
+              0.14
+            ],
+            "vertical": [
+              0.08,
+              0.1,
+              0.84,
+              0.1
+            ],
+            "1:1": [
+              0.06,
+              0.04,
+              0.88,
+              0.14
+            ]
+          },
+          "anim_in": {
+            "type": "slide-down",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.4,
+              0.3,
+              0.2,
+              0.356
+            ],
+            "vertical": [
+              0.25,
+              0.25,
+              0.5,
+              0.281
+            ],
+            "1:1": [
+              0.35,
+              0.33,
+              0.3,
+              0.3
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.5
+          },
+          "start": 0.2
+        },
+        {
+          "type": "logo",
+          "name": "Hub logo",
+          "box": {
+            "*": [
+              0.42,
+              0.42,
+              0.16,
+              0.12
+            ],
+            "vertical": [
+              0.29,
+              0.355,
+              0.42,
+              0.07
+            ],
+            "1:1": [
+              0.37,
+              0.43,
+              0.26,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.35
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF",
+            "radius": 0.5,
+            "stroke": {
+              "$brand": "colors.primary"
+            },
+            "stroke_width": 3
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.24,
+              0.24,
+              0.12
+            ],
+            "vertical": [
+              0.06,
+              0.56,
+              0.42,
+              0.065
+            ],
+            "1:1": [
+              0.04,
+              0.24,
+              0.28,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.35
+          },
+          "start": 0.5,
+          "if": "tool_1"
+        },
+        {
+          "type": "text",
+          "text": "{{tool_1}}",
+          "if": "tool_1",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 700,
+            "size": 38,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.24,
+              0.24,
+              0.12
+            ],
+            "vertical": [
+              0.06,
+              0.56,
+              0.42,
+              0.065
+            ],
+            "1:1": [
+              0.04,
+              0.24,
+              0.28,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.55
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF",
+            "radius": 0.5,
+            "stroke": {
+              "$brand": "colors.primary"
+            },
+            "stroke_width": 3
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.44,
+              0.24,
+              0.12
+            ],
+            "vertical": [
+              0.52,
+              0.56,
+              0.42,
+              0.065
+            ],
+            "1:1": [
+              0.04,
+              0.44,
+              0.28,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.35
+          },
+          "start": 0.6799999999999999,
+          "if": "tool_2"
+        },
+        {
+          "type": "text",
+          "text": "{{tool_2}}",
+          "if": "tool_2",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 700,
+            "size": 38,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.44,
+              0.24,
+              0.12
+            ],
+            "vertical": [
+              0.52,
+              0.56,
+              0.42,
+              0.065
+            ],
+            "1:1": [
+              0.04,
+              0.44,
+              0.28,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.73
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF",
+            "radius": 0.5,
+            "stroke": {
+              "$brand": "colors.primary"
+            },
+            "stroke_width": 3
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.64,
+              0.24,
+              0.12
+            ],
+            "vertical": [
+              0.06,
+              0.65,
+              0.42,
+              0.065
+            ],
+            "1:1": [
+              0.04,
+              0.64,
+              0.28,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.35
+          },
+          "start": 0.86,
+          "if": "tool_3"
+        },
+        {
+          "type": "text",
+          "text": "{{tool_3}}",
+          "if": "tool_3",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 700,
+            "size": 38,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.64,
+              0.24,
+              0.12
+            ],
+            "vertical": [
+              0.06,
+              0.65,
+              0.42,
+              0.065
+            ],
+            "1:1": [
+              0.04,
+              0.64,
+              0.28,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.91
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF",
+            "radius": 0.5,
+            "stroke": {
+              "$brand": "colors.primary"
+            },
+            "stroke_width": 3
+          },
+          "box": {
+            "*": [
+              0.7,
+              0.24,
+              0.24,
+              0.12
+            ],
+            "vertical": [
+              0.52,
+              0.65,
+              0.42,
+              0.065
+            ],
+            "1:1": [
+              0.68,
+              0.24,
+              0.28,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.35
+          },
+          "start": 1.04,
+          "if": "tool_4"
+        },
+        {
+          "type": "text",
+          "text": "{{tool_4}}",
+          "if": "tool_4",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 700,
+            "size": 38,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.7,
+              0.24,
+              0.24,
+              0.12
+            ],
+            "vertical": [
+              0.52,
+              0.65,
+              0.42,
+              0.065
+            ],
+            "1:1": [
+              0.68,
+              0.24,
+              0.28,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 1.09
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF",
+            "radius": 0.5,
+            "stroke": {
+              "$brand": "colors.primary"
+            },
+            "stroke_width": 3
+          },
+          "box": {
+            "*": [
+              0.7,
+              0.44,
+              0.24,
+              0.12
+            ],
+            "vertical": [
+              0.06,
+              0.74,
+              0.42,
+              0.065
+            ],
+            "1:1": [
+              0.68,
+              0.44,
+              0.28,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.35
+          },
+          "start": 1.22,
+          "if": "tool_5"
+        },
+        {
+          "type": "text",
+          "text": "{{tool_5}}",
+          "if": "tool_5",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 700,
+            "size": 38,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.7,
+              0.44,
+              0.24,
+              0.12
+            ],
+            "vertical": [
+              0.06,
+              0.74,
+              0.42,
+              0.065
+            ],
+            "1:1": [
+              0.68,
+              0.44,
+              0.28,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 1.27
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF",
+            "radius": 0.5,
+            "stroke": {
+              "$brand": "colors.primary"
+            },
+            "stroke_width": 3
+          },
+          "box": {
+            "*": [
+              0.7,
+              0.64,
+              0.24,
+              0.12
+            ],
+            "vertical": [
+              0.52,
+              0.74,
+              0.42,
+              0.065
+            ],
+            "1:1": [
+              0.68,
+              0.64,
+              0.28,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.35
+          },
+          "start": 1.4,
+          "if": "tool_6"
+        },
+        {
+          "type": "text",
+          "text": "{{tool_6}}",
+          "if": "tool_6",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 700,
+            "size": 38,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.7,
+              0.64,
+              0.24,
+              0.12
+            ],
+            "vertical": [
+              0.52,
+              0.74,
+              0.42,
+              0.065
+            ],
+            "1:1": [
+              0.68,
+              0.64,
+              0.28,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 1.45
+        },
+        {
+          "type": "text",
+          "text": "{{benefit}}",
+          "if": "benefit",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 36,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.15,
+              0.84,
+              0.7,
+              0.08
+            ],
+            "vertical": [
+              0.06,
+              0.86,
+              0.88,
+              0.06
+            ],
+            "1:1": [
+              0.06,
+              0.82,
+              0.88,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 1.6
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "zoom",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

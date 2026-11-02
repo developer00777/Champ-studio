@@ -1,0 +1,686 @@
+{
+  "cst": "1.0",
+  "id": "event-recap",
+  "name": "Event Recap",
+  "category": "events",
+  "description": "Three highlight moments, the event in numbers and a thank-you with what's next. For the morning after.",
+  "tags": [
+    "event recap",
+    "highlights",
+    "conference",
+    "thank you",
+    "social"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "event",
+      "caption_1",
+      "stat_1",
+      "stat_1_label",
+      "thanks",
+      "cta"
+    ],
+    "properties": {
+      "event": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Event name"
+      },
+      "photo_1": {
+        "x-kind": "media",
+        "description": "Event highlight photo or clip 1"
+      },
+      "caption_1": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Caption for highlight 1"
+      },
+      "photo_2": {
+        "x-kind": "media",
+        "description": "Event highlight photo or clip 2"
+      },
+      "caption_2": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Caption for highlight 2"
+      },
+      "photo_3": {
+        "x-kind": "media",
+        "description": "Event highlight photo or clip 3"
+      },
+      "caption_3": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Caption for highlight 3"
+      },
+      "stat_1": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "First number, e.g. 1,200"
+      },
+      "stat_1_label": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "First number label, e.g. attendees"
+      },
+      "stat_2": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "Second number"
+      },
+      "stat_2_label": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Second number label"
+      },
+      "thanks": {
+        "type": "string",
+        "maxLength": 56,
+        "x-kind": "text",
+        "description": "Thank-you line"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action, e.g. Watch the sessions"
+      },
+      "vo_highlights": {
+        "type": "string",
+        "maxLength": 400,
+        "x-kind": "voiceover",
+        "description": "Voiceover across the highlights"
+      },
+      "vo_numbers": {
+        "type": "string",
+        "maxLength": 160,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the numbers"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the thank-you and CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "event": "Growth Summit 2026",
+    "caption_1": "Two days. One mission.",
+    "caption_2": "40 sessions on data-driven growth",
+    "caption_3": "And a lot of great conversations",
+    "stat_1": "1,200",
+    "stat_1_label": "attendees",
+    "stat_2": "40",
+    "stat_2_label": "expert sessions",
+    "thanks": "Thank you for making it our best year yet",
+    "cta": "Watch the sessions",
+    "music": "inspiring"
+  },
+  "scenes": [
+    {
+      "id": "moment1",
+      "role": "highlight",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.2,
+        "pad": 0.2
+      },
+      "vo": {
+        "$slot": "vo_highlights"
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "photo_1"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000000",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{event}} · Recap",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 28,
+            "uppercase": true
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.66,
+              0.6,
+              0.065
+            ],
+            "vertical": [
+              0.07,
+              0.64,
+              0.86,
+              0.056
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{caption_1}}",
+          "if": "caption_1",
+          "style": {
+            "$brand": "styles.title",
+            "size": 76,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.75,
+              0.86,
+              0.16
+            ],
+            "vertical": [
+              0.07,
+              0.71,
+              0.86,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 0.2
+        }
+      ]
+    },
+    {
+      "id": "moment2",
+      "role": "highlight",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.2,
+        "pad": 0.2
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.5
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "photo_2"
+          },
+          "motion": "pan-right"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000000",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{caption_2}}",
+          "if": "caption_2",
+          "style": {
+            "$brand": "styles.title",
+            "size": 76,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.75,
+              0.86,
+              0.16
+            ],
+            "vertical": [
+              0.07,
+              0.71,
+              0.86,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 0.2
+        }
+      ]
+    },
+    {
+      "id": "moment3",
+      "role": "highlight",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.2,
+        "pad": 0.2
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.5
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "photo_3"
+          },
+          "motion": "kenburns-out"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000000",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{caption_3}}",
+          "if": "caption_3",
+          "style": {
+            "$brand": "styles.title",
+            "size": 76,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.75,
+              0.86,
+              0.16
+            ],
+            "vertical": [
+              0.07,
+              0.71,
+              0.86,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 0.2
+        }
+      ]
+    },
+    {
+      "id": "numbers",
+      "role": "stats",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_numbers"
+      },
+      "transition": {
+        "type": "slide-up",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{event}} in numbers",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.14,
+              0.8,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.18,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "stat",
+          "text": "{{stat_1}}",
+          "style": {
+            "$brand": "styles.stat"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.26,
+              0.42,
+              0.34
+            ],
+            "vertical": [
+              0.08,
+              0.24,
+              0.84,
+              0.16
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{stat_1_label}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 700,
+            "size": 44,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.62,
+              0.42,
+              0.1
+            ],
+            "vertical": [
+              0.08,
+              0.4,
+              0.84,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.3
+        },
+        {
+          "type": "stat",
+          "text": "{{stat_2}}",
+          "style": {
+            "$brand": "styles.stat"
+          },
+          "box": {
+            "*": [
+              0.52,
+              0.26,
+              0.42,
+              0.34
+            ],
+            "vertical": [
+              0.08,
+              0.5,
+              0.84,
+              0.16
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.5
+          },
+          "start": 0.5
+        },
+        {
+          "type": "text",
+          "text": "{{stat_2_label}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 700,
+            "size": 44,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.52,
+              0.62,
+              0.42,
+              0.1
+            ],
+            "vertical": [
+              0.08,
+              0.66,
+              0.84,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.8
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{thanks}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.35,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

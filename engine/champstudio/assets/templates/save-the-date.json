@@ -1,0 +1,496 @@
+{
+  "cst": "1.0",
+  "id": "save-the-date",
+  "name": "Save the Date",
+  "category": "events",
+  "description": "An elegant, music-only save-the-date: the date as hero, the event over a visual, and an add-to-calendar card.",
+  "tags": [
+    "save the date",
+    "event",
+    "announcement",
+    "invite"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "date",
+      "event",
+      "cta"
+    ],
+    "properties": {
+      "date": {
+        "type": "string",
+        "maxLength": 20,
+        "x-kind": "text",
+        "description": "The date, e.g. 14.11.26 or Nov 14"
+      },
+      "event": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Event name"
+      },
+      "place": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Venue and city"
+      },
+      "bg": {
+        "x-kind": "media",
+        "description": "Elegant visual of the venue or theme"
+      },
+      "note": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Small note, e.g. Invitation to follow"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "date": "14 Nov 2026",
+    "event": "Champions Annual Partner Evening",
+    "place": "The Shard, London",
+    "note": "Formal invitation to follow",
+    "cta": "Add to calendar",
+    "music": "inspiring"
+  },
+  "scenes": [
+    {
+      "id": "date",
+      "role": "hook",
+      "duration": {
+        "mode": "fixed",
+        "sec": 3.5
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Frame",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            },
+            "stroke": {
+              "$brand": "colors.primary"
+            },
+            "stroke_width": 3
+          },
+          "box": {
+            "*": [
+              0.04,
+              0.07,
+              0.92,
+              0.86
+            ],
+            "vertical": [
+              0.06,
+              0.04,
+              0.88,
+              0.92
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.5
+          },
+          "opacity": 1.0
+        },
+        {
+          "type": "shape",
+          "name": "Frame inner",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.background"
+            }
+          },
+          "box": {
+            "*": [
+              0.045,
+              0.078,
+              0.91,
+              0.844
+            ],
+            "vertical": [
+              0.066,
+              0.043,
+              0.868,
+              0.914
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "Save the date",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 36,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.24,
+              0.8,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.6
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{date}}",
+          "style": {
+            "$brand": "styles.stat",
+            "size": 170
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.34,
+              0.84,
+              0.3
+            ],
+            "vertical": [
+              0.1,
+              0.34,
+              0.8,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "zoom-in",
+            "sec": 0.7
+          },
+          "start": 0.4
+        },
+        {
+          "type": "text",
+          "text": "{{event}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 48,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.66,
+              0.76,
+              0.12
+            ],
+            "vertical": [
+              0.1,
+              0.55,
+              0.8,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.6
+          },
+          "start": 0.9
+        }
+      ]
+    },
+    {
+      "id": "place",
+      "role": "venue",
+      "duration": {
+        "mode": "fixed",
+        "sec": 3.0
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.6
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "bg"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000033",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{place}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.36,
+              0.8,
+              0.22
+            ],
+            "vertical": [
+              0.08,
+              0.38,
+              0.84,
+              0.16
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.6
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{note}}",
+          "if": "note",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 36,
+            "weight": 500
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.6,
+              0.8,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.56,
+              0.84,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.6
+          },
+          "start": 0.5
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "fixed",
+        "sec": 3.0
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.6
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{event}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{date}} · {{place}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 36,
+            "weight": 500
+          },
+          "box": {
+            "*": [
+              0.15,
+              0.53,
+              0.7,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.465,
+              0.84,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.3
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.6,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": false
+  }
+}

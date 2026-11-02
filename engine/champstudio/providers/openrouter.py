@@ -3,6 +3,11 @@
 Image API   : POST https://openrouter.ai/api/v1/images        (sync, base64 out)
 Video API   : POST https://openrouter.ai/api/v1/videos        (job id, poll)
 Speech API  : POST https://openrouter.ai/api/v1/audio/speech  (sync, raw audio bytes)
+Chat        : POST https://openrouter.ai/api/v1/chat/completions (LLM; json_schema output;
+              music via modalities ["text","audio"] + stream)
+STT         : POST https://openrouter.ai/api/v1/audio/transcriptions
+              {model, input_audio: {data, format}, response_format: "verbose_json",
+               timestamp_granularities: ["word","segment"]} -> {text, words[{word,start,end}], ...}
 Model lists : GET  /api/v1/images/models, /api/v1/videos/models,
               GET  /api/v1/models?output_modalities=speech
 
@@ -14,6 +19,7 @@ Payload shapes follow the API reference as of 2026-09-30:
 from __future__ import annotations
 
 import base64
+import json
 
 import httpx
 
@@ -125,20 +131,156 @@ class OpenRouterClient:
             body["speed"] = speed
         async with self._http(300.0) as client:
             r = await client.post(f"{BASE}/audio/speech", headers=self._headers, json=body)
+            if r.status_code == 400 and "pcm" in r.text.lower():
+                # some models (Gemini TTS) only stream raw PCM: ask for that and wrap it as WAV
+                body["response_format"] = "pcm"
+                r = await client.post(f"{BASE}/audio/speech", headers=self._headers, json=body)
         if r.status_code >= 400:
             raise ProviderError(_err("speech synthesis", r))
         if not r.content:
             raise ProviderError("OpenRouter returned empty audio")
-        mime = (r.headers.get("content-type") or "audio/mpeg").split(";")[0].strip() or "audio/mpeg"
+        ctype = r.headers.get("content-type") or "audio/mpeg"
+        mime = ctype.split(";")[0].strip() or "audio/mpeg"
+        data = r.content
+        if body["response_format"] == "pcm" or "pcm" in mime or mime in ("audio/l16", "application/octet-stream"):
+            data, mime = pcm_to_wav(data, ctype), "audio/wav"
         return GeneratedMedia(
             kind="audio",
-            data=r.content,
+            data=data,
             mime=mime,
             model=model,
             provider=self.provider,
             prompt=text,
             meta={"generation_id": r.headers.get("x-generation-id")},
         )
+
+    # ── chat (LLM) ───────────────────────────────────────────────────
+
+    async def chat(
+        self,
+        *,
+        model: str,
+        messages: list[dict],
+        response_format: dict | None = None,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+        timeout: float = 180.0,
+        reasoning: dict | None = None,
+    ) -> dict:
+        """One chat completion. Returns {"content", "usage", "model", "finish_reason"}."""
+        body: dict = {"model": model, "messages": messages, "usage": {"include": True}}
+        if response_format:
+            body["response_format"] = response_format
+        if temperature is not None:
+            body["temperature"] = temperature
+        if reasoning:  # e.g. {"effort": "low"}; ignored by models that don't reason
+            body["reasoning"] = reasoning
+        if max_tokens:
+            body["max_tokens"] = max_tokens
+        async with self._http(timeout) as client:
+            r = await client.post(f"{BASE}/chat/completions", headers=self._headers, json=body)
+        if r.status_code >= 400:
+            raise ProviderError(_err("chat", r))
+        data = r.json()
+        if data.get("error"):
+            err = data["error"]
+            raise ProviderError(f"OpenRouter chat failed: {err.get('message') if isinstance(err, dict) else err}")
+        choice = (data.get("choices") or [{}])[0]
+        content = (choice.get("message") or {}).get("content") or ""
+        if isinstance(content, list):  # some providers return content parts
+            content = "".join(p.get("text", "") for p in content if isinstance(p, dict))
+        return {
+            "content": content,
+            "usage": data.get("usage") or {},
+            "model": data.get("model") or model,
+            "finish_reason": choice.get("finish_reason"),
+        }
+
+    # ── transcription (STT) ──────────────────────────────────────────
+
+    async def transcribe(
+        self,
+        *,
+        audio: bytes,
+        audio_format: str,
+        model: str,
+        language: str | None = None,
+        keyterms: list[str] | None = None,
+    ) -> dict:
+        """Word-timestamped transcript: {"text", "words": [{word,start,end}], "duration", "cost"}."""
+        body: dict = {
+            "model": model,
+            "input_audio": {"data": base64.b64encode(audio).decode(), "format": audio_format},
+            "response_format": "verbose_json",
+            "timestamp_granularities": ["word", "segment"],
+        }
+        if language:
+            body["language"] = language
+        if keyterms:
+            body["keyterms"] = keyterms
+        async with self._http(120.0) as client:
+            r = await client.post(f"{BASE}/audio/transcriptions", headers=self._headers, json=body)
+        if r.status_code >= 400:
+            raise ProviderError(_err("transcription", r))
+        data = r.json()
+        words = [
+            {"word": w.get("word", "").strip(), "start": float(w.get("start", 0)), "end": float(w.get("end", 0))}
+            for w in (data.get("words") or [])
+            if (w.get("type") in (None, "word")) and w.get("word", "").strip()
+        ]
+        return {
+            "text": data.get("text", ""),
+            "words": words,
+            "segments": data.get("segments") or [],
+            "duration": data.get("duration"),
+            "language": data.get("language"),
+            "cost": (data.get("usage") or {}).get("cost"),
+        }
+
+    # ── music (chat with audio output, streamed) ─────────────────────
+
+    async def generate_music(self, *, prompt: str, model: str, audio_format: str = "mp3") -> GeneratedMedia:
+        body = {
+            "model": model,
+            "modalities": ["text", "audio"],
+            "audio": {"format": audio_format},
+            "stream": True,
+            "messages": [{"role": "user", "content": prompt}],
+            "usage": {"include": True},
+        }
+        chunks: list[str] = []
+        cost = None
+        async with self._http(300.0) as client:
+            async with client.stream("POST", f"{BASE}/chat/completions", headers=self._headers, json=body) as r:
+                if r.status_code >= 400:
+                    await r.aread()
+                    raise ProviderError(_err("music generation", r))
+                async for line in r.aiter_lines():
+                    if not line.startswith("data:"):
+                        continue
+                    payload = line[5:].strip()
+                    if payload == "[DONE]":
+                        break
+                    try:
+                        evt = json.loads(payload)
+                    except json.JSONDecodeError:
+                        continue
+                    if evt.get("usage"):
+                        cost = evt["usage"].get("cost", cost)
+                    for ch in evt.get("choices") or []:
+                        audio = (ch.get("delta") or {}).get("audio") or {}
+                        if audio.get("data"):
+                            chunks.append(audio["data"])
+        if not chunks:
+            raise ProviderError("OpenRouter returned no music audio")
+        # chunks are either independently padded base64 or slices of one stream
+        if all(len(c) % 4 == 0 for c in chunks):
+            data = b"".join(base64.b64decode(c) for c in chunks)
+        else:
+            data = base64.b64decode("".join(chunks))
+        mime = {"mp3": "audio/mpeg", "wav": "audio/wav"}.get(audio_format, "audio/mpeg")
+        return GeneratedMedia(kind="audio", data=data, mime=mime, model=model,
+                              provider=self.provider, prompt=prompt, cost=cost)
 
     # ── images (sync) ────────────────────────────────────────────────
 
@@ -273,6 +415,28 @@ class OpenRouterClient:
             r = await client.get(url, headers=self._headers)
             r.raise_for_status()
             return r.content
+
+
+def pcm_to_wav(pcm: bytes, content_type: str = "") -> bytes:
+    """Wrap raw 16-bit little-endian PCM in a WAV header. Rate/channels come from the
+    content type when given (e.g. audio/pcm;rate=24000;channels=1), else Gemini's 24 kHz mono."""
+    import io
+    import re
+    import wave
+
+    if pcm[:4] == b"RIFF":
+        return pcm
+    rate = int((re.search(r"rate=(\d+)", content_type) or [None, 24000])[1])
+    channels = int((re.search(r"channels=(\d+)", content_type) or [None, 1])[1])
+    if len(pcm) % 2:
+        pcm = pcm[:-1]
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as w:
+        w.setnchannels(channels)
+        w.setsampwidth(2)
+        w.setframerate(rate)
+        w.writeframes(pcm)
+    return buf.getvalue()
 
 
 def _err(what: str, r: httpx.Response) -> str:

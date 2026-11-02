@@ -8,3 +8,6 @@ scripts
 *.md
 .env
 .DS_Store
+web/editor-src/node_modules
+web/editor-src/dist
+web/editor

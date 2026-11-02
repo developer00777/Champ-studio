@@ -1,0 +1,272 @@
+{
+  "cst": "1.0",
+  "id": "logo-reveal-intro",
+  "name": "Logo Reveal Intro",
+  "category": "brand-utility",
+  "description": "A four-second branded opener: brand-colour panels sweep across, then the logo pops on dark with the tagline. Put it before any video.",
+  "tags": [
+    "intro",
+    "logo reveal",
+    "opener",
+    "bumper",
+    "brand"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [],
+    "properties": {
+      "tagline": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Tagline under the logo (defaults to the brand tagline)"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "tagline": "Empowering Innovation. Building Resilience.",
+    "music": "dramatic"
+  },
+  "scenes": [
+    {
+      "id": "sweep",
+      "role": "build",
+      "duration": {
+        "mode": "fixed",
+        "sec": 1.0
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Panel 1",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary_dark"
+            }
+          },
+          "box": {
+            "*": [
+              0.0,
+              0.0,
+              1.0,
+              1.0
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.45
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Panel 2",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.0,
+              0.0,
+              1.0,
+              1.0
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.45
+          },
+          "start": 0.2
+        },
+        {
+          "type": "shape",
+          "name": "Streak",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.0,
+              0.46,
+              1.0,
+              0.08
+            ],
+            "vertical": [
+              0.0,
+              0.48,
+              1.0,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.35
+          },
+          "start": 0.45
+        }
+      ]
+    },
+    {
+      "id": "reveal",
+      "role": "logo",
+      "duration": {
+        "mode": "fixed",
+        "sec": 3.0
+      },
+      "transition": {
+        "type": "zoom",
+        "sec": 0.35
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Glow",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.39,
+              0.3,
+              0.22,
+              0.391
+            ],
+            "vertical": [
+              0.2,
+              0.33,
+              0.6,
+              0.338
+            ]
+          },
+          "anim_in": {
+            "type": "zoom-out",
+            "sec": 0.6
+          },
+          "opacity": 0.18
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.36,
+              0.4,
+              0.2
+            ],
+            "vertical": [
+              0.1,
+              0.42,
+              0.8,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.55
+          },
+          "start": 0.15
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.46,
+              0.6,
+              0.08,
+              0.006
+            ],
+            "vertical": [
+              0.4,
+              0.545,
+              0.2,
+              0.003
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          },
+          "start": 0.6
+        },
+        {
+          "type": "text",
+          "text": "{{tagline}}",
+          "if": "tagline",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 34,
+            "weight": 500,
+            "color": "#FFFFFFCC"
+          },
+          "box": {
+            "*": [
+              0.15,
+              0.63,
+              0.7,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.56,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.5
+          },
+          "start": 0.8
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.7,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": false
+  }
+}

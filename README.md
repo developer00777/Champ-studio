@@ -13,6 +13,29 @@ Bring your own keys; everything runs on your machine.
 - **Voice** — paste a script, pick a model and voice, get an mp3 in the Library (`POST /api/audio`, OpenRouter `/audio/speech`).
 - **Lip Sync** — a portrait plus a voice track becomes a talking-head video through `heygen/avatar-iv` on OpenRouter (`POST /api/lipsync`). No HeyGen account needed; billed per second on the OpenRouter key.
 
+### Video studio (2026-10 roadmap — see `docs/superpowers/plans/2026-10-30-studio-roadmap.md`)
+
+- **Director** — a brief becomes a finished video: LLM script and scene plan → storyboard stills you
+  approve → voiceover, AI clips (or stills with motion, text cards, avatar presenter), music, word-level
+  captions → one render per aspect ratio (16:9, 9:16, 1:1, 4:5). Edit by chat ("make the hook
+  punchier") — only the affected scenes are re-made. Cost estimate before you pay; budget caps.
+- **Templates** — 50+ original B2B templates (ads, product promo, explainers, data/thought leadership,
+  social proof, events, recruitment, sales enablement, brand utilities, company news) in every ratio,
+  driven by brand kits. Fill by hand or from a brief (AI), batch-render personalised videos from a CSV,
+  insert titles/lower thirds into the editor, save any sequence as a team template.
+- **Editor** (`/editor/`) — Premiere-style multi-track timeline: source/program monitors, razor, ripple,
+  roll, J/L cuts, snapping, markers, keyframes, transitions, titles, colour, audio mixing, JKL, undo,
+  autosave + versions, edit locks, exports (H.264, ProRes, DNxHR, WebM, review copies), SRT/VTT,
+  Premiere XML / EDL / OTIO interchange.
+- **AI editing** — text-based editing, silence and filler removal (captions re-timed correctly),
+  auto captions, auto ducking, auto reframe to vertical, scene detection, speech enhancement,
+  B-roll, chat commands, AI rough cut from raw footage.
+- **Team** — brand kits, frame-accurate review links with approve / request changes, comments as
+  markers, OIDC single sign-on with viewer/reviewer/editor/admin roles, audit log, cost ledger.
+- **Cheap models by default** (Settings → AI models): Claude Haiku 5.5 for scripts, DeepSeek V4.1 Flash
+  for bulk text, Veo 3.1 Lite for drafts, Veo 3.1 Fast for finals, Gemini Flash Lite Image for stills,
+  Lyria 3 clips for music — each with an automatic fallback.
+
 ## Install — Mac (native)
 
 ```bash
@@ -73,6 +96,16 @@ you want.
 `posterize` · `upscale` (2×/4×). Outputs are assets too — chain them.
 
 ## Development
+
+Engine tests run in the dev image (Python 3.12 + ffmpeg), no keys or network needed — OpenRouter is
+faked with real media bytes:
+
+```bash
+./scripts/test-docker.sh                     # everything
+./scripts/test-docker.sh tests/test_director.py -x
+cd web/editor-src && npm install && npm test && npm run build   # editor (Vite + TypeScript)
+```
+
 
 ```bash
 cd engine && uv venv --python-preference only-managed -p 3.12 .venv

@@ -1,0 +1,985 @@
+{
+  "cst": "1.0",
+  "id": "chart-reveal",
+  "name": "Chart Reveal",
+  "category": "data-leadership",
+  "description": "Four horizontal bars grow in, shortest to longest, with the winner in brand colour, then the insight and a CTA. Bar lengths are fixed; order your data ascending.",
+  "tags": [
+    "chart",
+    "bar chart",
+    "data",
+    "comparison",
+    "insight"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "title",
+      "bar_1_label",
+      "bar_1_value",
+      "bar_4_label",
+      "bar_4_value",
+      "insight",
+      "cta"
+    ],
+    "properties": {
+      "kicker": {
+        "type": "string",
+        "maxLength": 28,
+        "x-kind": "text",
+        "description": "Small label above the title"
+      },
+      "title": {
+        "type": "string",
+        "maxLength": 52,
+        "x-kind": "text",
+        "description": "Chart question, e.g. Reply rate by data source"
+      },
+      "bar_1_label": {
+        "type": "string",
+        "maxLength": 20,
+        "x-kind": "text",
+        "description": "Bar 1 label (bars grow shortest to longest; bar 4 is highlighted)"
+      },
+      "bar_1_value": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "Bar 1 value as displayed, e.g. 6.4%"
+      },
+      "bar_2_label": {
+        "type": "string",
+        "maxLength": 20,
+        "x-kind": "text",
+        "description": "Bar 2 label (bars grow shortest to longest; bar 4 is highlighted)"
+      },
+      "bar_2_value": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "Bar 2 value as displayed, e.g. 6.4%"
+      },
+      "bar_3_label": {
+        "type": "string",
+        "maxLength": 20,
+        "x-kind": "text",
+        "description": "Bar 3 label (bars grow shortest to longest; bar 4 is highlighted)"
+      },
+      "bar_3_value": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "Bar 3 value as displayed, e.g. 6.4%"
+      },
+      "bar_4_label": {
+        "type": "string",
+        "maxLength": 20,
+        "x-kind": "text",
+        "description": "Bar 4 label (bars grow shortest to longest; bar 4 is highlighted)"
+      },
+      "bar_4_value": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "Bar 4 value as displayed, e.g. 6.4%"
+      },
+      "source": {
+        "type": "string",
+        "maxLength": 60,
+        "x-kind": "text",
+        "description": "Source note under the chart"
+      },
+      "insight": {
+        "type": "string",
+        "maxLength": 64,
+        "x-kind": "text",
+        "description": "The takeaway in one line"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_intro": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover posing the question"
+      },
+      "vo_chart": {
+        "type": "string",
+        "maxLength": 280,
+        "x-kind": "voiceover",
+        "description": "Voiceover walking through the chart"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 160,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the insight and CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "kicker": "Data drop",
+    "title": "Cold email reply rate by data source",
+    "bar_1_label": "Cold lists",
+    "bar_1_value": "1.2%",
+    "bar_2_label": "Firmographic",
+    "bar_2_value": "2.8%",
+    "bar_3_label": "Intent only",
+    "bar_3_value": "4.1%",
+    "bar_4_label": "Intent + verified",
+    "bar_4_value": "6.4%",
+    "source": "Benchmark of 1.2M B2B sends, 2026",
+    "insight": "Verified intent data replies 5x better.",
+    "cta": "Get the benchmark",
+    "music": "calm-tech"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "role": "intro",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_intro"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Rule",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.26,
+              0.06,
+              0.008
+            ],
+            "vertical": [
+              0.08,
+              0.3,
+              0.12,
+              0.005
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{kicker}}",
+          "if": "kicker",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.28500000000000003,
+              0.7,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.312,
+              0.84,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.35
+          },
+          "start": 0.1
+        },
+        {
+          "type": "text",
+          "text": "{{title}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 96,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.36,
+              0.8,
+              0.28
+            ],
+            "vertical": [
+              0.08,
+              0.36,
+              0.84,
+              0.2
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.2
+        }
+      ]
+    },
+    {
+      "id": "chart",
+      "role": "chart",
+      "duration": {
+        "mode": "voiceover",
+        "min": 6,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_chart"
+      },
+      "transition": {
+        "type": "slide-up",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{title}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 48,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.08,
+              0.88,
+              0.12
+            ],
+            "vertical": [
+              0.08,
+              0.14,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{bar_1_label}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 36,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.26,
+              0.22,
+              0.1
+            ],
+            "vertical": [
+              0.08,
+              0.3,
+              0.6,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.4
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.surface"
+            },
+            "radius": 0.25
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.275,
+              0.52,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.348,
+              0.84,
+              0.032
+            ]
+          },
+          "start": 0.4
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.text_muted"
+            },
+            "radius": 0.25
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.275,
+              0.2184,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.348,
+              0.35279999999999995,
+              0.032
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.7
+          },
+          "start": 0.4
+        },
+        {
+          "type": "text",
+          "text": "{{bar_1_value}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 44,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.84,
+              0.26,
+              0.12,
+              0.1
+            ],
+            "vertical": [
+              0.68,
+              0.3,
+              0.24,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.9
+        },
+        {
+          "type": "text",
+          "text": "{{bar_2_label}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 36,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.41000000000000003,
+              0.22,
+              0.1
+            ],
+            "vertical": [
+              0.08,
+              0.42,
+              0.6,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.8500000000000001
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.surface"
+            },
+            "radius": 0.25
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.42500000000000004,
+              0.52,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.46799999999999997,
+              0.84,
+              0.032
+            ]
+          },
+          "start": 0.8500000000000001
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.text_muted"
+            },
+            "radius": 0.25
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.42500000000000004,
+              0.3016,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.46799999999999997,
+              0.48719999999999997,
+              0.032
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.7
+          },
+          "start": 0.8500000000000001
+        },
+        {
+          "type": "text",
+          "text": "{{bar_2_value}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 44,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.84,
+              0.41000000000000003,
+              0.12,
+              0.1
+            ],
+            "vertical": [
+              0.68,
+              0.42,
+              0.24,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 1.35
+        },
+        {
+          "type": "text",
+          "text": "{{bar_3_label}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 36,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.56,
+              0.22,
+              0.1
+            ],
+            "vertical": [
+              0.08,
+              0.54,
+              0.6,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 1.3
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.surface"
+            },
+            "radius": 0.25
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.5750000000000001,
+              0.52,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.5880000000000001,
+              0.84,
+              0.032
+            ]
+          },
+          "start": 1.3
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.text_muted"
+            },
+            "radius": 0.25
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.5750000000000001,
+              0.3952,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.5880000000000001,
+              0.6384,
+              0.032
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.7
+          },
+          "start": 1.3
+        },
+        {
+          "type": "text",
+          "text": "{{bar_3_value}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 44,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.84,
+              0.56,
+              0.12,
+              0.1
+            ],
+            "vertical": [
+              0.68,
+              0.54,
+              0.24,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 1.8
+        },
+        {
+          "type": "text",
+          "text": "{{bar_4_label}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 700,
+            "size": 36,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.71,
+              0.22,
+              0.1
+            ],
+            "vertical": [
+              0.08,
+              0.6599999999999999,
+              0.6,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 1.75
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.surface"
+            },
+            "radius": 0.25
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.725,
+              0.52,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.708,
+              0.84,
+              0.032
+            ]
+          },
+          "start": 1.75
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            },
+            "radius": 0.25
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.725,
+              0.52,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.708,
+              0.84,
+              0.032
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.7
+          },
+          "start": 1.75
+        },
+        {
+          "type": "text",
+          "text": "{{bar_4_value}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "shadow": false,
+            "size": 44,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.84,
+              0.71,
+              0.12,
+              0.1
+            ],
+            "vertical": [
+              0.68,
+              0.6599999999999999,
+              0.24,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 2.25
+        },
+        {
+          "type": "text",
+          "text": "{{source}}",
+          "if": "source",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "weight": 500,
+            "size": 26,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.86,
+              0.6,
+              0.05
+            ],
+            "vertical": [
+              0.08,
+              0.8,
+              0.84,
+              0.03
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 2.4
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{insight}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

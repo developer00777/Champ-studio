@@ -1,0 +1,677 @@
+{
+  "cst": "1.0",
+  "id": "feature-launch",
+  "name": "Feature Launch",
+  "category": "product-promo",
+  "description": "Announce a new feature: dark reveal of the name, product visual, three benefits and a try-it CTA.",
+  "tags": [
+    "launch",
+    "feature",
+    "saas",
+    "product",
+    "announcement"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "feature",
+      "tagline",
+      "benefits",
+      "cta"
+    ],
+    "properties": {
+      "badge": {
+        "type": "string",
+        "maxLength": 16,
+        "x-kind": "text",
+        "description": "Badge text, e.g. NEW or JUST LAUNCHED"
+      },
+      "feature": {
+        "type": "string",
+        "maxLength": 36,
+        "x-kind": "text",
+        "description": "Feature name"
+      },
+      "tagline": {
+        "type": "string",
+        "maxLength": 64,
+        "x-kind": "text",
+        "description": "What it does in one line"
+      },
+      "screen": {
+        "x-kind": "media",
+        "description": "Screenshot or product visual of the feature",
+        "x-media": [
+          "image"
+        ]
+      },
+      "screen_caption": {
+        "type": "string",
+        "maxLength": 56,
+        "x-kind": "text",
+        "description": "Caption beside the product visual"
+      },
+      "benefits": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "description": "Three benefits"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_intro": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover announcing the feature"
+      },
+      "vo_screen": {
+        "type": "string",
+        "maxLength": 200,
+        "x-kind": "voiceover",
+        "description": "Voiceover describing what you see"
+      },
+      "vo_benefits": {
+        "type": "string",
+        "maxLength": 220,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the benefits"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "badge": "New",
+    "feature": "Buyer Intent Radar",
+    "tagline": "See which accounts are researching you, this week.",
+    "screen_caption": "Every surge ranked by fit and timing",
+    "benefits": [
+      "Spot in-market accounts early",
+      "Prioritise reps' time",
+      "Sync alerts to Slack and CRM"
+    ],
+    "cta_headline": "Live today for every plan",
+    "cta": "Try it now",
+    "music": "corporate-upbeat"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "role": "intro",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_intro"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.62,
+              0.18,
+              0.36,
+              0.64
+            ],
+            "vertical": [
+              0.2,
+              0.06,
+              0.6,
+              0.34
+            ]
+          },
+          "anim_in": {
+            "type": "zoom-out",
+            "sec": 0.6
+          },
+          "opacity": 0.9
+        },
+        {
+          "type": "text",
+          "text": "{{badge}}",
+          "if": "badge",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 30,
+            "uppercase": true
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.4,
+              0.065
+            ],
+            "vertical": [
+              0.08,
+              0.46,
+              0.6,
+              0.056
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{feature}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 110,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.39,
+              0.56,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.52,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{tagline}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 500,
+            "size": 40,
+            "align": "left",
+            "color": "#FFFFFFCC",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.7,
+              0.52,
+              0.12
+            ],
+            "vertical": [
+              0.08,
+              0.71,
+              0.84,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.6
+        }
+      ]
+    },
+    {
+      "id": "screen",
+      "role": "demo",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4.5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_screen"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.surface"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF",
+            "radius": 0.04,
+            "stroke": {
+              "$brand": "colors.primary"
+            },
+            "stroke_width": 3
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.12,
+              0.6,
+              0.76
+            ],
+            "vertical": [
+              0.05,
+              0.1,
+              0.9,
+              0.5
+            ],
+            "1:1": [
+              0.05,
+              0.08,
+              0.9,
+              0.6
+            ]
+          },
+          "anim_in": {
+            "type": "zoom-in",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "media",
+          "src": {
+            "$slot": "screen"
+          },
+          "motion": "pan-up",
+          "box": {
+            "*": [
+              0.075,
+              0.145,
+              0.57,
+              0.71
+            ],
+            "vertical": [
+              0.07,
+              0.115,
+              0.86,
+              0.47
+            ],
+            "1:1": [
+              0.07,
+              0.105,
+              0.86,
+              0.55
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{screen_caption}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 56,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.7,
+              0.3,
+              0.26,
+              0.4
+            ],
+            "vertical": [
+              0.06,
+              0.66,
+              0.88,
+              0.12
+            ],
+            "1:1": [
+              0.06,
+              0.72,
+              0.88,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.4
+          },
+          "start": 0.4
+        }
+      ]
+    },
+    {
+      "id": "benefits",
+      "role": "benefits",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_benefits"
+      },
+      "transition": {
+        "type": "wipe-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{feature}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.16,
+              0.84,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.22,
+              0.84,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "name": "Numbers",
+          "items": [
+            "01",
+            "02",
+            "03"
+          ],
+          "stagger": 0.9,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 56
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.26,
+              0.08,
+              0.5
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.14,
+              0.4
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.3
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "benefits"
+          },
+          "stagger": 0.9,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 56,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.16,
+              0.26,
+              0.76,
+              0.5
+            ],
+            "vertical": [
+              0.22,
+              0.28,
+              0.7,
+              0.4
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

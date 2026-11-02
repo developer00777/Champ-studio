@@ -1,0 +1,638 @@
+{
+  "cst": "1.0",
+  "id": "job-of-the-week",
+  "name": "Job of the Week",
+  "category": "recruitment",
+  "description": "Spotlight one open role: title with location, type and level chips, three responsibilities, the package line and an apply CTA.",
+  "tags": [
+    "job",
+    "hiring",
+    "role spotlight",
+    "recruitment",
+    "weekly"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "role",
+      "duties",
+      "cta"
+    ],
+    "properties": {
+      "role": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Job title"
+      },
+      "location": {
+        "type": "string",
+        "maxLength": 20,
+        "x-kind": "text",
+        "description": "Location, e.g. Remote (UK)"
+      },
+      "job_type": {
+        "type": "string",
+        "maxLength": 16,
+        "x-kind": "text",
+        "description": "Type, e.g. Full-time"
+      },
+      "level": {
+        "type": "string",
+        "maxLength": 16,
+        "x-kind": "text",
+        "description": "Level, e.g. Senior"
+      },
+      "duties": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 44
+        },
+        "description": "Three key responsibilities"
+      },
+      "package": {
+        "type": "string",
+        "maxLength": 56,
+        "x-kind": "text",
+        "description": "Salary or headline perk"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_role": {
+        "type": "string",
+        "maxLength": 160,
+        "x-kind": "voiceover",
+        "description": "Voiceover introducing the role"
+      },
+      "vo_duties": {
+        "type": "string",
+        "maxLength": 260,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the responsibilities"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 160,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the package and CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "role": "Senior Data Engineer",
+    "location": "Remote (UK)",
+    "job_type": "Full-time",
+    "level": "Senior",
+    "duties": [
+      "Own pipelines for 120M+ B2B records",
+      "Design our real-time enrichment layer",
+      "Mentor a team of four engineers"
+    ],
+    "package": "£85–100k + equity + learning budget",
+    "cta": "Apply this week",
+    "music": "corporate-upbeat"
+  },
+  "scenes": [
+    {
+      "id": "role",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_role"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.primary"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Job of the week",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.22,
+              0.6,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.26,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{role}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 110,
+            "align": "left",
+            "valign": "top",
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.84,
+              0.32
+            ],
+            "vertical": [
+              0.08,
+              0.31,
+              0.84,
+              0.2
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{location}}",
+          "if": "location",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 32,
+            "weight": 700,
+            "bg_color": "#FFFFFF",
+            "bg_padding": 0.5,
+            "bg_radius": 0.5,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.66,
+              0.19,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.54,
+              0.6,
+              0.065
+            ],
+            "1:1": [
+              0.08,
+              0.66,
+              0.26,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.35
+          },
+          "start": 0.6
+        },
+        {
+          "type": "text",
+          "text": "{{job_type}}",
+          "if": "job_type",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 32,
+            "weight": 700,
+            "bg_color": "#FFFFFF",
+            "bg_padding": 0.5,
+            "bg_radius": 0.5,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.29,
+              0.66,
+              0.19,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.615,
+              0.6,
+              0.065
+            ],
+            "1:1": [
+              0.36000000000000004,
+              0.66,
+              0.26,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.35
+          },
+          "start": 0.75
+        },
+        {
+          "type": "text",
+          "text": "{{level}}",
+          "if": "level",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 32,
+            "weight": 700,
+            "bg_color": "#FFFFFF",
+            "bg_padding": 0.5,
+            "bg_radius": 0.5,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.5,
+              0.66,
+              0.19,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.6900000000000001,
+              0.6,
+              0.065
+            ],
+            "1:1": [
+              0.64,
+              0.66,
+              0.26,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.35
+          },
+          "start": 0.8999999999999999
+        }
+      ]
+    },
+    {
+      "id": "duties",
+      "role": "list",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_duties"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "What you'll do",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.84,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.2,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "name": "Numbers",
+          "items": [
+            "01",
+            "02",
+            "03"
+          ],
+          "stagger": 1.0,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 50
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.26,
+              0.08,
+              0.56
+            ],
+            "vertical": [
+              0.08,
+              0.27,
+              0.14,
+              0.44
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.3
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "duties"
+          },
+          "stagger": 1.0,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 50,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.16,
+              0.26,
+              0.76,
+              0.56
+            ],
+            "vertical": [
+              0.22,
+              0.27,
+              0.7,
+              0.44
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{package}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{role}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 36,
+            "weight": 500
+          },
+          "box": {
+            "*": [
+              0.15,
+              0.53,
+              0.7,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.465,
+              0.84,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.3
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

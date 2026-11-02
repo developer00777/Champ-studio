@@ -1,0 +1,923 @@
+{
+  "cst": "1.0",
+  "id": "pricing-plans",
+  "name": "Pricing Plans",
+  "category": "product-promo",
+  "description": "Hook, three plan cards with the middle one featured, and a start-trial CTA. Transparent pricing as a video.",
+  "tags": [
+    "pricing",
+    "plans",
+    "saas",
+    "offer"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "hook",
+      "plan_1_name",
+      "plan_1_price",
+      "plan_2_name",
+      "plan_2_price",
+      "plan_3_name",
+      "plan_3_price",
+      "cta"
+    ],
+    "properties": {
+      "hook": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Pricing hook, e.g. Simple pricing. No surprises."
+      },
+      "hook_sub": {
+        "type": "string",
+        "maxLength": 64,
+        "x-kind": "text",
+        "description": "Optional supporting line"
+      },
+      "plan_1_name": {
+        "type": "string",
+        "maxLength": 18,
+        "x-kind": "text",
+        "description": "Plan 1 name"
+      },
+      "plan_1_price": {
+        "type": "string",
+        "maxLength": 10,
+        "x-kind": "text",
+        "description": "Plan 1 price, e.g. $49"
+      },
+      "plan_1_line": {
+        "type": "string",
+        "maxLength": 28,
+        "x-kind": "text",
+        "description": "Plan 1 one-line description"
+      },
+      "plan_2_name": {
+        "type": "string",
+        "maxLength": 18,
+        "x-kind": "text",
+        "description": "Plan 2 name"
+      },
+      "plan_2_price": {
+        "type": "string",
+        "maxLength": 10,
+        "x-kind": "text",
+        "description": "Plan 2 price, e.g. $49"
+      },
+      "plan_2_line": {
+        "type": "string",
+        "maxLength": 28,
+        "x-kind": "text",
+        "description": "Plan 2 one-line description"
+      },
+      "plan_3_name": {
+        "type": "string",
+        "maxLength": 18,
+        "x-kind": "text",
+        "description": "Plan 3 name"
+      },
+      "plan_3_price": {
+        "type": "string",
+        "maxLength": 10,
+        "x-kind": "text",
+        "description": "Plan 3 price, e.g. $49"
+      },
+      "plan_3_line": {
+        "type": "string",
+        "maxLength": 28,
+        "x-kind": "text",
+        "description": "Plan 3 one-line description"
+      },
+      "plans_title": {
+        "type": "string",
+        "maxLength": 36,
+        "x-kind": "text",
+        "description": "Heading above the cards"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_hook": {
+        "type": "string",
+        "maxLength": 120,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the hook"
+      },
+      "vo_plans": {
+        "type": "string",
+        "maxLength": 260,
+        "x-kind": "voiceover",
+        "description": "Voiceover walking through the plans"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 100,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "hook": "Simple pricing. No surprises.",
+    "hook_sub": "Every plan includes verified data and CRM sync.",
+    "plan_1_name": "Starter",
+    "plan_1_price": "$49",
+    "plan_1_line": "For solo sellers",
+    "plan_2_name": "Growth",
+    "plan_2_price": "$199",
+    "plan_2_line": "For scaling teams",
+    "plan_3_name": "Enterprise",
+    "plan_3_price": "Custom",
+    "plan_3_line": "For global orgs",
+    "plans_title": "Pick the plan that fits",
+    "cta_headline": "Start free, upgrade anytime",
+    "cta": "Start free trial",
+    "music": "corporate-upbeat"
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_hook"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.08,
+              0.012
+            ],
+            "vertical": [
+              0.08,
+              0.33,
+              0.16,
+              0.007
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{hook}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 100,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.34,
+              0.8,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.36,
+              0.84,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{hook_sub}}",
+          "if": "hook_sub",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 500,
+            "size": 40,
+            "align": "left",
+            "color": "#FFFFFFCC",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.66,
+              0.7,
+              0.1
+            ],
+            "vertical": [
+              0.08,
+              0.6,
+              0.84,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.5
+        }
+      ]
+    },
+    {
+      "id": "plans",
+      "role": "plans",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_plans"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{plans_title}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 56
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.08,
+              0.8,
+              0.12
+            ],
+            "vertical": [
+              0.08,
+              0.13,
+              0.84,
+              0.08
+            ],
+            "1:1": [
+              0.08,
+              0.06,
+              0.84,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.surface"
+            },
+            "radius": 0.08
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.26,
+              0.26,
+              0.56
+            ],
+            "vertical": [
+              0.08,
+              0.25,
+              0.84,
+              0.19
+            ],
+            "1:1": [
+              0.08,
+              0.22,
+              0.84,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{plan_1_name}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 40,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08499999999999999,
+              0.31,
+              0.21,
+              0.08
+            ],
+            "vertical": [
+              0.13,
+              0.27,
+              0.4,
+              0.04
+            ],
+            "1:1": [
+              0.13,
+              0.24,
+              0.4,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.30000000000000004
+        },
+        {
+          "type": "text",
+          "text": "{{plan_1_price}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 84,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08499999999999999,
+              0.42,
+              0.21,
+              0.18
+            ],
+            "vertical": [
+              0.13,
+              0.315,
+              0.74,
+              0.07
+            ],
+            "1:1": [
+              0.13,
+              0.3,
+              0.74,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 0.35
+        },
+        {
+          "type": "text",
+          "text": "{{plan_1_line}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "weight": 500,
+            "size": 30,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08499999999999999,
+              0.64,
+              0.21,
+              0.12
+            ],
+            "vertical": [
+              0.13,
+              0.39,
+              0.74,
+              0.035
+            ],
+            "1:1": [
+              0.13,
+              0.385,
+              0.74,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.4
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            },
+            "radius": 0.08
+          },
+          "box": {
+            "*": [
+              0.37,
+              0.26,
+              0.26,
+              0.56
+            ],
+            "vertical": [
+              0.08,
+              0.47,
+              0.84,
+              0.19
+            ],
+            "1:1": [
+              0.08,
+              0.47,
+              0.84,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{plan_2_name}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 40,
+            "shadow": false,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.395,
+              0.31,
+              0.21,
+              0.08
+            ],
+            "vertical": [
+              0.13,
+              0.49,
+              0.4,
+              0.04
+            ],
+            "1:1": [
+              0.13,
+              0.49,
+              0.4,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.55
+        },
+        {
+          "type": "text",
+          "text": "{{plan_2_price}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 84,
+            "shadow": false,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.395,
+              0.42,
+              0.21,
+              0.18
+            ],
+            "vertical": [
+              0.13,
+              0.5349999999999999,
+              0.74,
+              0.07
+            ],
+            "1:1": [
+              0.13,
+              0.5499999999999999,
+              0.74,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 0.6
+        },
+        {
+          "type": "text",
+          "text": "{{plan_2_line}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 500,
+            "size": 30,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.395,
+              0.64,
+              0.21,
+              0.12
+            ],
+            "vertical": [
+              0.13,
+              0.61,
+              0.74,
+              0.035
+            ],
+            "1:1": [
+              0.13,
+              0.635,
+              0.74,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.65
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.surface"
+            },
+            "radius": 0.08
+          },
+          "box": {
+            "*": [
+              0.68,
+              0.26,
+              0.26,
+              0.56
+            ],
+            "vertical": [
+              0.08,
+              0.69,
+              0.84,
+              0.19
+            ],
+            "1:1": [
+              0.08,
+              0.72,
+              0.84,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 0.7
+        },
+        {
+          "type": "text",
+          "text": "{{plan_3_name}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 40,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.7050000000000001,
+              0.31,
+              0.21,
+              0.08
+            ],
+            "vertical": [
+              0.13,
+              0.71,
+              0.4,
+              0.04
+            ],
+            "1:1": [
+              0.13,
+              0.74,
+              0.4,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.7999999999999999
+        },
+        {
+          "type": "text",
+          "text": "{{plan_3_price}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 84,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.7050000000000001,
+              0.42,
+              0.21,
+              0.18
+            ],
+            "vertical": [
+              0.13,
+              0.7549999999999999,
+              0.74,
+              0.07
+            ],
+            "1:1": [
+              0.13,
+              0.7999999999999999,
+              0.74,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 0.85
+        },
+        {
+          "type": "text",
+          "text": "{{plan_3_line}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "weight": 500,
+            "size": 30,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.7050000000000001,
+              0.64,
+              0.21,
+              0.12
+            ],
+            "vertical": [
+              0.13,
+              0.83,
+              0.74,
+              0.035
+            ],
+            "1:1": [
+              0.13,
+              0.885,
+              0.74,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.8999999999999999
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

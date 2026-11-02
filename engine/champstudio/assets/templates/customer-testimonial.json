@@ -1,0 +1,624 @@
+{
+  "cst": "1.0",
+  "id": "customer-testimonial",
+  "name": "Customer Testimonial",
+  "category": "social-proof",
+  "description": "Customer photo or clip beside their quote, the result they got as a big number, and a CTA.",
+  "tags": [
+    "testimonial",
+    "customer",
+    "review",
+    "quote",
+    "social proof"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "quote",
+      "name",
+      "result",
+      "result_label",
+      "cta"
+    ],
+    "properties": {
+      "customer_media": {
+        "x-kind": "media",
+        "description": "Customer photo or short video"
+      },
+      "quote": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "text",
+        "description": "Customer quote, ideally under 20 words"
+      },
+      "name": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Customer name"
+      },
+      "role": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Title and company"
+      },
+      "company_logo": {
+        "x-kind": "logo",
+        "description": "Customer company logo (optional)"
+      },
+      "result": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "Result number, e.g. 38%"
+      },
+      "result_label": {
+        "type": "string",
+        "maxLength": 52,
+        "x-kind": "text",
+        "description": "What improved"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_quote": {
+        "type": "string",
+        "maxLength": 320,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the quote"
+      },
+      "vo_result": {
+        "type": "string",
+        "maxLength": 160,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the result"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "quote": "We booked more meetings in one quarter than all of last year. The data just works.",
+    "name": "Dana Whitfield",
+    "role": "VP Sales, Northwind Health",
+    "result": "38%",
+    "result_label": "more meetings booked per rep",
+    "cta_headline": "Be our next success story",
+    "cta": "Talk to sales",
+    "music": "inspiring"
+  },
+  "scenes": [
+    {
+      "id": "quote",
+      "role": "quote",
+      "duration": {
+        "mode": "voiceover",
+        "min": 6.5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_quote"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "media",
+          "src": {
+            "$slot": "customer_media"
+          },
+          "motion": "kenburns-in",
+          "box": {
+            "*": [
+              0.0,
+              0.0,
+              0.42,
+              1.0
+            ],
+            "vertical": [
+              0.0,
+              0.0,
+              1.0,
+              0.42
+            ],
+            "1:1": [
+              0.0,
+              0.0,
+              1.0,
+              0.36
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "“",
+          "style": {
+            "$brand": "styles.title",
+            "size": 240,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "shadow": false,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.47,
+              0.06,
+              0.15,
+              0.24
+            ],
+            "vertical": [
+              0.06,
+              0.42,
+              0.3,
+              0.1
+            ],
+            "1:1": [
+              0.06,
+              0.36,
+              0.2,
+              0.14
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{quote}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 52,
+            "align": "left",
+            "valign": "top",
+            "line_height": 1.25
+          },
+          "box": {
+            "*": [
+              0.48,
+              0.26,
+              0.46,
+              0.42
+            ],
+            "vertical": [
+              0.08,
+              0.5,
+              0.84,
+              0.22
+            ],
+            "1:1": [
+              0.08,
+              0.48,
+              0.84,
+              0.28
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.6
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{name}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 800,
+            "size": 38,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.48,
+              0.72,
+              0.34,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.725,
+              0.6,
+              0.04
+            ],
+            "1:1": [
+              0.08,
+              0.79,
+              0.6,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          },
+          "start": 0.8
+        },
+        {
+          "type": "text",
+          "text": "{{role}}",
+          "if": "role",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "weight": 500,
+            "size": 30,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.48,
+              0.79,
+              0.34,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.77,
+              0.6,
+              0.032
+            ],
+            "1:1": [
+              0.08,
+              0.85,
+              0.6,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 1.0
+        },
+        {
+          "type": "logo",
+          "name": "Customer logo",
+          "src": {
+            "$slot": "company_logo"
+          },
+          "if": "company_logo",
+          "box": {
+            "*": [
+              0.82,
+              0.72,
+              0.13,
+              0.13
+            ],
+            "vertical": [
+              0.7,
+              0.735,
+              0.22,
+              0.07
+            ],
+            "1:1": [
+              0.72,
+              0.78,
+              0.2,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 1.0,
+          "fallback_text": false
+        }
+      ]
+    },
+    {
+      "id": "result",
+      "role": "result",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_result"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "text",
+          "text": "The result",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.accent"
+            },
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.16,
+              0.4,
+              0.06
+            ],
+            "vertical": [
+              0.2,
+              0.22,
+              0.6,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "stat",
+          "text": "{{result}}",
+          "style": {
+            "$brand": "styles.stat",
+            "size": 260,
+            "color": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.22,
+              0.84,
+              0.4
+            ],
+            "vertical": [
+              0.06,
+              0.27,
+              0.88,
+              0.2
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{result_label}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 700,
+            "size": 52,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.64,
+              0.76,
+              0.14
+            ],
+            "vertical": [
+              0.08,
+              0.49,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.22,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

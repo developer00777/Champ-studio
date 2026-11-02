@@ -1,0 +1,813 @@
+{
+  "cst": "1.0",
+  "id": "life-at-company",
+  "name": "Life at Company",
+  "category": "recruitment",
+  "description": "Four culture moments, each with a value word and caption, closing on a careers CTA. Your employer brand in 20 seconds.",
+  "tags": [
+    "culture",
+    "life at",
+    "employer brand",
+    "careers",
+    "team"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "company",
+      "word_1",
+      "word_2",
+      "cta"
+    ],
+    "properties": {
+      "company": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Company or team name"
+      },
+      "photo_1": {
+        "x-kind": "media",
+        "description": "Culture moment 1"
+      },
+      "word_1": {
+        "type": "string",
+        "maxLength": 14,
+        "x-kind": "text",
+        "description": "One value word for moment 1"
+      },
+      "caption_1": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Caption for moment 1"
+      },
+      "photo_2": {
+        "x-kind": "media",
+        "description": "Culture moment 2"
+      },
+      "word_2": {
+        "type": "string",
+        "maxLength": 14,
+        "x-kind": "text",
+        "description": "One value word for moment 2"
+      },
+      "caption_2": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Caption for moment 2"
+      },
+      "photo_3": {
+        "x-kind": "media",
+        "description": "Culture moment 3"
+      },
+      "word_3": {
+        "type": "string",
+        "maxLength": 14,
+        "x-kind": "text",
+        "description": "One value word for moment 3"
+      },
+      "caption_3": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Caption for moment 3"
+      },
+      "photo_4": {
+        "x-kind": "media",
+        "description": "Culture moment 4"
+      },
+      "word_4": {
+        "type": "string",
+        "maxLength": 14,
+        "x-kind": "text",
+        "description": "One value word for moment 4"
+      },
+      "caption_4": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Caption for moment 4"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_story": {
+        "type": "string",
+        "maxLength": 500,
+        "x-kind": "voiceover",
+        "description": "Voiceover across the culture moments (optional)"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "company": "Champions Group",
+    "word_1": "Curious",
+    "caption_1": "We question every data point",
+    "word_2": "Together",
+    "caption_2": "Every win is a team win",
+    "word_3": "Growing",
+    "caption_3": "Learning budget from day one",
+    "word_4": "Grounded",
+    "caption_4": "Real impact for real clients",
+    "cta_headline": "Find your place with us",
+    "cta": "See open roles",
+    "music": "inspiring"
+  },
+  "scenes": [
+    {
+      "id": "moment1",
+      "role": "moment",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.8,
+        "pad": 0.2
+      },
+      "vo": {
+        "$slot": "vo_story"
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "photo_1"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000011",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "Life at {{company}}",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 28,
+            "uppercase": true
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.1,
+              0.6,
+              0.065
+            ],
+            "vertical": [
+              0.07,
+              0.08,
+              0.86,
+              0.056
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{word_1}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 150,
+            "align": "left",
+            "valign": "bottom"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.48,
+              0.86,
+              0.26
+            ],
+            "vertical": [
+              0.07,
+              0.5,
+              0.86,
+              0.16
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.075,
+              0.76,
+              0.08,
+              0.01
+            ],
+            "vertical": [
+              0.075,
+              0.675,
+              0.16,
+              0.005
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          },
+          "start": 0.35
+        },
+        {
+          "type": "text",
+          "text": "{{caption_1}}",
+          "if": "caption_1",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 600,
+            "size": 44,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.79,
+              0.86,
+              0.1
+            ],
+            "vertical": [
+              0.07,
+              0.69,
+              0.86,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.45
+        }
+      ]
+    },
+    {
+      "id": "moment2",
+      "role": "moment",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.8,
+        "pad": 0.2
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "photo_2"
+          },
+          "motion": "pan-left"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000011",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{word_2}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 150,
+            "align": "left",
+            "valign": "bottom"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.48,
+              0.86,
+              0.26
+            ],
+            "vertical": [
+              0.07,
+              0.5,
+              0.86,
+              0.16
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.075,
+              0.76,
+              0.08,
+              0.01
+            ],
+            "vertical": [
+              0.075,
+              0.675,
+              0.16,
+              0.005
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          },
+          "start": 0.35
+        },
+        {
+          "type": "text",
+          "text": "{{caption_2}}",
+          "if": "caption_2",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 600,
+            "size": 44,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.79,
+              0.86,
+              0.1
+            ],
+            "vertical": [
+              0.07,
+              0.69,
+              0.86,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.45
+        }
+      ]
+    },
+    {
+      "id": "moment3",
+      "role": "moment",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.8,
+        "pad": 0.2
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "photo_3"
+          },
+          "motion": "kenburns-out"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000011",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{word_3}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 150,
+            "align": "left",
+            "valign": "bottom"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.48,
+              0.86,
+              0.26
+            ],
+            "vertical": [
+              0.07,
+              0.5,
+              0.86,
+              0.16
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.075,
+              0.76,
+              0.08,
+              0.01
+            ],
+            "vertical": [
+              0.075,
+              0.675,
+              0.16,
+              0.005
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          },
+          "start": 0.35
+        },
+        {
+          "type": "text",
+          "text": "{{caption_3}}",
+          "if": "caption_3",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 600,
+            "size": 44,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.79,
+              0.86,
+              0.1
+            ],
+            "vertical": [
+              0.07,
+              0.69,
+              0.86,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.45
+        }
+      ]
+    },
+    {
+      "id": "moment4",
+      "role": "moment",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.8,
+        "pad": 0.2
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "photo_4"
+          },
+          "motion": "pan-right"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000011",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{word_4}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 150,
+            "align": "left",
+            "valign": "bottom"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.48,
+              0.86,
+              0.26
+            ],
+            "vertical": [
+              0.07,
+              0.5,
+              0.86,
+              0.16
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.075,
+              0.76,
+              0.08,
+              0.01
+            ],
+            "vertical": [
+              0.075,
+              0.675,
+              0.16,
+              0.005
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          },
+          "start": 0.35
+        },
+        {
+          "type": "text",
+          "text": "{{caption_4}}",
+          "if": "caption_4",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 600,
+            "size": 44,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.79,
+              0.86,
+              0.1
+            ],
+            "vertical": [
+              0.07,
+              0.69,
+              0.86,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.45
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.4,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

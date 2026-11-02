@@ -1,0 +1,667 @@
+{
+  "cst": "1.0",
+  "id": "whats-new-release",
+  "name": "What's New Release",
+  "category": "product-promo",
+  "description": "Monthly release recap: version stamp, a list of what shipped, one spotlight screenshot and a see-the-changelog CTA.",
+  "tags": [
+    "release notes",
+    "changelog",
+    "updates",
+    "saas",
+    "product"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "title",
+      "updates",
+      "spotlight",
+      "cta"
+    ],
+    "properties": {
+      "version": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Version or release name, e.g. October release"
+      },
+      "title": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Headline, e.g. What's new in Studio"
+      },
+      "updates": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 5,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 44
+        },
+        "description": "One short line per update"
+      },
+      "spotlight": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Name of the spotlight feature"
+      },
+      "spotlight_body": {
+        "type": "string",
+        "maxLength": 80,
+        "x-kind": "text",
+        "description": "One line on the spotlight feature"
+      },
+      "screen": {
+        "x-kind": "media",
+        "description": "Screenshot of the spotlight feature",
+        "x-media": [
+          "image"
+        ]
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_intro": {
+        "type": "string",
+        "maxLength": 120,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the intro"
+      },
+      "vo_updates": {
+        "type": "string",
+        "maxLength": 360,
+        "x-kind": "voiceover",
+        "description": "Voiceover listing the updates"
+      },
+      "vo_spotlight": {
+        "type": "string",
+        "maxLength": 200,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the spotlight"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 100,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "version": "October release",
+    "title": "What's new this month",
+    "updates": [
+      "Faster list exports",
+      "Job-change alerts",
+      "HubSpot field mapping",
+      "New healthcare filters"
+    ],
+    "spotlight": "Job-change alerts",
+    "spotlight_body": "Know the moment a champion moves to a new account.",
+    "cta": "Read the changelog",
+    "music": "calm-tech"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "role": "intro",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_intro"
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF",
+            "radius": 0.5
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.3,
+              0.075
+            ],
+            "vertical": [
+              0.08,
+              0.34,
+              0.6,
+              0.045
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{version}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.3,
+              0.075
+            ],
+            "vertical": [
+              0.08,
+              0.34,
+              0.6,
+              0.045
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{title}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 104,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.42,
+              0.8,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.41,
+              0.84,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.25
+        }
+      ]
+    },
+    {
+      "id": "updates",
+      "role": "list",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_updates"
+      },
+      "transition": {
+        "type": "wipe-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.12,
+              0.006,
+              0.76
+            ],
+            "vertical": [
+              0.06,
+              0.18,
+              0.012,
+              0.62
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "Shipped",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.12,
+              0.6,
+              0.07
+            ],
+            "vertical": [
+              0.1,
+              0.18,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "updates"
+          },
+          "stagger": 0.9,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 50,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.22,
+              0.82,
+              0.66
+            ],
+            "vertical": [
+              0.1,
+              0.24,
+              0.82,
+              0.54
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          }
+        }
+      ]
+    },
+    {
+      "id": "spotlight",
+      "role": "spotlight",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_spotlight"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "media",
+          "src": {
+            "$slot": "screen"
+          },
+          "motion": "pan-left",
+          "box": {
+            "*": [
+              0.5,
+              0.0,
+              0.5,
+              1.0
+            ],
+            "vertical": [
+              0.0,
+              0.0,
+              1.0,
+              0.44
+            ],
+            "1:1": [
+              0.0,
+              0.0,
+              1.0,
+              0.44
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "Spotlight",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.accent"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.26,
+              0.4,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.5,
+              0.84,
+              0.035
+            ],
+            "1:1": [
+              0.08,
+              0.5,
+              0.84,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{spotlight}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 68,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.33,
+              0.4,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.545,
+              0.84,
+              0.16
+            ],
+            "1:1": [
+              0.08,
+              0.56,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{spotlight_body}}",
+          "if": "spotlight_body",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 500,
+            "size": 34,
+            "align": "left",
+            "color": "#FFFFFFCC",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.65,
+              0.38,
+              0.18
+            ],
+            "vertical": [
+              0.08,
+              0.71,
+              0.84,
+              0.08
+            ],
+            "1:1": [
+              0.08,
+              0.75,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.5
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{title}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

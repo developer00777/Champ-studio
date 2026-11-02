@@ -1,0 +1,195 @@
+{
+  "cst": "1.0",
+  "id": "caption-bar",
+  "name": "Caption Bar",
+  "category": "brand-utility",
+  "description": "Overlay: a branded caption bar with a small label for key messages, quotes or translations. Drop on any track in the editor.",
+  "tags": [
+    "overlay",
+    "caption",
+    "bar",
+    "subtitle",
+    "graphics"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "slots": {
+    "type": "object",
+    "required": [
+      "text"
+    ],
+    "properties": {
+      "label": {
+        "type": "string",
+        "maxLength": 20,
+        "x-kind": "text",
+        "description": "Small label on the bar, e.g. KEY POINT"
+      },
+      "text": {
+        "type": "string",
+        "maxLength": 80,
+        "x-kind": "text",
+        "description": "Caption text"
+      }
+    }
+  },
+  "defaults": {
+    "label": "Key point",
+    "text": "Verified data cuts bounce rates by more than half."
+  },
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "bar",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 6.0
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "name": "Bar",
+          "shape": {
+            "kind": "rect",
+            "fill": "#000000B3",
+            "radius": 0.18
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.76,
+              0.88,
+              0.15
+            ],
+            "vertical": [
+              0.05,
+              0.7,
+              0.9,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Accent",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.76,
+              0.008,
+              0.15
+            ],
+            "vertical": [
+              0.05,
+              0.7,
+              0.014,
+              0.11
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{label}}",
+          "if": "label",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 24,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.accent"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.09,
+              0.775,
+              0.6,
+              0.04
+            ],
+            "vertical": [
+              0.09,
+              0.71,
+              0.8,
+              0.025
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.15,
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{text}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 42,
+            "weight": 700,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.09,
+              0.815,
+              0.82,
+              0.08
+            ],
+            "vertical": [
+              0.09,
+              0.738,
+              0.82,
+              0.065
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.35
+          },
+          "start": 0.2,
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

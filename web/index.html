@@ -16,6 +16,17 @@
   <aside class="sidebar">
     <div class="wordmark">Champ&nbsp;<em>Studio</em></div>
     <nav class="nav" id="nav">
+      <div class="nav-group">Make</div>
+      <button class="nav-item" data-view="director">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7zm0-3l3 3H4V4zm5 0h3l3 3h-3L9 4zm6 0h3l2 2v1h-2l-3-3zM10 11v6l5-3-5-3z"/></svg>
+        Director</button>
+      <button class="nav-item" data-view="templates">
+        <svg viewBox="0 0 24 24"><path d="M4 4h7v7H4V4zm9 0h7v4h-7V4zm0 6h7v10h-7V10zM4 13h7v7H4v-7z"/></svg>
+        Templates</button>
+      <button class="nav-item" data-view="projects">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18v3H3V6zm0 5h11v3H3v-3zm13 0h5v3h-5v-3zM3 16h7v3H3v-3zm9 0h9v3h-9v-3z"/></svg>
+        Editor</button>
+      <div class="nav-group">Generate</div>
       <button class="nav-item" data-view="create">
         <svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4L12 3zM19 15l.9 2.6L22.5 18l-2.6.9L19 21.5l-.9-2.6L15.5 18l2.6-.9L19 15z"/></svg>
         Create</button>
@@ -28,6 +39,10 @@
       <button class="nav-item" data-view="library">
         <svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5zm4 10l2.5-3 2 2.4L15 11l3 4H8z"/></svg>
         Library</button>
+      <div class="nav-group">Team</div>
+      <button class="nav-item" data-view="brands">
+        <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1 0 1.6-.8 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5C21 6.6 17 3 12 3zM6.5 12a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+        Brand Kits</button>
       <button class="nav-item" data-view="settings">
         <svg viewBox="0 0 24 24"><path d="M12 8.5A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5zm8.9 5l-1.9-.6a7 7 0 0 0 0-1.8l1.9-.6a1 1 0 0 0 .6-1.3l-1-2.4a1 1 0 0 0-1.3-.5l-1.9.7a7 7 0 0 0-1.5-1l.2-2a1 1 0 0 0-1-1.1h-2.6a1 1 0 0 0-1 1.1l.2 2a7 7 0 0 0-1.5 1l-1.9-.7a1 1 0 0 0-1.3.5l-1 2.4a1 1 0 0 0 .6 1.3l1.9.6a7 7 0 0 0 0 1.8l-1.9.6a1 1 0 0 0-.6 1.3l1 2.4a1 1 0 0 0 1.3.5l1.9-.7a7 7 0 0 0 1.5 1l-.2 2a1 1 0 0 0 1 1.1h2.6a1 1 0 0 0 1-1.1l-.2-2a7 7 0 0 0 1.5-1l1.9.7a1 1 0 0 0 1.3-.5l1-2.4a1 1 0 0 0-.6-1.3z"/></svg>
         Settings</button>
@@ -42,6 +57,87 @@
   </aside>
 
   <main id="main">
+
+    <!-- ══ DIRECTOR ══ -->
+    <section class="view" id="view-director">
+      <header class="view-head">
+        <h1>Director</h1>
+        <p>Describe the video you need. Director writes the script, storyboards it, records the voiceover, makes the clips, adds captions and music, and renders every aspect ratio.</p>
+      </header>
+      <div id="dir-new">
+        <div class="prompt-dock glass">
+          <textarea id="dir-prompt" rows="2" placeholder="e.g. 30-second LinkedIn ad for Ampliz healthcare data: 4M+ physicians, 99% accuracy, aimed at pharma marketing leaders…"></textarea>
+          <button class="btn ember big" id="dir-go">Write plan</button>
+        </div>
+        <div class="controls-row">
+          <div class="ctl"><label>Length</label><div class="chip-row" id="dir-length"></div></div>
+          <div class="ctl"><label>Aspect ratios</label><div class="chip-row multi" id="dir-aspects"></div></div>
+          <div class="ctl"><label>Production budget</label><div class="chip-row" id="dir-budget"></div></div>
+          <div class="ctl"><label>Brand kit</label><select id="dir-brand" class="sel"></select></div>
+          <div class="ctl"><label>Platform</label>
+            <select id="dir-platform" class="sel"><option>LinkedIn</option><option>YouTube</option><option>Instagram</option><option>TikTok</option><option>Website</option><option>Email</option><option>Event screen</option></select></div>
+          <div class="ctl"><label>Audience</label><input id="dir-audience" class="sel" placeholder="B2B decision makers"></div>
+        </div>
+        <div class="controls-row">
+          <div class="ctl grow"><label>Facts the script may use (optional)</label><input id="dir-facts" class="sel wide" placeholder="Numbers, product names, offer, URL…"></div>
+          <div class="ctl"><label>Presenter portrait</label><button class="btn ghost" id="dir-presenter">+ Pick image</button></div>
+          <div class="ctl"><label>Autopilot</label><button class="switch" id="dir-auto" role="switch" aria-checked="false"><span></span></button></div>
+        </div>
+        <p class="hint" id="dir-budget-hint"></p>
+        <h2 class="section-title">Your Director projects</h2>
+        <div class="project-grid" id="dir-list"></div>
+        <div class="empty-state" id="dir-empty" hidden>
+          <div class="empty-mark">🎬</div><h3>No videos yet</h3><p>Write a brief above and press <strong>Write plan</strong>.</p>
+        </div>
+      </div>
+      <div id="dir-detail" hidden></div>
+    </section>
+
+    <!-- ══ TEMPLATES ══ -->
+    <section class="view" id="view-templates">
+      <header class="view-head">
+        <h1>Templates</h1>
+        <p>B2B video templates for every ratio. Fill them yourself or from a brief, make a batch of personalised videos from a CSV, or drop graphics into the editor.</p>
+      </header>
+      <div class="controls-row">
+        <div class="ctl grow"><label>Search</label><input id="tpl-search" class="sel wide" placeholder="webinar, hiring, stat, testimonial…"></div>
+        <div class="ctl"><label>Preview ratio</label><div class="chip-row" id="tpl-aspect"></div></div>
+        <div class="ctl"><label>Brand kit</label><select id="tpl-brand" class="sel"></select></div>
+      </div>
+      <div class="chip-row filters" id="tpl-cats"></div>
+      <div class="tpl-grid" id="tpl-grid"></div>
+    </section>
+
+    <!-- ══ PROJECTS / EDITOR ══ -->
+    <section class="view" id="view-projects">
+      <header class="view-head">
+        <h1>Editor</h1>
+        <p>Multi-track timeline editing for the video team. Open a sequence, or start one from a Director video or a template.</p>
+      </header>
+      <div class="controls-row">
+        <div class="ctl"><label>New sequence</label><input id="proj-name" class="sel" placeholder="Sequence name"></div>
+        <div class="ctl"><label>Ratio</label><div class="chip-row" id="proj-aspect"></div></div>
+        <div class="ctl"><label>&nbsp;</label><button class="btn ember" id="proj-new">Create &amp; open</button></div>
+        <div class="ctl"><label>Import Premiere XML / EDL / OTIO</label>
+          <button class="btn ghost" id="proj-import">Import…</button><input type="file" id="proj-import-file" accept=".xml,.edl,.otio" hidden></div>
+        <div class="ctl"><label>Rough cut from footage</label><button class="btn ghost" id="proj-rough">AI rough cut…</button></div>
+      </div>
+      <div class="project-grid" id="proj-list"></div>
+      <div class="empty-state" id="proj-empty" hidden>
+        <div class="empty-mark">▤</div><h3>No sequences yet</h3><p>Create one above, or send a Director video or template to the editor.</p>
+      </div>
+    </section>
+
+    <!-- ══ BRAND KITS ══ -->
+    <section class="view" id="view-brands">
+      <header class="view-head">
+        <h1>Brand Kits</h1>
+        <p>Colours, fonts, logos, voice and tone. Every template, Director video and editor title uses the kit you choose.</p>
+      </header>
+      <div class="controls-row"><button class="btn ember" id="brand-new">+ New brand kit</button>
+        <button class="btn ghost" id="brand-font">Upload brand font</button><input type="file" id="brand-font-file" accept=".ttf,.otf" hidden></div>
+      <div class="brand-grid" id="brand-grid"></div>
+    </section>
 
     <!-- ══ CREATE ══ -->
     <section class="view" id="view-create">
@@ -256,6 +352,28 @@
         </div>
       </div>
       <div class="settings-card glass">
+        <h2 class="section-title">Usage &amp; budget</h2>
+        <div class="usage-row" id="usage-summary"></div>
+        <div class="controls-row">
+          <div class="ctl"><label>Monthly cap (USD, 0 = none)</label><input type="number" id="budget-month" class="sel num-wide" min="0" step="1"></div>
+          <div class="ctl"><label>Per-project cap (USD)</label><input type="number" id="budget-project" class="sel num-wide" min="0" step="1"></div>
+          <div class="ctl"><label>&nbsp;</label><button class="btn" id="budget-save">Save budget</button></div>
+        </div>
+        <table class="data-table" id="usage-models"></table>
+      </div>
+      <div class="settings-card glass">
+        <h2 class="section-title">AI models</h2>
+        <p class="hint">Each job uses the cheapest model that does it well. Override any role with an OpenRouter model id; the fallback is tried automatically when the main model fails.</p>
+        <table class="data-table" id="roles-table"></table>
+        <div class="settings-actions"><button class="btn" id="roles-save">Save models</button></div>
+      </div>
+      <div class="settings-card glass" id="team-card" hidden>
+        <h2 class="section-title">Team &amp; audit</h2>
+        <table class="data-table" id="users-table"></table>
+        <h3 class="sub-title">Recent activity</h3>
+        <table class="data-table" id="audit-table"></table>
+      </div>
+      <div class="settings-card glass">
         <h2 class="section-title">Engine</h2>
         <p class="hint" id="settings-engine">—</p>
         <p class="hint">Assets are stored in the engine's data directory (<code>CHAMP_DATA_DIR</code>); deleting an asset removes its file permanently.</p>
@@ -268,5 +386,6 @@
 <div id="modal-root"></div>
 <div id="toast-root"></div>
 <script type="module" src="app.js"></script>
+<script type="module" src="studio.js"></script>
 </body>
 </html>

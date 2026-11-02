@@ -1,0 +1,727 @@
+{
+  "cst": "1.0",
+  "id": "employee-spotlight",
+  "name": "Employee Spotlight",
+  "category": "recruitment",
+  "description": "Celebrate a team member: portrait with name and role, their quote in their words, three fun facts, and a join-us CTA.",
+  "tags": [
+    "employee spotlight",
+    "culture",
+    "team",
+    "employer brand",
+    "people"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "name",
+      "role",
+      "quote",
+      "cta"
+    ],
+    "properties": {
+      "portrait": {
+        "x-kind": "media",
+        "description": "Portrait photo or short clip of the employee"
+      },
+      "name": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Employee name"
+      },
+      "role": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Role and team"
+      },
+      "tenure": {
+        "type": "string",
+        "maxLength": 28,
+        "x-kind": "text",
+        "description": "Tenure or location, e.g. 4 years · Chennai"
+      },
+      "quote": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "text",
+        "description": "What they love about the work"
+      },
+      "facts": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "description": "Three fun facts or highlights"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_intro": {
+        "type": "string",
+        "maxLength": 160,
+        "x-kind": "voiceover",
+        "description": "Voiceover introducing them"
+      },
+      "vo_quote": {
+        "type": "string",
+        "maxLength": 300,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the quote"
+      },
+      "vo_facts": {
+        "type": "string",
+        "maxLength": 240,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the facts"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "name": "Kavya Iyer",
+    "role": "Lead Research Analyst, Healthcare Data",
+    "tenure": "5 years · Chennai",
+    "quote": "Every record I verify helps a hospital reach the right people. That impact is real, and I see it every day.",
+    "facts": [
+      "Verified her 1 millionth record",
+      "Runs our book club",
+      "Trained 30+ new analysts"
+    ],
+    "cta": "Join our team",
+    "music": "chill"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "role": "intro",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_intro"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "media",
+          "src": {
+            "$slot": "portrait"
+          },
+          "motion": "kenburns-in",
+          "box": {
+            "*": [
+              0.0,
+              0.0,
+              0.46,
+              1.0
+            ],
+            "vertical": [
+              0.0,
+              0.0,
+              1.0,
+              0.46
+            ],
+            "1:1": [
+              0.0,
+              0.0,
+              1.0,
+              0.42
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "Employee spotlight",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.52,
+              0.28,
+              0.42,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.5,
+              0.84,
+              0.035
+            ],
+            "1:1": [
+              0.08,
+              0.46,
+              0.84,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{name}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 84,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.52,
+              0.35,
+              0.42,
+              0.18
+            ],
+            "vertical": [
+              0.08,
+              0.54,
+              0.84,
+              0.1
+            ],
+            "1:1": [
+              0.08,
+              0.52,
+              0.84,
+              0.14
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.45
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{role}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 700,
+            "size": 38,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.52,
+              0.55,
+              0.42,
+              0.12
+            ],
+            "vertical": [
+              0.08,
+              0.645,
+              0.84,
+              0.06
+            ],
+            "1:1": [
+              0.08,
+              0.67,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.4
+        },
+        {
+          "type": "text",
+          "text": "{{tenure}}",
+          "if": "tenure",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "weight": 500,
+            "size": 32,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.52,
+              0.68,
+              0.42,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.71,
+              0.84,
+              0.04
+            ],
+            "1:1": [
+              0.08,
+              0.78,
+              0.84,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.6
+        }
+      ]
+    },
+    {
+      "id": "quote",
+      "role": "quote",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_quote"
+      },
+      "transition": {
+        "type": "dip-black",
+        "sec": 0.35
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "text",
+          "text": "“",
+          "style": {
+            "$brand": "styles.title",
+            "size": 320,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "shadow": false,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.04,
+              0.2,
+              0.3
+            ],
+            "vertical": [
+              0.07,
+              0.08,
+              0.4,
+              0.14
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{quote}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 60,
+            "align": "left",
+            "valign": "top",
+            "line_height": 1.25
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.28,
+              0.84,
+              0.46
+            ],
+            "vertical": [
+              0.08,
+              0.22,
+              0.84,
+              0.42
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.7
+          },
+          "start": 0.3
+        },
+        {
+          "type": "text",
+          "text": "— {{name}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 700,
+            "size": 36,
+            "align": "left",
+            "color": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.78,
+              0.84,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.68,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 1.0
+        }
+      ]
+    },
+    {
+      "id": "facts",
+      "role": "list",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_facts"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Fun facts",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.84,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.2,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "name": "Numbers",
+          "items": [
+            "01",
+            "02",
+            "03"
+          ],
+          "stagger": 1.0,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 50
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.26,
+              0.08,
+              0.56
+            ],
+            "vertical": [
+              0.08,
+              0.27,
+              0.14,
+              0.44
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.3
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "facts"
+          },
+          "stagger": 1.0,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 50,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.16,
+              0.26,
+              0.76,
+              0.56
+            ],
+            "vertical": [
+              0.22,
+              0.27,
+              0.7,
+              0.44
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "Work with people like {{name}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

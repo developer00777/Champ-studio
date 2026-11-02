@@ -1,0 +1,710 @@
+{
+  "cst": "1.0",
+  "id": "compliance-tip",
+  "name": "Compliance Tip",
+  "category": "data-leadership",
+  "description": "A numbered compliance tip for regulated data (GDPR, HIPAA, CAN-SPAM, TCPA): the rule, a do/don't pair and a CTA.",
+  "tags": [
+    "compliance",
+    "gdpr",
+    "hipaa",
+    "privacy",
+    "tip",
+    "series"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "regulation",
+      "title",
+      "do",
+      "dont",
+      "cta"
+    ],
+    "properties": {
+      "tip_number": {
+        "type": "string",
+        "maxLength": 4,
+        "x-kind": "text",
+        "description": "Tip number in the series, e.g. 12"
+      },
+      "regulation": {
+        "type": "string",
+        "maxLength": 20,
+        "x-kind": "text",
+        "description": "Regulation tag, e.g. GDPR"
+      },
+      "title": {
+        "type": "string",
+        "maxLength": 52,
+        "x-kind": "text",
+        "description": "The tip as a headline"
+      },
+      "explain": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "text",
+        "description": "One or two sentences of context"
+      },
+      "do": {
+        "type": "string",
+        "maxLength": 60,
+        "x-kind": "text",
+        "description": "What to do"
+      },
+      "dont": {
+        "type": "string",
+        "maxLength": 60,
+        "x-kind": "text",
+        "description": "What not to do"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_intro": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the tip headline"
+      },
+      "vo_explain": {
+        "type": "string",
+        "maxLength": 260,
+        "x-kind": "voiceover",
+        "description": "Voiceover explaining the rule"
+      },
+      "vo_dodont": {
+        "type": "string",
+        "maxLength": 220,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the do and don't"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "tip_number": "12",
+    "regulation": "GDPR",
+    "title": "Log consent the moment you collect it",
+    "explain": "Regulators ask when, where and how consent was given. A timestamped record answers all three.",
+    "do": "Store source, timestamp and wording",
+    "dont": "Assume a purchased list is consented",
+    "cta": "Get the checklist",
+    "music": "calm-tech"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "role": "intro",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_intro"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Compliance tip #{{tip_number}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.accent"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.24,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{regulation}}",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 34,
+            "uppercase": true
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.31,
+              0.4,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.32,
+              0.84,
+              0.056
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{title}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 96,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.42,
+              0.84,
+              0.34
+            ],
+            "vertical": [
+              0.08,
+              0.39,
+              0.84,
+              0.24
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "explain",
+      "role": "explain",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_explain"
+      },
+      "transition": {
+        "type": "wipe-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Rule",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.24000000000000002,
+              0.06,
+              0.008
+            ],
+            "vertical": [
+              0.08,
+              0.27999999999999997,
+              0.12,
+              0.005
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "Why it matters",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.265,
+              0.7,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.292,
+              0.84,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.35
+          },
+          "start": 0.1
+        },
+        {
+          "type": "text",
+          "text": "{{explain}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 64,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.33999999999999997,
+              0.8,
+              0.28
+            ],
+            "vertical": [
+              0.08,
+              0.33999999999999997,
+              0.84,
+              0.2
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.2
+        }
+      ]
+    },
+    {
+      "id": "dodont",
+      "role": "do-dont",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_dodont"
+      },
+      "transition": {
+        "type": "slide-up",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.surface"
+            },
+            "radius": 0.06
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.18,
+              0.42,
+              0.62
+            ],
+            "vertical": [
+              0.06,
+              0.14,
+              0.88,
+              0.32
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "✓  Do",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 40,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.24,
+              0.34,
+              0.08
+            ],
+            "vertical": [
+              0.12,
+              0.17,
+              0.76,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{do}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 56,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.36,
+              0.34,
+              0.38
+            ],
+            "vertical": [
+              0.12,
+              0.24,
+              0.76,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.3
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.dark"
+            },
+            "radius": 0.06
+          },
+          "box": {
+            "*": [
+              0.52,
+              0.18,
+              0.42,
+              0.62
+            ],
+            "vertical": [
+              0.06,
+              0.5,
+              0.88,
+              0.32
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.4
+          },
+          "start": 0.9
+        },
+        {
+          "type": "text",
+          "text": "×  Don't",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 40,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left",
+            "color": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.56,
+              0.24,
+              0.34,
+              0.08
+            ],
+            "vertical": [
+              0.12,
+              0.53,
+              0.76,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 1.1
+        },
+        {
+          "type": "text",
+          "text": "{{dont}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 56,
+            "align": "left",
+            "valign": "top",
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.56,
+              0.36,
+              0.34,
+              0.38
+            ],
+            "vertical": [
+              0.12,
+              0.6,
+              0.76,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 1.2
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{regulation}} tip #{{tip_number}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.2,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

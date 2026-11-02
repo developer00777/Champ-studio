@@ -1,0 +1,310 @@
+{
+  "cst": "1.0",
+  "id": "email-thumbnail-loop",
+  "name": "Email Thumbnail Loop",
+  "category": "sales-enablement",
+  "description": "A 5-second silent loop for email GIF thumbnails: personalised greeting, a play button and the company name. Batch with a CSV of prospects.",
+  "tags": [
+    "email",
+    "gif",
+    "thumbnail",
+    "personalized",
+    "loop",
+    "outbound"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "line_1",
+      "line_2"
+    ],
+    "properties": {
+      "line_1": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "First frame line, e.g. Hi {first_name}"
+      },
+      "line_2": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Second frame line, e.g. Made for {company}"
+      },
+      "bg": {
+        "x-kind": "media",
+        "description": "Background, e.g. a screenshot of the prospect's website",
+        "x-media": [
+          "image"
+        ]
+      }
+    }
+  },
+  "defaults": {
+    "line_1": "Hi {first_name}",
+    "line_2": "A 60-second idea for {company}"
+  },
+  "scenes": [
+    {
+      "id": "frame1",
+      "role": "loop",
+      "duration": {
+        "mode": "fixed",
+        "sec": 2.6
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "bg"
+          },
+          "motion": "pan-left"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000088",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{line_1}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 96
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.2,
+              0.84,
+              0.32
+            ],
+            "vertical": [
+              0.06,
+              0.26,
+              0.88,
+              0.24
+            ],
+            "1:1": [
+              0.06,
+              0.18,
+              0.88,
+              0.36
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Play button",
+          "shape": {
+            "kind": "ellipse",
+            "fill": "#FFFFFF"
+          },
+          "box": {
+            "*": [
+              0.44,
+              0.58,
+              0.12,
+              0.213
+            ],
+            "vertical": [
+              0.35,
+              0.56,
+              0.3,
+              0.169
+            ],
+            "1:1": [
+              0.42,
+              0.6,
+              0.16,
+              0.16
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          }
+        },
+        {
+          "type": "text",
+          "text": "▶",
+          "style": {
+            "$brand": "styles.title",
+            "size": 96,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.44,
+              0.58,
+              0.12,
+              0.213
+            ],
+            "vertical": [
+              0.35,
+              0.56,
+              0.3,
+              0.169
+            ],
+            "1:1": [
+              0.42,
+              0.6,
+              0.16,
+              0.16
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          }
+        }
+      ]
+    },
+    {
+      "id": "frame2",
+      "role": "loop",
+      "duration": {
+        "mode": "fixed",
+        "sec": 2.4
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "bg"
+          },
+          "motion": "pan-right"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000088",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{line_2}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 96
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.2,
+              0.84,
+              0.32
+            ],
+            "vertical": [
+              0.06,
+              0.26,
+              0.88,
+              0.24
+            ],
+            "1:1": [
+              0.06,
+              0.18,
+              0.88,
+              0.36
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Play button",
+          "shape": {
+            "kind": "ellipse",
+            "fill": "#FFFFFF"
+          },
+          "box": {
+            "*": [
+              0.44,
+              0.58,
+              0.12,
+              0.213
+            ],
+            "vertical": [
+              0.35,
+              0.56,
+              0.3,
+              0.169
+            ],
+            "1:1": [
+              0.42,
+              0.6,
+              0.16,
+              0.16
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "▶",
+          "style": {
+            "$brand": "styles.title",
+            "size": 96,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.44,
+              0.58,
+              0.12,
+              0.213
+            ],
+            "vertical": [
+              0.35,
+              0.56,
+              0.3,
+              0.169
+            ],
+            "1:1": [
+              0.42,
+              0.6,
+              0.16,
+              0.16
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

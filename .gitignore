@@ -13,3 +13,8 @@ engine/dist/
 engine/build/
 *.spec
 dist/
+
+.env
+web/editor-src/node_modules/
+web/editor-src/dist/
+web/editor/

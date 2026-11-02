@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video Review · Champ Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#0B0D12; --carbon:#14171F; --slate:#1E222D; --steel:#2A2F3D; --mist:#6B7280; --cloud:#D1D5DB;
+          --snow:#FAFAF7; --ember:#FF6B35; --verdant:#10B981; --amber:#F59E0B; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ink); color: var(--cloud); font: 14px/1.5 Inter, system-ui, sans-serif; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px;
+           border-bottom: 1px solid var(--steel); background: var(--carbon); flex-wrap: wrap; }
+  h1 { font: 700 18px "Space Grotesk", sans-serif; color: var(--snow); margin: 0; }
+  .brand { font: 700 13px "Space Grotesk", sans-serif; color: var(--mist); } .brand em { color: var(--ember); font-style: normal; }
+  main { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px; padding: 20px 24px; max-width: 1500px; margin: 0 auto; }
+  video { width: 100%; max-height: 72vh; background: #000; border-radius: 12px; display: block; }
+  .bar { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .tc { font: 13px "JetBrains Mono", monospace; color: var(--snow); background: var(--slate); padding: 4px 10px; border-radius: 8px; }
+  .status { font: 600 11px Inter; letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; }
+  .status.needs_review { background: rgba(59,130,246,.15); color: #3B82F6; }
+  .status.changes_requested { background: rgba(245,158,11,.15); color: var(--amber); }
+  .status.approved { background: rgba(16,185,129,.15); color: var(--verdant); }
+  button { font: 600 13px Inter; border-radius: 10px; padding: 8px 14px; border: 1px solid var(--steel); background: var(--slate);
+           color: var(--snow); cursor: pointer; }
+  button:hover { border-color: var(--ember); }
+  button.primary { background: var(--ember); border-color: var(--ember); color: #fff; }
+  button.ok { background: var(--verdant); border-color: var(--verdant); color: #04130d; }
+  aside { background: var(--carbon); border: 1px solid var(--steel); border-radius: 14px; padding: 14px; display: flex;
+          flex-direction: column; gap: 10px; max-height: calc(100vh - 110px); }
+  .list { overflow-y: auto; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .c { background: var(--slate); border-radius: 10px; padding: 10px; cursor: pointer; border: 1px solid transparent; }
+  .c:hover { border-color: var(--ember); }
+  .c.resolved { opacity: .55; }
+  .c .meta { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--mist); margin-bottom: 4px; }
+  .c .at { font-family: "JetBrains Mono", monospace; color: var(--ember); }
+  textarea, input { width: 100%; background: var(--slate); border: 1px solid var(--steel); border-radius: 10px; color: var(--snow);
+                    padding: 8px 10px; font: inherit; }
+  textarea { resize: vertical; min-height: 64px; }
+  .muted { color: var(--mist); font-size: 12px; }
+  .err { padding: 40px; text-align: center; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } aside { max-height: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div><div class="brand">Champ&nbsp;<em>Studio</em> · Review</div><h1 id="title">Loading…</h1></div>
+  <div class="bar" style="margin:0">
+    <span class="status" id="status"></span>
+    <button id="changes">Request changes</button>
+    <button class="ok" id="approve">Approve</button>
+  </div>
+</header>
+<main id="main">
+  <section>
+    <video id="video" controls playsinline preload="metadata"></video>
+    <div class="bar">
+      <span class="tc" id="tc">00:00:00:00</span>
+      <span class="muted">Pause on a frame, then comment — it is pinned to that exact moment.</span>
+    </div>
+  </section>
+  <aside>
+    <input id="author" placeholder="Your name">
+    <textarea id="body" placeholder="Comment at the current frame…"></textarea>
+    <button class="primary" id="send">Comment at <span id="send-tc">00:00:00:00</span></button>
+    <div class="list" id="list"></div>
+  </aside>
+</main>
+<script type="module">
+const token = new URLSearchParams(location.search).get("t");
+const $ = (s) => document.querySelector(s);
+let fps = 30;
+const tc = (f) => {
+  const s = Math.floor(f / fps), ff = f % fps;
+  return [Math.floor(s / 3600), Math.floor(s / 60) % 60, s % 60, ff].map((n) => String(n).padStart(2, "0")).join(":");
+};
+const frame = () => Math.round($("#video").currentTime * fps);
+const esc = (t) => t.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+try { $("#author").value = localStorage.getItem("champ.review.author") || ""; } catch {}
+
+async function api(path, body) {
+  const r = await fetch(path, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {});
+  if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
+  return r.json();
+}
+
+function paint(data) {
+  $("#title").textContent = data.project.name || "Video review";
+  document.title = `${data.project.name} · Review`;
+  $("#status").className = `status ${data.status}`;
+  $("#status").textContent = data.status.replace("_", " ");
+  $("#list").innerHTML = data.comments.length ? "" : '<p class="muted">No comments yet.</p>';
+  for (const c of data.comments) {
+    const div = document.createElement("div");
+    div.className = `c${c.resolved ? " resolved" : ""}`;
+    div.innerHTML = `<div class="meta"><span>${esc(c.author || "")}</span><span class="at">${c.in_frame != null ? tc(c.in_frame) : "general"}</span></div>${esc(c.body)}`;
+    div.onclick = () => { if (c.in_frame != null) { $("#video").currentTime = c.in_frame / fps; $("#video").pause(); } };
+    $("#list").append(div);
+  }
+}
+
+async function load() {
+  try {
+    const data = await api(`/api/review/${token}`);
+    fps = data.fps || 30;
+    if (!$("#video").src) $("#video").src = data.video_url;
+    paint(data);
+  } catch (e) {
+    $("#main").innerHTML = `<div class="err"><h1>Review link unavailable</h1><p class="muted">${esc(e.message)}</p></div>`;
+  }
+}
+
+$("#video").addEventListener("timeupdate", () => { $("#tc").textContent = tc(frame()); $("#send-tc").textContent = tc(frame()); });
+$("#video").addEventListener("seeked", () => { $("#tc").textContent = tc(frame()); $("#send-tc").textContent = tc(frame()); });
+$("#send").onclick = async () => {
+  const body = $("#body").value.trim();
+  if (!body) return;
+  const author = $("#author").value.trim() || "Guest reviewer";
+  try { localStorage.setItem("champ.review.author", author); } catch {}
+  const f = frame();
+  await api(`/api/review/${token}/comments`, { body, author, in_frame: f, out_frame: f });
+  $("#body").value = "";
+  load();
+};
+const setStatus = async (status) => {
+  await api(`/api/review/${token}/status`, { status, author: $("#author").value.trim() || "Guest reviewer" });
+  load();
+};
+$("#approve").onclick = () => setStatus("approved");
+$("#changes").onclick = () => setStatus("changes_requested");
+load();
+setInterval(load, 15000);
+</script>
+</body>
+</html>

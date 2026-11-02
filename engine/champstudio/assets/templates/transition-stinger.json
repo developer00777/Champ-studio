@@ -1,0 +1,159 @@
+{
+  "cst": "1.0",
+  "id": "transition-stinger",
+  "name": "Transition Stinger",
+  "category": "brand-utility",
+  "description": "Overlay: a 1.2-second brand-colour wipe with a logo flash to hide a cut between two clips. Centre it on the edit point.",
+  "tags": [
+    "overlay",
+    "transition",
+    "stinger",
+    "wipe",
+    "graphics"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "overlay": true,
+  "slots": {
+    "type": "object",
+    "required": [],
+    "properties": {}
+  },
+  "defaults": {},
+  "background": "#00000000",
+  "scenes": [
+    {
+      "id": "wipe",
+      "role": "overlay",
+      "duration": {
+        "mode": "fixed",
+        "sec": 1.2
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "name": "Panel 1",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary_dark"
+            }
+          },
+          "box": {
+            "*": [
+              0.0,
+              0.0,
+              1.0,
+              1.0
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.35
+          },
+          "anim_out": {
+            "type": "wipe",
+            "sec": 0.35
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Panel 2",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.0,
+              0.0,
+              1.0,
+              1.0
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.35
+          },
+          "start": 0.1,
+          "end": 1.1,
+          "anim_out": {
+            "type": "wipe",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Streak",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.0,
+              0.47,
+              1.0,
+              0.06
+            ],
+            "vertical": [
+              0.0,
+              0.485,
+              1.0,
+              0.03
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.3
+          },
+          "start": 0.2,
+          "end": 1.0,
+          "anim_out": {
+            "type": "wipe",
+            "sec": 0.25
+          }
+        },
+        {
+          "type": "logo",
+          "name": "Logo",
+          "box": {
+            "*": [
+              0.3,
+              0.38,
+              0.4,
+              0.24
+            ],
+            "vertical": [
+              0.1,
+              0.44,
+              0.8,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.25
+          },
+          "start": 0.35,
+          "end": 0.85,
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.15
+          }
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": false
+  }
+}

@@ -1,0 +1,526 @@
+{
+  "cst": "1.0",
+  "id": "expert-quote",
+  "name": "Expert Quote",
+  "category": "data-leadership",
+  "description": "A bold pull-quote from a leader with headshot and attribution, framed by a topic intro and a branded close.",
+  "tags": [
+    "quote",
+    "thought leadership",
+    "expert",
+    "leadership",
+    "linkedin"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "quote",
+      "name",
+      "cta"
+    ],
+    "properties": {
+      "topic": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Topic of the quote, e.g. On the future of data"
+      },
+      "quote": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "text",
+        "description": "The quote, ideally under 20 words"
+      },
+      "name": {
+        "type": "string",
+        "maxLength": 32,
+        "x-kind": "text",
+        "description": "Speaker name"
+      },
+      "role": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Speaker title and company"
+      },
+      "headshot": {
+        "x-kind": "media",
+        "description": "Speaker headshot photo",
+        "x-media": [
+          "image"
+        ]
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_intro": {
+        "type": "string",
+        "maxLength": 120,
+        "x-kind": "voiceover",
+        "description": "Voiceover introducing the topic"
+      },
+      "vo_quote": {
+        "type": "string",
+        "maxLength": 300,
+        "x-kind": "voiceover",
+        "description": "Voiceover reading or framing the quote"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "topic": "On the future of B2B data",
+    "quote": "The winners won't have the most data. They'll have the freshest, and act on it first.",
+    "name": "Sreedeep Kumar",
+    "role": "Founder & CEO, Champions Group",
+    "cta_headline": "Read the full interview",
+    "cta": "Read more",
+    "music": "inspiring"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "role": "intro",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_intro"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.primary"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Expert view",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.32,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.34,
+              0.84,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{topic}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 100,
+            "align": "left",
+            "valign": "top",
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.39,
+              0.84,
+              0.32
+            ],
+            "vertical": [
+              0.08,
+              0.39,
+              0.84,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        }
+      ]
+    },
+    {
+      "id": "quote",
+      "role": "quote",
+      "duration": {
+        "mode": "voiceover",
+        "min": 6,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_quote"
+      },
+      "transition": {
+        "type": "dip-black",
+        "sec": 0.35
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "text",
+          "text": "“",
+          "style": {
+            "$brand": "styles.title",
+            "size": 320,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "shadow": false,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.04,
+              0.2,
+              0.3
+            ],
+            "vertical": [
+              0.07,
+              0.06,
+              0.4,
+              0.14
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{quote}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 64,
+            "align": "left",
+            "valign": "top",
+            "line_height": 1.25
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.26,
+              0.84,
+              0.44
+            ],
+            "vertical": [
+              0.08,
+              0.2,
+              0.84,
+              0.42
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.7
+          },
+          "start": 0.3
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.74,
+              0.0045,
+              0.14
+            ],
+            "vertical": [
+              0.08,
+              0.7,
+              0.008,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 1.0
+        },
+        {
+          "type": "media",
+          "src": {
+            "$slot": "headshot"
+          },
+          "motion": "none",
+          "box": {
+            "*": [
+              0.1,
+              0.74,
+              0.079,
+              0.14
+            ],
+            "vertical": [
+              0.11,
+              0.7,
+              0.2,
+              0.1
+            ]
+          },
+          "if": "headshot",
+          "name": "Headshot"
+        },
+        {
+          "type": "text",
+          "text": "{{name}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 44,
+            "align": "left",
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.74,
+              0.6,
+              0.07
+            ],
+            "vertical": [
+              0.34,
+              0.7,
+              0.6,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          },
+          "start": 1.1
+        },
+        {
+          "type": "text",
+          "text": "{{role}}",
+          "if": "role",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 500,
+            "align": "left",
+            "color": "#FFFFFFAA"
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.81,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.34,
+              0.75,
+              0.6,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 1.3
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.25,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": false
+  }
+}

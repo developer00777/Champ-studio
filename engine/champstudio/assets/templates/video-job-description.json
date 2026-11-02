@@ -1,0 +1,817 @@
+{
+  "cst": "1.0",
+  "id": "video-job-description",
+  "name": "Video Job Description",
+  "category": "recruitment",
+  "description": "A full job description as video: role overview, what you'll do, what you'll bring, the perks and how to apply.",
+  "tags": [
+    "job description",
+    "jd",
+    "hiring",
+    "recruitment",
+    "careers"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "role",
+      "do",
+      "bring",
+      "perks",
+      "cta"
+    ],
+    "properties": {
+      "role": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Job title"
+      },
+      "team": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Team, location and type, e.g. Data Team · Remote · Full-time"
+      },
+      "bg": {
+        "x-kind": "media",
+        "description": "Visual of the team or workplace"
+      },
+      "mission": {
+        "type": "string",
+        "maxLength": 90,
+        "x-kind": "text",
+        "description": "One-line mission of the role"
+      },
+      "do": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 5,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 44
+        },
+        "description": "What you'll do"
+      },
+      "bring": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 5,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 44
+        },
+        "description": "What you'll bring"
+      },
+      "perks": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 36
+        },
+        "description": "Three perks"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "apply_note": {
+        "type": "string",
+        "maxLength": 56,
+        "x-kind": "text",
+        "description": "How to apply, e.g. Apply at careers.example.com"
+      },
+      "vo_intro": {
+        "type": "string",
+        "maxLength": 220,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the overview"
+      },
+      "vo_do": {
+        "type": "string",
+        "maxLength": 320,
+        "x-kind": "voiceover",
+        "description": "Voiceover for what you'll do"
+      },
+      "vo_bring": {
+        "type": "string",
+        "maxLength": 320,
+        "x-kind": "voiceover",
+        "description": "Voiceover for what you'll bring"
+      },
+      "vo_perks": {
+        "type": "string",
+        "maxLength": 240,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the perks"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover for how to apply"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "role": "Account Executive, Healthcare Data",
+    "team": "Sales · London · Full-time",
+    "mission": "Help hospitals and life-science teams reach the right decision makers.",
+    "do": [
+      "Own a pipeline of mid-market accounts",
+      "Run discovery and tailored demos",
+      "Close new and expansion deals",
+      "Partner with marketing on campaigns"
+    ],
+    "bring": [
+      "3+ years closing B2B SaaS or data",
+      "Curiosity about healthcare markets",
+      "A habit of hitting quota"
+    ],
+    "perks": [
+      "Uncapped commission",
+      "Hybrid, flexible hours",
+      "Annual learning budget"
+    ],
+    "cta": "Apply now",
+    "apply_note": "Applications reviewed weekly",
+    "music": "corporate-upbeat"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_intro"
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "bg"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000033",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{team}}",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 28,
+            "uppercase": true
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.27,
+              0.6,
+              0.065
+            ],
+            "vertical": [
+              0.08,
+              0.3,
+              0.84,
+              0.056
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{role}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 92,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.36,
+              0.8,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.36,
+              0.84,
+              0.24
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{mission}}",
+          "if": "mission",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 500,
+            "size": 38,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.67,
+              0.66,
+              0.12
+            ],
+            "vertical": [
+              0.08,
+              0.61,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.45
+        }
+      ]
+    },
+    {
+      "id": "do",
+      "role": "list",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_do"
+      },
+      "transition": {
+        "type": "wipe-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.12,
+              0.006,
+              0.76
+            ],
+            "vertical": [
+              0.06,
+              0.18,
+              0.012,
+              0.62
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "What you'll do",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.12,
+              0.6,
+              0.07
+            ],
+            "vertical": [
+              0.1,
+              0.18,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "do"
+          },
+          "stagger": 0.9,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 48,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.22,
+              0.82,
+              0.66
+            ],
+            "vertical": [
+              0.1,
+              0.24,
+              0.82,
+              0.54
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          }
+        }
+      ]
+    },
+    {
+      "id": "bring",
+      "role": "list",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_bring"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.surface"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.12,
+              0.006,
+              0.76
+            ],
+            "vertical": [
+              0.06,
+              0.18,
+              0.012,
+              0.62
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "What you'll bring",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.12,
+              0.6,
+              0.07
+            ],
+            "vertical": [
+              0.1,
+              0.18,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "bring"
+          },
+          "stagger": 0.9,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 48,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.22,
+              0.82,
+              0.66
+            ],
+            "vertical": [
+              0.1,
+              0.24,
+              0.82,
+              0.54
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          }
+        }
+      ]
+    },
+    {
+      "id": "perks",
+      "role": "perks",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_perks"
+      },
+      "transition": {
+        "type": "slide-up",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "text",
+          "text": "The perks",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.accent"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.84,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.2,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "name": "Numbers",
+          "items": [
+            "01",
+            "02",
+            "03"
+          ],
+          "stagger": 1.0,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 52
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.26,
+              0.08,
+              0.56
+            ],
+            "vertical": [
+              0.08,
+              0.27,
+              0.14,
+              0.44
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.3
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "perks"
+          },
+          "stagger": 1.0,
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 600,
+            "size": 52,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.16,
+              0.26,
+              0.76,
+              0.56
+            ],
+            "vertical": [
+              0.22,
+              0.27,
+              0.7,
+              0.44
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{role}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{apply_note}}",
+          "if": "apply_note",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 36,
+            "weight": 500
+          },
+          "box": {
+            "*": [
+              0.15,
+              0.53,
+              0.7,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.465,
+              0.84,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.3
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.25,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

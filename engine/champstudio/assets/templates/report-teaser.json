@@ -1,0 +1,616 @@
+{
+  "cst": "1.0",
+  "id": "report-teaser",
+  "name": "Report Teaser",
+  "category": "data-leadership",
+  "description": "Promote a research report: cover moment, three headline findings, one hero number and a download CTA.",
+  "tags": [
+    "report",
+    "research",
+    "whitepaper",
+    "gated content",
+    "download"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "report_title",
+      "findings",
+      "stat",
+      "stat_label",
+      "cta",
+      "cover"
+    ],
+    "properties": {
+      "report_title": {
+        "type": "string",
+        "maxLength": 52,
+        "x-kind": "text",
+        "description": "Report title"
+      },
+      "report_sub": {
+        "type": "string",
+        "maxLength": 70,
+        "x-kind": "text",
+        "description": "Subtitle or who it is for"
+      },
+      "cover": {
+        "x-kind": "media",
+        "description": "Abstract visual for the report cover"
+      },
+      "findings": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 48
+        },
+        "description": "Three headline findings"
+      },
+      "stat": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "One hero number from the report"
+      },
+      "stat_label": {
+        "type": "string",
+        "maxLength": 56,
+        "x-kind": "text",
+        "description": "What the number means"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_cover": {
+        "type": "string",
+        "maxLength": 160,
+        "x-kind": "voiceover",
+        "description": "Voiceover introducing the report"
+      },
+      "vo_findings": {
+        "type": "string",
+        "maxLength": 300,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the findings"
+      },
+      "vo_stat": {
+        "type": "string",
+        "maxLength": 160,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the hero number"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "report_title": "The 2027 Healthcare Data Benchmark",
+    "report_sub": "What 400 provider marketers told us about reaching physicians",
+    "findings": [
+      "Email still drives 41% of HCP engagement",
+      "Specialty targeting doubles reply rates",
+      "Data decay costs teams 9 hours a week"
+    ],
+    "stat": "2x",
+    "stat_label": "reply rates with specialty-level targeting",
+    "cta_headline": "Read the full benchmark",
+    "cta": "Download free",
+    "music": "calm-tech"
+  },
+  "scenes": [
+    {
+      "id": "cover",
+      "role": "intro",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_cover"
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "cover"
+          },
+          "motion": "pan-left"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000033",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "New report",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 28,
+            "uppercase": true
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.27,
+              0.6,
+              0.065
+            ],
+            "vertical": [
+              0.08,
+              0.3,
+              0.84,
+              0.056
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{report_title}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 96,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.36,
+              0.8,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.36,
+              0.84,
+              0.24
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{report_sub}}",
+          "if": "report_sub",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 500,
+            "size": 38,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.67,
+              0.66,
+              0.12
+            ],
+            "vertical": [
+              0.08,
+              0.61,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.45
+        }
+      ]
+    },
+    {
+      "id": "findings",
+      "role": "findings",
+      "duration": {
+        "mode": "voiceover",
+        "min": 6,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_findings"
+      },
+      "transition": {
+        "type": "wipe-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Key findings",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.84,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.2,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "list",
+          "name": "Numbers",
+          "items": [
+            "01",
+            "02",
+            "03"
+          ],
+          "stagger": 1.2,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 50
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.26,
+              0.08,
+              0.56
+            ],
+            "vertical": [
+              0.08,
+              0.27,
+              0.14,
+              0.44
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.3
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "findings"
+          },
+          "stagger": 1.2,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 50,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.16,
+              0.26,
+              0.76,
+              0.56
+            ],
+            "vertical": [
+              0.22,
+              0.27,
+              0.7,
+              0.44
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "stat",
+      "role": "stat",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_stat"
+      },
+      "transition": {
+        "type": "dip-black",
+        "sec": 0.3
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "stat",
+          "text": "{{stat}}",
+          "style": {
+            "$brand": "styles.stat",
+            "size": 260,
+            "color": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.16,
+              0.84,
+              0.44
+            ],
+            "vertical": [
+              0.06,
+              0.26,
+              0.88,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{stat_label}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 700,
+            "size": 52,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.62,
+              0.76,
+              0.14
+            ],
+            "vertical": [
+              0.08,
+              0.5,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

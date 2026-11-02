@@ -1,0 +1,691 @@
+{
+  "cst": "1.0",
+  "id": "before-after",
+  "name": "Before / After",
+  "category": "product-promo",
+  "description": "Contrast life before and after your product: two full-bleed scenes with labels, a side-by-side metric comparison and a CTA.",
+  "tags": [
+    "before after",
+    "comparison",
+    "transformation",
+    "results"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "before",
+      "after",
+      "before_value",
+      "after_value",
+      "metric_label",
+      "cta"
+    ],
+    "properties": {
+      "before": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "The painful 'before' state"
+      },
+      "after": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "The improved 'after' state"
+      },
+      "before_img": {
+        "x-kind": "media",
+        "description": "Visual of the before state"
+      },
+      "after_img": {
+        "x-kind": "media",
+        "description": "Visual of the after state"
+      },
+      "metric_label": {
+        "type": "string",
+        "maxLength": 36,
+        "x-kind": "text",
+        "description": "What is being compared, e.g. Hours spent on list building"
+      },
+      "before_value": {
+        "type": "string",
+        "maxLength": 10,
+        "x-kind": "text",
+        "description": "Before value, e.g. 12 hrs"
+      },
+      "after_value": {
+        "type": "string",
+        "maxLength": 10,
+        "x-kind": "text",
+        "description": "After value, e.g. 45 min"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_before": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the before state"
+      },
+      "vo_after": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the after state"
+      },
+      "vo_compare": {
+        "type": "string",
+        "maxLength": 160,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the comparison"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 100,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "before": "Spreadsheets, guesswork, bounced emails",
+    "after": "One verified list, ready to launch",
+    "metric_label": "Weekly hours spent building lists",
+    "before_value": "12 hrs",
+    "after_value": "45 min",
+    "cta_headline": "Get your hours back",
+    "cta": "See how",
+    "music": "corporate-upbeat"
+  },
+  "scenes": [
+    {
+      "id": "before",
+      "role": "before",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_before"
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "before_img"
+          },
+          "motion": "kenburns-out"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000088",
+              "#000000EE"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "BEFORE",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 34,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left",
+            "bg_color": {
+              "$brand": "colors.dark"
+            },
+            "bg_padding": 0.5,
+            "bg_radius": 0.3
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.3,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.31,
+              0.6,
+              0.07
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{before}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 92,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.41,
+              0.8,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.4,
+              0.84,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        }
+      ]
+    },
+    {
+      "id": "after",
+      "role": "after",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_after"
+      },
+      "transition": {
+        "type": "wipe-right",
+        "sec": 0.5
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "after_img"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000022",
+              "#000000BB"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "AFTER",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 34,
+            "uppercase": true,
+            "bg_padding": 0.5
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.3,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.31,
+              0.6,
+              0.07
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.35
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{after}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 92,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.41,
+              0.8,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.4,
+              0.84,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        }
+      ]
+    },
+    {
+      "id": "compare",
+      "role": "comparison",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_compare"
+      },
+      "transition": {
+        "type": "slide-up",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{metric_label}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 32,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.14,
+              0.8,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.16,
+              0.84,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.surface"
+            },
+            "radius": 0.06
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.28,
+              0.4,
+              0.52
+            ],
+            "vertical": [
+              0.08,
+              0.25,
+              0.84,
+              0.28
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "Before",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "weight": 500,
+            "size": 34,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.32,
+              0.4,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.27,
+              0.84,
+              0.04
+            ]
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{before_value}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "shadow": false,
+            "size": 120
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.42,
+              0.36,
+              0.3
+            ],
+            "vertical": [
+              0.1,
+              0.32,
+              0.8,
+              0.17
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.3
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            },
+            "radius": 0.06
+          },
+          "box": {
+            "*": [
+              0.52,
+              0.28,
+              0.4,
+              0.52
+            ],
+            "vertical": [
+              0.08,
+              0.56,
+              0.84,
+              0.28
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.4
+          },
+          "start": 0.6
+        },
+        {
+          "type": "text",
+          "text": "After",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 34
+          },
+          "box": {
+            "*": [
+              0.52,
+              0.32,
+              0.4,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.58,
+              0.84,
+              0.04
+            ]
+          },
+          "start": 0.8
+        },
+        {
+          "type": "text",
+          "text": "{{after_value}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 120,
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.54,
+              0.42,
+              0.36,
+              0.3
+            ],
+            "vertical": [
+              0.1,
+              0.63,
+              0.8,
+              0.17
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.9
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

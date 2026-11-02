@@ -1,0 +1,438 @@
+{
+  "cst": "1.0",
+  "id": "event-countdown",
+  "name": "Event Countdown",
+  "category": "events",
+  "description": "Social countdown teaser: a giant number of days to go, the event over a visual, then a register CTA. No voiceover needed.",
+  "tags": [
+    "countdown",
+    "event",
+    "teaser",
+    "days to go",
+    "social"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "days",
+      "event",
+      "cta"
+    ],
+    "properties": {
+      "days": {
+        "type": "string",
+        "maxLength": 3,
+        "x-kind": "text",
+        "description": "Number of days to go, e.g. 7"
+      },
+      "days_label": {
+        "type": "string",
+        "maxLength": 20,
+        "x-kind": "text",
+        "description": "Label under the number, e.g. DAYS TO GO"
+      },
+      "event": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Event name"
+      },
+      "details": {
+        "type": "string",
+        "maxLength": 56,
+        "x-kind": "text",
+        "description": "Date and place, e.g. 14 Nov · London ExCeL"
+      },
+      "bg": {
+        "x-kind": "media",
+        "description": "Visual of the venue or event atmosphere"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "days": "7",
+    "days_label": "Days to go",
+    "event": "Champions Growth Summit 2026",
+    "details": "14 November · London",
+    "cta": "Register now",
+    "music": "energetic"
+  },
+  "scenes": [
+    {
+      "id": "count",
+      "role": "hook",
+      "duration": {
+        "mode": "fixed",
+        "sec": 2.6
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.34,
+              0.08,
+              0.32,
+              0.569
+            ],
+            "vertical": [
+              0.1,
+              0.22,
+              0.8,
+              0.45
+            ]
+          },
+          "anim_in": {
+            "type": "zoom-out",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{days}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 300,
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.34,
+              0.12,
+              0.32,
+              0.5
+            ],
+            "vertical": [
+              0.1,
+              0.26,
+              0.8,
+              0.36
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.5
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{days_label}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 44,
+            "weight": 800,
+            "uppercase": true,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.7,
+              0.6,
+              0.08
+            ],
+            "vertical": [
+              0.08,
+              0.7,
+              0.84,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 0.5
+        }
+      ]
+    },
+    {
+      "id": "event",
+      "role": "event",
+      "duration": {
+        "mode": "fixed",
+        "sec": 3.0
+      },
+      "transition": {
+        "type": "zoom",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "bg"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000044",
+              "#000000DD"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{event}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 96,
+            "align": "left",
+            "valign": "bottom"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.84,
+              0.36
+            ],
+            "vertical": [
+              0.08,
+              0.3,
+              0.84,
+              0.3
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.69,
+              0.08,
+              0.01
+            ],
+            "vertical": [
+              0.08,
+              0.62,
+              0.16,
+              0.005
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          },
+          "start": 0.3
+        },
+        {
+          "type": "text",
+          "text": "{{details}}",
+          "if": "details",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 600,
+            "size": 44,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.72,
+              0.84,
+              0.1
+            ],
+            "vertical": [
+              0.08,
+              0.64,
+              0.84,
+              0.07
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.4
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "fixed",
+        "sec": 2.6
+      },
+      "transition": {
+        "type": "slide-up",
+        "sec": 0.35
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{event}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.6,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": false
+  }
+}

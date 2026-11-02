@@ -1,0 +1,538 @@
+{
+  "cst": "1.0",
+  "id": "faq-short",
+  "name": "FAQ Short",
+  "category": "explainers",
+  "description": "One customer question on brand orange, a clear answer with a supporting detail, then a CTA. Perfect for a weekly FAQ series.",
+  "tags": [
+    "faq",
+    "question",
+    "answer",
+    "shorts",
+    "series"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "question",
+      "answer",
+      "cta"
+    ],
+    "properties": {
+      "series": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Series label, e.g. FAQ FRIDAY"
+      },
+      "question": {
+        "type": "string",
+        "maxLength": 70,
+        "x-kind": "text",
+        "description": "The question as customers ask it"
+      },
+      "answer": {
+        "type": "string",
+        "maxLength": 70,
+        "x-kind": "text",
+        "description": "The short answer"
+      },
+      "detail": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "text",
+        "description": "Supporting detail or example"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_question": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover asking the question"
+      },
+      "vo_answer": {
+        "type": "string",
+        "maxLength": 360,
+        "x-kind": "voiceover",
+        "description": "Voiceover answering it"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "series": "FAQ Friday",
+    "question": "How often is your contact data verified?",
+    "answer": "Every record is re-verified every 30 days.",
+    "detail": "Emails are pinged, phone numbers dialled and job titles matched against live sources.",
+    "cta_headline": "Got a question? Ask our team",
+    "cta": "Ask us anything",
+    "music": "chill"
+  },
+  "scenes": [
+    {
+      "id": "question",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_question"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.primary"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "ellipse",
+            "fill": "#FFFFFF"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.1,
+              0.178
+            ],
+            "vertical": [
+              0.08,
+              0.16,
+              0.18,
+              0.101
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          }
+        },
+        {
+          "type": "text",
+          "text": "Q",
+          "style": {
+            "$brand": "styles.title",
+            "size": 96,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.1,
+              0.178
+            ],
+            "vertical": [
+              0.08,
+              0.16,
+              0.18,
+              0.101
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{series}}",
+          "if": "series",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.21,
+              0.19,
+              0.6,
+              0.07
+            ],
+            "vertical": [
+              0.3,
+              0.19,
+              0.62,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{question}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 96,
+            "align": "left",
+            "valign": "top",
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.4,
+              0.84,
+              0.4
+            ],
+            "vertical": [
+              0.08,
+              0.32,
+              0.84,
+              0.32
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          },
+          "start": 0.25
+        }
+      ]
+    },
+    {
+      "id": "answer",
+      "role": "answer",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_answer"
+      },
+      "transition": {
+        "type": "slide-up",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.1,
+              0.178
+            ],
+            "vertical": [
+              0.08,
+              0.16,
+              0.18,
+              0.101
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          }
+        },
+        {
+          "type": "text",
+          "text": "A",
+          "style": {
+            "$brand": "styles.title",
+            "size": 96,
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.14,
+              0.1,
+              0.178
+            ],
+            "vertical": [
+              0.08,
+              0.16,
+              0.18,
+              0.101
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{answer}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 84,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.38,
+              0.84,
+              0.26
+            ],
+            "vertical": [
+              0.08,
+              0.31,
+              0.84,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{detail}}",
+          "if": "detail",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "weight": 500,
+            "size": 38,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.66,
+              0.76,
+              0.16
+            ],
+            "vertical": [
+              0.08,
+              0.55,
+              0.84,
+              0.16
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.8
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.2,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

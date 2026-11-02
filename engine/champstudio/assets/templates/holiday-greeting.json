@@ -1,0 +1,311 @@
+{
+  "cst": "1.0",
+  "id": "holiday-greeting",
+  "name": "Holiday Greeting",
+  "category": "company-news",
+  "description": "A warm, music-only seasonal greeting: greeting over a festive visual, a short message, and a branded sign-off.",
+  "tags": [
+    "holiday",
+    "season's greetings",
+    "festive",
+    "new year",
+    "diwali",
+    "greeting"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "greeting",
+      "signoff"
+    ],
+    "properties": {
+      "greeting": {
+        "type": "string",
+        "maxLength": 36,
+        "x-kind": "text",
+        "description": "The greeting, e.g. Season's greetings"
+      },
+      "message": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "text",
+        "description": "A short warm message"
+      },
+      "bg": {
+        "x-kind": "media",
+        "description": "Festive, tasteful seasonal visual (no text)"
+      },
+      "signoff": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Sign-off, e.g. From all of us at Champions Group"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "greeting": "Season's greetings",
+    "message": "Thank you for a year of building, learning and growing together. We can't wait for what's next.",
+    "signoff": "Warm wishes from all of us",
+    "music": "inspiring"
+  },
+  "scenes": [
+    {
+      "id": "greeting",
+      "role": "hook",
+      "duration": {
+        "mode": "fixed",
+        "sec": 3.5
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "bg"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000022",
+              "#000000BB"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{greeting}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 130
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.84,
+              0.32
+            ],
+            "vertical": [
+              0.06,
+              0.32,
+              0.88,
+              0.24
+            ]
+          },
+          "anim_in": {
+            "type": "zoom-in",
+            "sec": 0.8
+          },
+          "start": 0.2
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.44,
+              0.65,
+              0.12,
+              0.008
+            ],
+            "vertical": [
+              0.36,
+              0.58,
+              0.28,
+              0.004
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.5
+          },
+          "start": 1.0
+        }
+      ]
+    },
+    {
+      "id": "message",
+      "role": "message",
+      "duration": {
+        "mode": "fixed",
+        "sec": 4.0
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.6
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.surface"
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{message}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 64,
+            "weight": 600,
+            "line_height": 1.3
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.22,
+              0.76,
+              0.5
+            ],
+            "vertical": [
+              0.08,
+              0.26,
+              0.84,
+              0.4
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.8
+          }
+        }
+      ]
+    },
+    {
+      "id": "signoff",
+      "role": "signoff",
+      "duration": {
+        "mode": "fixed",
+        "sec": 3.5
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.6
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.26,
+              0.4,
+              0.16
+            ],
+            "vertical": [
+              0.12,
+              0.32,
+              0.76,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{signoff}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 44,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.5,
+              0.8,
+              0.1
+            ],
+            "vertical": [
+              0.08,
+              0.44,
+              0.84,
+              0.07
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.6
+          },
+          "start": 0.4
+        },
+        {
+          "type": "text",
+          "text": "{{brand.tagline}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 500,
+            "color": "#FFFFFFCC"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.62,
+              0.8,
+              0.07
+            ],
+            "vertical": [
+              0.08,
+              0.52,
+              0.84,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.6
+          },
+          "start": 0.8
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.6,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": false
+  }
+}

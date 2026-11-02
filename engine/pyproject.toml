@@ -17,6 +17,9 @@ dependencies = [
     "rembg>=2.0.60",
     "numba>=0.59",
     "onnxruntime>=1.17",
+    "jsonschema>=4.22",
+    "opentimelineio>=0.17",
+    "opentimelineio-plugins>=0.17",
 ]
 
 [project.optional-dependencies]
@@ -34,4 +37,5 @@ packages = ["champstudio"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 markers = ["slow: needs model weight downloads; run explicitly with -m slow"]

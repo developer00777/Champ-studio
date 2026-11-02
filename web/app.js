@@ -934,7 +934,14 @@ const library = (() => {
   onEnter.settings = load;
 })();
 
-/* ── boot ───────────────────────────────────────────────────────── */
+/* ── shared with studio.js (Director, Templates, Projects, Brands…) ── */
 
-const initial = location.hash.replace(/^#\//, "");
-show($(`#view-${initial}`) ? initial : "create");
+window.champ = { $, $$, el, api, toast, pref, setPref, fmtDate, shortModel, download, openModal, pickFromLibrary,
+                 chipGroup, bindSwitch, autoGrow, show, onEnter, mediaFor, openDetail, pollHealth };
+
+/* ── boot (after every module has registered its views) ─────────── */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const initial = location.hash.replace(/^#\//, "");
+  show($(`#view-${initial}`) ? initial : "director");
+});

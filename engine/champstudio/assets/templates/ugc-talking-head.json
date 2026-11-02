@@ -1,0 +1,365 @@
+{
+  "cst": "1.0",
+  "id": "ugc-talking-head",
+  "name": "UGC Talking Head",
+  "category": "social-ads",
+  "description": "Native-feeling vertical ad: a talking-head clip (uploaded or AI avatar) with a hook banner, a key-point pill, burned-in captions and an end card.",
+  "tags": [
+    "ad",
+    "ugc",
+    "talking head",
+    "avatar",
+    "captions",
+    "tiktok",
+    "reels"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "talking_head",
+      "hook",
+      "cta",
+      "vo_script"
+    ],
+    "properties": {
+      "talking_head": {
+        "x-kind": "media",
+        "description": "Talking-head video: uploaded selfie clip or AI avatar render"
+      },
+      "hook": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Hook banner shown for the first seconds"
+      },
+      "point": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Key point pill shown mid-way"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_script": {
+        "type": "string",
+        "maxLength": 600,
+        "x-kind": "voiceover",
+        "description": "The spoken script, first person, conversational"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "hook": "I cut our bounce rate in half",
+    "point": "Verified data, not scraped lists",
+    "cta_headline": "Try it on your next campaign",
+    "cta": "Get started free",
+    "music": "chill"
+  },
+  "scenes": [
+    {
+      "id": "talk",
+      "role": "talking-head",
+      "duration": {
+        "mode": "voiceover",
+        "min": 9,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_script"
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "talking_head"
+          },
+          "motion": "none",
+          "with_audio": true
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000066",
+              "#00000000"
+            ]
+          },
+          "box": {
+            "*": [
+              0,
+              0,
+              1,
+              0.34
+            ],
+            "vertical": [
+              0,
+              0,
+              1,
+              0.26
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{hook}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 72,
+            "bg_color": {
+              "$brand": "colors.primary"
+            },
+            "bg_padding": 0.4,
+            "bg_radius": 0.3,
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.08,
+              0.76,
+              0.18
+            ],
+            "vertical": [
+              0.06,
+              0.09,
+              0.88,
+              0.13
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "end": 4.0,
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{point}}",
+          "if": "point",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "size": 44
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.62,
+              0.6,
+              0.13
+            ],
+            "vertical": [
+              0.08,
+              0.6,
+              0.84,
+              0.09
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 4.5,
+          "end": 9.0,
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "slide-up",
+        "sec": 0.35
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.18,
+    "duck_db": 12
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

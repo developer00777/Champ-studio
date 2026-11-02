@@ -1,0 +1,656 @@
+{
+  "cst": "1.0",
+  "id": "carousel-slideshow",
+  "name": "Carousel Slideshow",
+  "category": "social-ads",
+  "description": "Four full-bleed visuals with punchy captions and a branded end card. Turns a static carousel into a video ad.",
+  "tags": [
+    "ad",
+    "carousel",
+    "slideshow",
+    "photos",
+    "instagram"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "title",
+      "image_1",
+      "caption_1",
+      "image_2",
+      "caption_2",
+      "cta"
+    ],
+    "properties": {
+      "title": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Opening title over the first slide"
+      },
+      "image_1": {
+        "x-kind": "media",
+        "description": "Slide 1 visual"
+      },
+      "caption_1": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Caption for slide 1"
+      },
+      "image_2": {
+        "x-kind": "media",
+        "description": "Slide 2 visual"
+      },
+      "caption_2": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Caption for slide 2"
+      },
+      "image_3": {
+        "x-kind": "media",
+        "description": "Slide 3 visual"
+      },
+      "caption_3": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Caption for slide 3"
+      },
+      "image_4": {
+        "x-kind": "media",
+        "description": "Slide 4 visual"
+      },
+      "caption_4": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Caption for slide 4"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "title": "One platform. Every growth signal.",
+    "caption_1": "Find accounts showing intent",
+    "caption_2": "Reach the whole buying group",
+    "caption_3": "Launch campaigns in minutes",
+    "caption_4": "Measure pipeline, not clicks",
+    "cta_headline": "See it on your own data",
+    "cta": "Start free trial",
+    "music": "energetic"
+  },
+  "scenes": [
+    {
+      "id": "slide1",
+      "role": "slide",
+      "duration": {
+        "mode": "fixed",
+        "sec": 4.6
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "image_1"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000000",
+              "#000000BB"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{title}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 88,
+            "align": "left",
+            "valign": "bottom"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.36,
+              0.8,
+              0.3
+            ],
+            "vertical": [
+              0.07,
+              0.42,
+              0.86,
+              0.2
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "end": 2.4,
+          "anim_out": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "01",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 34,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left",
+            "color": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.72,
+              0.2,
+              0.06
+            ],
+            "vertical": [
+              0.07,
+              0.68,
+              0.4,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 2.4
+        },
+        {
+          "type": "text",
+          "text": "{{caption_1}}",
+          "if": "caption_1",
+          "style": {
+            "$brand": "styles.title",
+            "size": 64,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.785,
+              0.86,
+              0.14
+            ],
+            "vertical": [
+              0.07,
+              0.72,
+              0.86,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 2.5
+        }
+      ]
+    },
+    {
+      "id": "slide2",
+      "role": "slide",
+      "duration": {
+        "mode": "fixed",
+        "sec": 2.8
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.35
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "image_2"
+          },
+          "motion": "pan-left"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000000",
+              "#000000BB"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "02",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 34,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left",
+            "color": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.72,
+              0.2,
+              0.06
+            ],
+            "vertical": [
+              0.07,
+              0.68,
+              0.4,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{caption_2}}",
+          "if": "caption_2",
+          "style": {
+            "$brand": "styles.title",
+            "size": 64,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.785,
+              0.86,
+              0.14
+            ],
+            "vertical": [
+              0.07,
+              0.72,
+              0.86,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "slide3",
+      "role": "slide",
+      "duration": {
+        "mode": "fixed",
+        "sec": 2.8
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.35
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "image_3"
+          },
+          "motion": "kenburns-out"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000000",
+              "#000000BB"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "03",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 34,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left",
+            "color": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.72,
+              0.2,
+              0.06
+            ],
+            "vertical": [
+              0.07,
+              0.68,
+              0.4,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{caption_3}}",
+          "if": "caption_3",
+          "style": {
+            "$brand": "styles.title",
+            "size": 64,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.785,
+              0.86,
+              0.14
+            ],
+            "vertical": [
+              0.07,
+              0.72,
+              0.86,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "slide4",
+      "role": "slide",
+      "duration": {
+        "mode": "fixed",
+        "sec": 2.8
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.35
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "image_4"
+          },
+          "motion": "pan-right"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000000",
+              "#000000BB"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "04",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 34,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left",
+            "color": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.72,
+              0.2,
+              0.06
+            ],
+            "vertical": [
+              0.07,
+              0.68,
+              0.4,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{caption_4}}",
+          "if": "caption_4",
+          "style": {
+            "$brand": "styles.title",
+            "size": 64,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.07,
+              0.785,
+              0.86,
+              0.14
+            ],
+            "vertical": [
+              0.07,
+              0.72,
+              0.86,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "fixed",
+        "sec": 3.5
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.5,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": false
+  }
+}

@@ -9,18 +9,22 @@ from __future__ import annotations
 import base64
 import logging
 import os
+import shutil
 import sys
+import tempfile
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 import uvicorn
-from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, field_validator
 from starlette.concurrency import run_in_threadpool
 
-from . import config, jobs, library, transforms
+from . import auth, config, costs, ingest, jobs, library, roles, transforms
+from .deps import guarded
 from .providers.base import ProviderError
 from .providers.muapi import MuAPIClient
 from .providers.openrouter import OpenRouterClient
@@ -35,7 +39,18 @@ def _default_web_dir() -> Path:
 
 WEB_DIR = Path(os.environ.get("CHAMP_WEB_DIR") or _default_web_dir())
 
-app = FastAPI(title="Champ Studio Engine", version=config.ENGINE_VERSION)
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    try:
+        n = await jobs.resume_after_restart(_client)
+        if n:
+            log.info("resumed %d provider job(s) after restart", n)
+    except Exception:  # noqa: BLE001 — never block startup on job recovery
+        log.exception("job recovery failed")
+    yield
+
+
+app = FastAPI(title="Champ Studio Engine", version=config.ENGINE_VERSION, lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -45,24 +60,14 @@ app.add_middleware(
 )
 
 
-# ── optional shared-deployment token gate ────────────────────────────
-
-
-async def require_access(request: Request) -> None:
-    token = config.access_token()
-    if not token:
-        return
-    supplied = request.headers.get("Authorization", "").removeprefix("Bearer ").strip()
-    if supplied != token:
-        raise HTTPException(401, "Missing or invalid access token")
-
-
-guarded = Depends(require_access)
-
-
 @app.exception_handler(ProviderError)
 async def provider_error_handler(_req, exc: ProviderError):
     return JSONResponse(status_code=502, content={"detail": str(exc)})
+
+
+@app.exception_handler(costs.BudgetExceeded)
+async def budget_error_handler(_req, exc: costs.BudgetExceeded):
+    return JSONResponse(status_code=402, content={"detail": str(exc)})
 
 
 def _client(provider: str | None):
@@ -87,6 +92,8 @@ async def health():
         "status": "ok",
         "name": "Champ Studio Engine",
         "version": config.ENGINE_VERSION,
+        "ffmpeg": bool(shutil.which("ffmpeg")),
+        "sso": auth.oidc_enabled(),
         "keys": {
             "openrouter": bool(config.get_api_key("openrouter")),
             "muapi": bool(config.get_api_key("muapi")),
@@ -155,7 +162,7 @@ async def _merged_models(kind: str) -> list[dict]:
 
 class ImageRequest(BaseModel):
     prompt: str = Field(min_length=1)
-    model: str = "google/gemini-2.5-flash-image"
+    model: str = Field(default_factory=lambda: roles.model_for("image"))
     provider: str | None = None
     n: int = Field(default=1, ge=1, le=10)
     aspect_ratio: str | None = None
@@ -191,6 +198,9 @@ async def generate_images(body: ImageRequest):
         input_references=input_references or None,
     )
     parent = body.input_asset_ids[0] if body.input_asset_ids else None
+    total = sum(m.cost or 0 for m in media[:1])  # OpenRouter reports one cost for the request
+    if total:
+        costs.record(kind="image", model=body.model, cost=total, role="image")
     assets = [
         library.save_asset(
             m.data,
@@ -233,6 +243,9 @@ async def generate_audio(body: AudioRequest):
     media = await client.synthesize_speech(
         text=body.text, model=body.model, voice=body.voice, speed=body.speed
     )
+    costs.record(kind="speech", model=body.model, role="speech",
+                 cost=media.cost if media.cost is not None else costs.estimate_speech(len(body.text)),
+                 estimated=media.cost is None)
     params = body.model_dump(exclude={"text", "model"}, exclude_none=True)
     if media.meta.get("generation_id"):
         params["generation_id"] = media.meta["generation_id"]
@@ -265,7 +278,7 @@ def _asset_data_url(asset_id: str, expect_kind: str) -> tuple[dict, str]:
 
 class VideoRequest(BaseModel):
     prompt: str = Field(min_length=1)
-    model: str = "google/veo-3.1"
+    model: str = Field(default_factory=lambda: roles.model_for("video_draft"))
     provider: str | None = None
     duration: int | None = None
     aspect_ratio: str | None = None
@@ -278,6 +291,8 @@ class VideoRequest(BaseModel):
 @app.post("/api/videos", dependencies=[guarded])
 async def generate_video(body: VideoRequest):
     client = _client(body.provider)
+    costs.check_budget(costs.estimate_video(body.model, body.duration or 8, body.resolution,
+                                            bool(body.generate_audio)))
 
     submit_kwargs: dict = {
         k: v
@@ -338,6 +353,13 @@ class LipSyncRequest(BaseModel):
 @app.post("/api/lipsync", dependencies=[guarded])
 async def lipsync(body: LipSyncRequest):
     client = OpenRouterClient()  # v1: lip sync is OpenRouter-only (heygen/avatar-iv)
+    try:
+        from .render import media as _media
+
+        seconds = _media.probe(str(library.asset_path(body.audio_asset_id)))["duration"]
+    except Exception:  # noqa: BLE001 — estimate only
+        seconds = 30
+    costs.check_budget(costs.estimate_video(body.model, seconds, body.resolution))
     _, image_url = _asset_data_url(body.image_asset_id, "image")
     _, audio_url = _asset_data_url(body.audio_asset_id, "audio")
     submit_kwargs: dict = {"input_references": [image_url], "audio_references": [audio_url]}
@@ -413,15 +435,36 @@ async def assets(kind: str | None = None, limit: int = 200, offset: int = 0):
     return {"assets": library.list_assets(kind=kind, limit=limit, offset=offset)}
 
 
+MAX_UPLOAD = int(os.environ.get("CHAMP_MAX_UPLOAD_MB", "4096")) * 1024 * 1024
+_EXT_MIME = {"mov": "video/quicktime", "mkv": "video/x-matroska", "webm": "video/webm", "mp4": "video/mp4",
+             "mp3": "audio/mpeg", "wav": "audio/wav", "m4a": "audio/mp4", "aac": "audio/mp4", "ogg": "audio/ogg",
+             "png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg", "webp": "image/webp"}
+
+
 @app.post("/api/assets/upload", dependencies=[guarded])
 async def upload_asset(file: UploadFile = File(...)):
-    mime = file.content_type or "image/png"
-    if not mime.startswith(("image/", "video/", "audio/")):
-        raise HTTPException(400, "only image, video or audio uploads")
-    data = await file.read()
-    if len(data) > 100 * 1024 * 1024:
-        raise HTTPException(413, "file too large (100 MB max)")
-    return library.save_asset(data, mime, tool="upload", params={"filename": file.filename})
+    mime = file.content_type or "application/octet-stream"
+    name = (file.filename or "").lower()
+    ext = name.rsplit(".", 1)[-1] if "." in name else ""
+    if ext == "cube":
+        mime = "application/octet-stream"  # colour LUT for the editor
+    elif not mime.startswith(("image/", "video/", "audio/")) and ext in _EXT_MIME:
+        mime = _EXT_MIME[ext]
+    elif not mime.startswith(("image/", "video/", "audio/")):
+        raise HTTPException(400, "only image, video, audio or .cube uploads")
+    # stream to disk: editor footage can be gigabytes
+    tmp = tempfile.NamedTemporaryFile(delete=False, dir=config.data_dir(), suffix=".upload")
+    size = 0
+    try:
+        with tmp:
+            while chunk := await file.read(1024 * 1024):
+                size += len(chunk)
+                if size > MAX_UPLOAD:
+                    raise HTTPException(413, f"file too large ({MAX_UPLOAD // 1024 // 1024} MB max)")
+                tmp.write(chunk)
+        return library.save_asset_file(tmp.name, mime, tool="upload", params={"filename": file.filename})
+    finally:
+        Path(tmp.name).unlink(missing_ok=True)
 
 
 @app.get("/api/assets/{asset_id}", dependencies=[guarded])
@@ -442,12 +485,49 @@ async def asset_file(asset_id: str):
     return FileResponse(path, media_type=a["mime"], filename=a["filename"])
 
 
+@app.get("/api/assets/{asset_id}/derived/{name}")
+async def asset_derived(asset_id: str, name: str):
+    # Unguarded like /file: proxies and thumbnails load in <video>/<img> tags.
+    path = ingest.derived_path(asset_id, name)
+    if not path:
+        raise HTTPException(404, "not generated yet")
+    media_type = {"mp4": "video/mp4", "jpg": "image/jpeg", "json": "application/json"}[name.rsplit(".", 1)[-1]]
+    return FileResponse(path, media_type=media_type)
+
+
+@app.get("/api/fonts/file/{name}")
+async def font_file(name: str):
+    # Unguarded: @font-face requests can't carry auth headers; fonts are OFL/brand files.
+    from .render import text as _text
+
+    for d in _text._font_dirs():
+        p = d / name
+        if p.parent == d and p.suffix.lower() in (".ttf", ".otf") and p.exists():
+            return FileResponse(p, media_type="font/ttf" if p.suffix.lower() == ".ttf" else "font/otf")
+    raise HTTPException(404, "font not found")
+
+
 @app.delete("/api/assets/{asset_id}", dependencies=[guarded])
 async def remove_asset(asset_id: str):
     if not library.delete_asset(asset_id):
         raise HTTPException(404, "asset not found")
     return {"deleted": asset_id}
 
+
+# ── feature routers ──────────────────────────────────────────────────
+
+from .routes import ai as _ai_routes  # noqa: E402
+from .routes import brands as _brand_routes  # noqa: E402
+from .routes import core as _core_routes  # noqa: E402
+from .routes import director as _director_routes  # noqa: E402
+from .routes import projects as _project_routes  # noqa: E402
+from .routes import review as _review_routes  # noqa: E402
+from .routes import templates as _template_routes  # noqa: E402
+
+app.include_router(auth.router)
+for _r in (_core_routes, _project_routes, _brand_routes, _director_routes, _template_routes, _ai_routes,
+           _review_routes):
+    app.include_router(_r.router)
 
 # ── web UI ───────────────────────────────────────────────────────────
 

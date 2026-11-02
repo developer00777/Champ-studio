@@ -1,0 +1,750 @@
+{
+  "cst": "1.0",
+  "id": "stat-reel",
+  "name": "Stat Reel",
+  "category": "data-leadership",
+  "description": "Three big numbers, one per scene on alternating light, dark and orange grounds, bookended by a title and a CTA.",
+  "tags": [
+    "stats",
+    "data",
+    "numbers",
+    "thought leadership",
+    "linkedin"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "title",
+      "stat_1",
+      "label_1",
+      "stat_2",
+      "label_2",
+      "stat_3",
+      "label_3",
+      "cta"
+    ],
+    "properties": {
+      "kicker": {
+        "type": "string",
+        "maxLength": 28,
+        "x-kind": "text",
+        "description": "Small label, e.g. BY THE NUMBERS"
+      },
+      "title": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Title for the reel"
+      },
+      "stat_1": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "Stat 1 number"
+      },
+      "label_1": {
+        "type": "string",
+        "maxLength": 56,
+        "x-kind": "text",
+        "description": "Stat 1 meaning"
+      },
+      "vo_stat_1": {
+        "type": "string",
+        "maxLength": 180,
+        "x-kind": "voiceover",
+        "description": "Voiceover for stat 1"
+      },
+      "stat_2": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "Stat 2 number"
+      },
+      "label_2": {
+        "type": "string",
+        "maxLength": 56,
+        "x-kind": "text",
+        "description": "Stat 2 meaning"
+      },
+      "vo_stat_2": {
+        "type": "string",
+        "maxLength": 180,
+        "x-kind": "voiceover",
+        "description": "Voiceover for stat 2"
+      },
+      "stat_3": {
+        "type": "string",
+        "maxLength": 8,
+        "x-kind": "text",
+        "description": "Stat 3 number"
+      },
+      "label_3": {
+        "type": "string",
+        "maxLength": 56,
+        "x-kind": "text",
+        "description": "Stat 3 meaning"
+      },
+      "vo_stat_3": {
+        "type": "string",
+        "maxLength": 180,
+        "x-kind": "voiceover",
+        "description": "Voiceover for stat 3"
+      },
+      "source": {
+        "type": "string",
+        "maxLength": 60,
+        "x-kind": "text",
+        "description": "Source note shown on the last stat"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_intro": {
+        "type": "string",
+        "maxLength": 120,
+        "x-kind": "voiceover",
+        "description": "Voiceover introducing the stats"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "kicker": "By the numbers",
+    "title": "The state of B2B buying in 2027",
+    "stat_1": "71%",
+    "label_1": "of B2B buyers research before talking to sales",
+    "stat_2": "6–10",
+    "label_2": "decision makers in a typical buying group",
+    "stat_3": "30%",
+    "label_3": "of contact data decays every year",
+    "source": "Source: Champions Group buyer research, 2026",
+    "cta_headline": "Get the full dataset",
+    "cta": "Download the report",
+    "music": "corporate-upbeat"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "role": "intro",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_intro"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{kicker}}",
+          "if": "kicker",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 28,
+            "uppercase": true
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.27,
+              0.5,
+              0.065
+            ],
+            "vertical": [
+              0.08,
+              0.3,
+              0.84,
+              0.056
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{title}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 100,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.36,
+              0.84,
+              0.32
+            ],
+            "vertical": [
+              0.08,
+              0.37,
+              0.84,
+              0.24
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        }
+      ]
+    },
+    {
+      "id": "stat1",
+      "role": "stat",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_stat_1"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "text",
+          "text": "01 / 03",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.14,
+              0.4,
+              0.06
+            ],
+            "vertical": [
+              0.2,
+              0.2,
+              0.6,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "stat",
+          "text": "{{stat_1}}",
+          "style": {
+            "$brand": "styles.stat"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.2,
+              0.84,
+              0.4
+            ],
+            "vertical": [
+              0.06,
+              0.26,
+              0.88,
+              0.2
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{label_1}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 700,
+            "size": 52,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.62,
+              0.76,
+              0.14
+            ],
+            "vertical": [
+              0.08,
+              0.48,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "stat2",
+      "role": "stat",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_stat_2"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "text",
+          "text": "02 / 03",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.14,
+              0.4,
+              0.06
+            ],
+            "vertical": [
+              0.2,
+              0.2,
+              0.6,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "stat",
+          "text": "{{stat_2}}",
+          "style": {
+            "$brand": "styles.stat",
+            "color": {
+              "$brand": "colors.accent"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.2,
+              0.84,
+              0.4
+            ],
+            "vertical": [
+              0.06,
+              0.26,
+              0.88,
+              0.2
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{label_2}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 700,
+            "size": 52,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.62,
+              0.76,
+              0.14
+            ],
+            "vertical": [
+              0.08,
+              0.48,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "stat3",
+      "role": "stat",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_stat_3"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "text",
+          "text": "03 / 03",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.14,
+              0.4,
+              0.06
+            ],
+            "vertical": [
+              0.2,
+              0.2,
+              0.6,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "stat",
+          "text": "{{stat_3}}",
+          "style": {
+            "$brand": "styles.stat",
+            "color": "#FFFFFF"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.2,
+              0.84,
+              0.4
+            ],
+            "vertical": [
+              0.06,
+              0.26,
+              0.88,
+              0.2
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{label_3}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "weight": 700,
+            "size": 52,
+            "align": "center"
+          },
+          "box": {
+            "*": [
+              0.12,
+              0.62,
+              0.76,
+              0.14
+            ],
+            "vertical": [
+              0.08,
+              0.48,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.3
+        },
+        {
+          "type": "text",
+          "text": "{{source}}",
+          "if": "source",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 26,
+            "weight": 500,
+            "color": "#FFFFFFCC"
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.84,
+              0.8,
+              0.05
+            ],
+            "vertical": [
+              0.08,
+              0.74,
+              0.84,
+              0.03
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.8
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

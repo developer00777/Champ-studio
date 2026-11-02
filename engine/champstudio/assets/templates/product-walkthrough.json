@@ -1,0 +1,1167 @@
+{
+  "cst": "1.0",
+  "id": "product-walkthrough",
+  "name": "Product Walkthrough",
+  "category": "product-promo",
+  "description": "Title card, three screenshot steps with slow pans and numbered captions, then a CTA. Ideal for onboarding and demos.",
+  "tags": [
+    "walkthrough",
+    "demo",
+    "screenshots",
+    "saas",
+    "onboarding"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "title",
+      "step_1",
+      "step_2",
+      "step_3",
+      "screen_1",
+      "screen_2",
+      "screen_3",
+      "cta"
+    ],
+    "properties": {
+      "title": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Walkthrough title"
+      },
+      "subtitle": {
+        "type": "string",
+        "maxLength": 60,
+        "x-kind": "text",
+        "description": "Optional line under the title"
+      },
+      "screen_1": {
+        "x-kind": "media",
+        "description": "Screenshot for step 1",
+        "x-media": [
+          "image"
+        ]
+      },
+      "step_1": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Step 1 title"
+      },
+      "step_1_body": {
+        "type": "string",
+        "maxLength": 80,
+        "x-kind": "text",
+        "description": "Step 1 one-line explanation"
+      },
+      "vo_step_1": {
+        "type": "string",
+        "maxLength": 220,
+        "x-kind": "voiceover",
+        "description": "Voiceover for step 1"
+      },
+      "screen_2": {
+        "x-kind": "media",
+        "description": "Screenshot for step 2",
+        "x-media": [
+          "image"
+        ]
+      },
+      "step_2": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Step 2 title"
+      },
+      "step_2_body": {
+        "type": "string",
+        "maxLength": 80,
+        "x-kind": "text",
+        "description": "Step 2 one-line explanation"
+      },
+      "vo_step_2": {
+        "type": "string",
+        "maxLength": 220,
+        "x-kind": "voiceover",
+        "description": "Voiceover for step 2"
+      },
+      "screen_3": {
+        "x-kind": "media",
+        "description": "Screenshot for step 3",
+        "x-media": [
+          "image"
+        ]
+      },
+      "step_3": {
+        "type": "string",
+        "maxLength": 40,
+        "x-kind": "text",
+        "description": "Step 3 title"
+      },
+      "step_3_body": {
+        "type": "string",
+        "maxLength": 80,
+        "x-kind": "text",
+        "description": "Step 3 one-line explanation"
+      },
+      "vo_step_3": {
+        "type": "string",
+        "maxLength": 220,
+        "x-kind": "voiceover",
+        "description": "Voiceover for step 3"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_intro": {
+        "type": "string",
+        "maxLength": 140,
+        "x-kind": "voiceover",
+        "description": "Voiceover introducing the walkthrough"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "title": "Build a target list in 3 steps",
+    "subtitle": "From blank page to export-ready in under five minutes.",
+    "step_1": "Choose your ideal customer",
+    "step_1_body": "Filter by industry, size, tech stack and region.",
+    "step_2": "Add buying-group contacts",
+    "step_2_body": "Pull verified emails and direct dials for every role.",
+    "step_3": "Push to your CRM",
+    "step_3_body": "One click sends the list to Salesforce or HubSpot.",
+    "cta_headline": "Try it on your own market",
+    "cta": "Start free",
+    "music": "calm-tech"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "role": "intro",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_intro"
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "shape",
+          "name": "Rule",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.24000000000000002,
+              0.06,
+              0.008
+            ],
+            "vertical": [
+              0.08,
+              0.3,
+              0.12,
+              0.005
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "Product walkthrough",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.265,
+              0.7,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.312,
+              0.84,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.35
+          },
+          "start": 0.1
+        },
+        {
+          "type": "text",
+          "text": "{{title}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 96,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.33999999999999997,
+              0.8,
+              0.28
+            ],
+            "vertical": [
+              0.08,
+              0.36,
+              0.84,
+              0.2
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{subtitle}}",
+          "if": "subtitle",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "weight": 500,
+            "size": 38,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.64,
+              0.66,
+              0.16
+            ],
+            "vertical": [
+              0.08,
+              0.5800000000000001,
+              0.84,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.45
+        }
+      ]
+    },
+    {
+      "id": "step1",
+      "role": "step",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_step_1"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.surface"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF",
+            "radius": 0.03,
+            "stroke": {
+              "$brand": "colors.primary"
+            },
+            "stroke_width": 2
+          },
+          "box": {
+            "*": [
+              0.38,
+              0.1,
+              0.58,
+              0.8
+            ],
+            "vertical": [
+              0.05,
+              0.3,
+              0.9,
+              0.5
+            ],
+            "1:1": [
+              0.05,
+              0.28,
+              0.9,
+              0.62
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.35
+          }
+        },
+        {
+          "type": "media",
+          "src": {
+            "$slot": "screen_1"
+          },
+          "motion": "pan-right",
+          "box": {
+            "*": [
+              0.395,
+              0.125,
+              0.55,
+              0.75
+            ],
+            "vertical": [
+              0.065,
+              0.31,
+              0.87,
+              0.48
+            ],
+            "1:1": [
+              0.065,
+              0.295,
+              0.87,
+              0.59
+            ]
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.22,
+              0.09,
+              0.16
+            ],
+            "vertical": [
+              0.08,
+              0.08,
+              0.14,
+              0.079
+            ],
+            "1:1": [
+              0.06,
+              0.06,
+              0.12,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "1",
+          "style": {
+            "$brand": "styles.title",
+            "size": 64,
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.22,
+              0.09,
+              0.16
+            ],
+            "vertical": [
+              0.08,
+              0.08,
+              0.14,
+              0.079
+            ],
+            "1:1": [
+              0.06,
+              0.06,
+              0.12,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{step_1}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 60,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.42,
+              0.29,
+              0.24
+            ],
+            "vertical": [
+              0.26,
+              0.08,
+              0.68,
+              0.1
+            ],
+            "1:1": [
+              0.21,
+              0.05,
+              0.73,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{step_1_body}}",
+          "if": "step_1_body",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "weight": 500,
+            "size": 32,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.67,
+              0.29,
+              0.18
+            ],
+            "vertical": [
+              0.08,
+              0.19,
+              0.84,
+              0.08
+            ],
+            "1:1": [
+              0.06,
+              0.18,
+              0.88,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.45
+        }
+      ]
+    },
+    {
+      "id": "step2",
+      "role": "step",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_step_2"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF",
+            "radius": 0.03,
+            "stroke": {
+              "$brand": "colors.primary"
+            },
+            "stroke_width": 2
+          },
+          "box": {
+            "*": [
+              0.38,
+              0.1,
+              0.58,
+              0.8
+            ],
+            "vertical": [
+              0.05,
+              0.3,
+              0.9,
+              0.5
+            ],
+            "1:1": [
+              0.05,
+              0.28,
+              0.9,
+              0.62
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.35
+          }
+        },
+        {
+          "type": "media",
+          "src": {
+            "$slot": "screen_2"
+          },
+          "motion": "pan-left",
+          "box": {
+            "*": [
+              0.395,
+              0.125,
+              0.55,
+              0.75
+            ],
+            "vertical": [
+              0.065,
+              0.31,
+              0.87,
+              0.48
+            ],
+            "1:1": [
+              0.065,
+              0.295,
+              0.87,
+              0.59
+            ]
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.22,
+              0.09,
+              0.16
+            ],
+            "vertical": [
+              0.08,
+              0.08,
+              0.14,
+              0.079
+            ],
+            "1:1": [
+              0.06,
+              0.06,
+              0.12,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "2",
+          "style": {
+            "$brand": "styles.title",
+            "size": 64,
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.22,
+              0.09,
+              0.16
+            ],
+            "vertical": [
+              0.08,
+              0.08,
+              0.14,
+              0.079
+            ],
+            "1:1": [
+              0.06,
+              0.06,
+              0.12,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{step_2}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 60,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.42,
+              0.29,
+              0.24
+            ],
+            "vertical": [
+              0.26,
+              0.08,
+              0.68,
+              0.1
+            ],
+            "1:1": [
+              0.21,
+              0.05,
+              0.73,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{step_2_body}}",
+          "if": "step_2_body",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "weight": 500,
+            "size": 32,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.67,
+              0.29,
+              0.18
+            ],
+            "vertical": [
+              0.08,
+              0.19,
+              0.84,
+              0.08
+            ],
+            "1:1": [
+              0.06,
+              0.18,
+              0.88,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.45
+        }
+      ]
+    },
+    {
+      "id": "step3",
+      "role": "step",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_step_3"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.surface"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": "#FFFFFF",
+            "radius": 0.03,
+            "stroke": {
+              "$brand": "colors.primary"
+            },
+            "stroke_width": 2
+          },
+          "box": {
+            "*": [
+              0.38,
+              0.1,
+              0.58,
+              0.8
+            ],
+            "vertical": [
+              0.05,
+              0.3,
+              0.9,
+              0.5
+            ],
+            "1:1": [
+              0.05,
+              0.28,
+              0.9,
+              0.62
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.35
+          }
+        },
+        {
+          "type": "media",
+          "src": {
+            "$slot": "screen_3"
+          },
+          "motion": "pan-up",
+          "box": {
+            "*": [
+              0.395,
+              0.125,
+              0.55,
+              0.75
+            ],
+            "vertical": [
+              0.065,
+              0.31,
+              0.87,
+              0.48
+            ],
+            "1:1": [
+              0.065,
+              0.295,
+              0.87,
+              0.59
+            ]
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "ellipse",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.22,
+              0.09,
+              0.16
+            ],
+            "vertical": [
+              0.08,
+              0.08,
+              0.14,
+              0.079
+            ],
+            "1:1": [
+              0.06,
+              0.06,
+              0.12,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "3",
+          "style": {
+            "$brand": "styles.title",
+            "size": 64,
+            "shadow": false
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.22,
+              0.09,
+              0.16
+            ],
+            "vertical": [
+              0.08,
+              0.08,
+              0.14,
+              0.079
+            ],
+            "1:1": [
+              0.06,
+              0.06,
+              0.12,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{step_3}}",
+          "style": {
+            "$brand": "styles.title",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "shadow": false,
+            "size": 60,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.42,
+              0.29,
+              0.24
+            ],
+            "vertical": [
+              0.26,
+              0.08,
+              0.68,
+              0.1
+            ],
+            "1:1": [
+              0.21,
+              0.05,
+              0.73,
+              0.12
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.4
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{step_3_body}}",
+          "if": "step_3_body",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text_muted"
+            },
+            "weight": 500,
+            "size": 32,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.67,
+              0.29,
+              0.18
+            ],
+            "vertical": [
+              0.08,
+              0.19,
+              0.84,
+              0.08
+            ],
+            "1:1": [
+              0.06,
+              0.18,
+              0.88,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.45
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

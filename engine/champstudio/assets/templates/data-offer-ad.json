@@ -1,0 +1,564 @@
+{
+  "cst": "1.0",
+  "id": "data-offer-ad",
+  "name": "Data Sample Offer",
+  "category": "social-ads",
+  "description": "Lead-gen ad for a free data sample: hook, a big record count with the filters you can pick, then claim CTA.",
+  "tags": [
+    "ad",
+    "data",
+    "free sample",
+    "lead gen",
+    "offer"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "hook",
+      "count",
+      "count_label",
+      "cta",
+      "bg"
+    ],
+    "properties": {
+      "hook": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "Hook about reaching a target audience"
+      },
+      "count": {
+        "type": "string",
+        "maxLength": 10,
+        "x-kind": "text",
+        "description": "How many records are on offer, e.g. 500"
+      },
+      "count_label": {
+        "type": "string",
+        "maxLength": 48,
+        "x-kind": "text",
+        "description": "What the records are, e.g. verified CFO contacts, free"
+      },
+      "filters_title": {
+        "type": "string",
+        "maxLength": 30,
+        "x-kind": "text",
+        "description": "Label above the filters"
+      },
+      "filters": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "description": "Three ways to filter the sample"
+      },
+      "cta_headline": {
+        "type": "string",
+        "maxLength": 44,
+        "x-kind": "text",
+        "description": "Closing line above the button"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "bg": {
+        "x-kind": "media",
+        "description": "Background visual for the hook (decision makers, office, skyline)"
+      },
+      "vo_hook": {
+        "type": "string",
+        "maxLength": 120,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the hook"
+      },
+      "vo_offer": {
+        "type": "string",
+        "maxLength": 240,
+        "x-kind": "voiceover",
+        "description": "Voiceover explaining the offer and filters"
+      },
+      "vo_cta": {
+        "type": "string",
+        "maxLength": 110,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "hook": "Need to reach CFOs this quarter?",
+    "count": "500",
+    "count_label": "verified finance leaders, free",
+    "filters_title": "Pick your filters",
+    "filters": [
+      "Industry & sub-sector",
+      "Company revenue band",
+      "Region & time zone"
+    ],
+    "cta_headline": "Your sample is one form away",
+    "cta": "Claim free sample",
+    "music": "corporate-upbeat"
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "role": "hook",
+      "duration": {
+        "mode": "voiceover",
+        "min": 2.5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_hook"
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "bg"
+          },
+          "motion": "kenburns-in"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000033",
+              "#000000CC"
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "FREE DATA SAMPLE",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 28,
+            "uppercase": true
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.27,
+              0.6,
+              0.065
+            ],
+            "vertical": [
+              0.08,
+              0.3,
+              0.84,
+              0.056
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{hook}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 96,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.36,
+              0.8,
+              0.3
+            ],
+            "vertical": [
+              0.08,
+              0.36,
+              0.84,
+              0.24
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.5
+          },
+          "start": 0.15
+        }
+      ]
+    },
+    {
+      "id": "offer",
+      "role": "offer",
+      "duration": {
+        "mode": "voiceover",
+        "min": 4,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_offer"
+      },
+      "transition": {
+        "type": "slide-left",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "stat",
+          "text": "{{count}}",
+          "style": {
+            "$brand": "styles.stat"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.18,
+              0.44,
+              0.34
+            ],
+            "vertical": [
+              0.08,
+              0.14,
+              0.84,
+              0.16
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.5
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{count_label}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 700,
+            "size": 44,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.54,
+              0.42,
+              0.18
+            ],
+            "vertical": [
+              0.08,
+              0.31,
+              0.84,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.3
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.surface"
+            },
+            "radius": 0.06
+          },
+          "box": {
+            "*": [
+              0.54,
+              0.16,
+              0.4,
+              0.68
+            ],
+            "vertical": [
+              0.06,
+              0.44,
+              0.88,
+              0.34
+            ],
+            "1:1": [
+              0.52,
+              0.16,
+              0.44,
+              0.68
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.4
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{filters_title}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.58,
+              0.22,
+              0.34,
+              0.06
+            ],
+            "vertical": [
+              0.11,
+              0.47,
+              0.78,
+              0.03
+            ],
+            "1:1": [
+              0.56,
+              0.21,
+              0.38,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.4
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "filters"
+          },
+          "stagger": 0.7,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 38,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.58,
+              0.32,
+              0.34,
+              0.46
+            ],
+            "vertical": [
+              0.11,
+              0.52,
+              0.78,
+              0.22
+            ],
+            "1:1": [
+              0.56,
+              0.3,
+              0.38,
+              0.48
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.6
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "role": "cta",
+      "duration": {
+        "mode": "voiceover",
+        "min": 3.0,
+        "pad": 0.6
+      },
+      "vo": {
+        "$slot": "vo_cta"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "gradient": {
+              "$brand": "gradients.hero"
+            }
+          }
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.3,
+              0.13,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.12,
+              0.18,
+              0.76,
+              0.06
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{cta_headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80
+          },
+          "box": {
+            "*": [
+              0.1,
+              0.3,
+              0.8,
+              0.24
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.18
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.15
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button",
+            "bg_color": "#FFFFFF",
+            "color": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.3,
+              0.62,
+              0.4,
+              0.14
+            ],
+            "vertical": [
+              0.12,
+              0.54,
+              0.76,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.45
+          },
+          "start": 0.45
+        },
+        {
+          "type": "text",
+          "text": "{{brand.website}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600
+          },
+          "box": {
+            "*": [
+              0.2,
+              0.775,
+              0.6,
+              0.06
+            ],
+            "vertical": [
+              0.1,
+              0.665,
+              0.8,
+              0.04
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.7
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.3,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}

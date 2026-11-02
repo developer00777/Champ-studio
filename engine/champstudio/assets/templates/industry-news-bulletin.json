@@ -1,0 +1,594 @@
+{
+  "cst": "1.0",
+  "id": "industry-news-bulletin",
+  "name": "Industry News Bulletin",
+  "category": "data-leadership",
+  "description": "A branded news-desk format: dated bulletin header, the lead story over a visual, quick hits, and what it means for the viewer.",
+  "tags": [
+    "news",
+    "bulletin",
+    "industry update",
+    "weekly",
+    "roundup"
+  ],
+  "aspects": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "slots": {
+    "type": "object",
+    "required": [
+      "show_name",
+      "headline",
+      "hits",
+      "takeaway",
+      "cta"
+    ],
+    "properties": {
+      "show_name": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Bulletin name, e.g. THE DATA BRIEF"
+      },
+      "date": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Issue date, e.g. Week of 3 Nov"
+      },
+      "headline": {
+        "type": "string",
+        "maxLength": 64,
+        "x-kind": "text",
+        "description": "Lead story headline"
+      },
+      "lead_img": {
+        "x-kind": "media",
+        "description": "Visual for the lead story"
+      },
+      "hits": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "x-kind": "list",
+        "items": {
+          "type": "string",
+          "maxLength": 52
+        },
+        "description": "Three quick-hit headlines"
+      },
+      "takeaway": {
+        "type": "string",
+        "maxLength": 80,
+        "x-kind": "text",
+        "description": "What it means for the viewer"
+      },
+      "cta": {
+        "type": "string",
+        "maxLength": 24,
+        "x-kind": "text",
+        "description": "Call to action"
+      },
+      "vo_lead": {
+        "type": "string",
+        "maxLength": 300,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the lead story"
+      },
+      "vo_hits": {
+        "type": "string",
+        "maxLength": 320,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the quick hits"
+      },
+      "vo_takeaway": {
+        "type": "string",
+        "maxLength": 220,
+        "x-kind": "voiceover",
+        "description": "Voiceover for the takeaway and CTA"
+      },
+      "music": {
+        "type": "string",
+        "x-kind": "music",
+        "description": "Music mood"
+      }
+    }
+  },
+  "defaults": {
+    "show_name": "The Data Brief",
+    "date": "Week of 3 November",
+    "headline": "New US privacy bill puts consent data in focus",
+    "hits": [
+      "HIPAA guidance updated for marketing data",
+      "B2B intent spend up 22% year on year",
+      "Two major CRM vendors merge"
+    ],
+    "takeaway": "Audit your consent records now; regulators are watching the data supply chain.",
+    "cta": "Subscribe for free",
+    "music": "calm-tech"
+  },
+  "scenes": [
+    {
+      "id": "lead",
+      "role": "lead",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.4
+      },
+      "vo": {
+        "$slot": "vo_lead"
+      },
+      "layers": [
+        {
+          "type": "media",
+          "src": {
+            "$slot": "lead_img"
+          },
+          "motion": "pan-left"
+        },
+        {
+          "type": "shape",
+          "name": "Scrim",
+          "shape": {
+            "kind": "rect",
+            "gradient": [
+              "#00000022",
+              "#000000DD"
+            ]
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.0,
+              0.0,
+              1.0,
+              0.12
+            ],
+            "vertical": [
+              0.0,
+              0.0,
+              1.0,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "wipe",
+            "sec": 0.4
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{show_name}}",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 34,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.05,
+              0.0,
+              0.5,
+              0.12
+            ],
+            "vertical": [
+              0.06,
+              0.0,
+              0.5,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{date}}",
+          "if": "date",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 30,
+            "weight": 600,
+            "align": "right"
+          },
+          "box": {
+            "*": [
+              0.55,
+              0.0,
+              0.4,
+              0.12
+            ],
+            "vertical": [
+              0.5,
+              0.0,
+              0.44,
+              0.08
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.3
+        },
+        {
+          "type": "text",
+          "text": "Top story",
+          "style": {
+            "$brand": "styles.lower_third",
+            "size": 28,
+            "uppercase": true
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.48,
+              0.4,
+              0.065
+            ],
+            "vertical": [
+              0.06,
+              0.46,
+              0.84,
+              0.056
+            ]
+          },
+          "anim_in": {
+            "type": "slide-right",
+            "sec": 0.4
+          },
+          "start": 0.4
+        },
+        {
+          "type": "text",
+          "text": "{{headline}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 80,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.57,
+              0.86,
+              0.26
+            ],
+            "vertical": [
+              0.06,
+              0.53,
+              0.88,
+              0.22
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.5
+        }
+      ]
+    },
+    {
+      "id": "hits",
+      "role": "list",
+      "duration": {
+        "mode": "voiceover",
+        "min": 6,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_hits"
+      },
+      "transition": {
+        "type": "slide-up",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.background"
+          }
+        },
+        {
+          "type": "shape",
+          "shape": {
+            "kind": "rect",
+            "fill": {
+              "$brand": "colors.primary"
+            }
+          },
+          "box": {
+            "*": [
+              0.0,
+              0.0,
+              1.0,
+              0.12
+            ],
+            "vertical": [
+              0.0,
+              0.0,
+              1.0,
+              0.08
+            ]
+          }
+        },
+        {
+          "type": "text",
+          "text": "Quick hits",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 34,
+            "weight": 800,
+            "uppercase": true,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.05,
+              0.0,
+              0.5,
+              0.12
+            ],
+            "vertical": [
+              0.06,
+              0.0,
+              0.5,
+              0.08
+            ]
+          }
+        },
+        {
+          "type": "list",
+          "name": "Numbers",
+          "items": [
+            "01",
+            "02",
+            "03"
+          ],
+          "stagger": 1.5,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.primary"
+            },
+            "weight": 800,
+            "align": "left",
+            "size": 48
+          },
+          "box": {
+            "*": [
+              0.06,
+              0.22,
+              0.08,
+              0.6
+            ],
+            "vertical": [
+              0.06,
+              0.2,
+              0.14,
+              0.54
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          },
+          "start": 0.3
+        },
+        {
+          "type": "list",
+          "items": {
+            "$slot": "hits"
+          },
+          "stagger": 1.5,
+          "style": {
+            "$brand": "styles.subtitle",
+            "color": {
+              "$brand": "colors.text"
+            },
+            "weight": 600,
+            "size": 48,
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.14,
+              0.22,
+              0.8,
+              0.6
+            ],
+            "vertical": [
+              0.2,
+              0.2,
+              0.74,
+              0.54
+            ]
+          },
+          "anim_in": {
+            "type": "slide-left",
+            "sec": 0.35
+          },
+          "start": 0.3
+        }
+      ]
+    },
+    {
+      "id": "takeaway",
+      "role": "takeaway",
+      "duration": {
+        "mode": "voiceover",
+        "min": 5,
+        "pad": 0.5
+      },
+      "vo": {
+        "$slot": "vo_takeaway"
+      },
+      "transition": {
+        "type": "crossfade",
+        "sec": 0.4
+      },
+      "layers": [
+        {
+          "type": "color",
+          "color": {
+            "$brand": "colors.dark"
+          }
+        },
+        {
+          "type": "text",
+          "text": "What it means for you",
+          "style": {
+            "$brand": "styles.subtitle",
+            "size": 28,
+            "weight": 800,
+            "uppercase": true,
+            "color": {
+              "$brand": "colors.accent"
+            },
+            "align": "left"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.22,
+              0.84,
+              0.06
+            ],
+            "vertical": [
+              0.08,
+              0.24,
+              0.84,
+              0.035
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.3
+          }
+        },
+        {
+          "type": "text",
+          "text": "{{takeaway}}",
+          "style": {
+            "$brand": "styles.title",
+            "size": 68,
+            "align": "left",
+            "valign": "top"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.3,
+              0.84,
+              0.32
+            ],
+            "vertical": [
+              0.08,
+              0.28,
+              0.84,
+              0.28
+            ]
+          },
+          "anim_in": {
+            "type": "slide-up",
+            "sec": 0.45
+          },
+          "start": 0.2
+        },
+        {
+          "type": "text",
+          "text": "{{cta}}",
+          "style": {
+            "$brand": "styles.button"
+          },
+          "box": {
+            "*": [
+              0.08,
+              0.66,
+              0.5,
+              0.13
+            ],
+            "vertical": [
+              0.08,
+              0.6,
+              0.84,
+              0.1
+            ]
+          },
+          "anim_in": {
+            "type": "pop",
+            "sec": 0.4
+          },
+          "start": 0.7
+        },
+        {
+          "type": "logo",
+          "box": {
+            "*": [
+              0.7,
+              0.82,
+              0.24,
+              0.1
+            ],
+            "vertical": [
+              0.5,
+              0.86,
+              0.44,
+              0.05
+            ]
+          },
+          "anim_in": {
+            "type": "fade",
+            "sec": 0.4
+          },
+          "start": 0.8,
+          "fallback_text": false
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "music": {
+      "$slot": "music"
+    },
+    "music_volume": 0.2,
+    "duck_db": 9
+  },
+  "captions": {
+    "enabled": true,
+    "box": {
+      "*": [
+        0.1,
+        0.84,
+        0.8,
+        0.11
+      ],
+      "vertical": [
+        0.06,
+        0.81,
+        0.88,
+        0.09
+      ]
+    }
+  }
+}
