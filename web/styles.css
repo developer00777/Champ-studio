@@ -679,7 +679,9 @@ textarea.sel { resize: vertical; font: inherit; line-height: 1.45; }
 .project-card:hover { border-color: var(--ember); transform: translateY(-1px); }
 .pc-title { font: 600 14.5px var(--font-display); color: var(--champ-snow); }
 .pc-meta { font-size: 12px; color: var(--champ-mist); }
-.card-actions.static { position: static; opacity: 1; background: none; padding: 8px 0 0; display: flex; gap: 6px;
+/* always-visible action rows (Editor cards): undo the hover-reveal's pointer-events: none */
+.card-actions.static { position: static; opacity: 1; transform: none; pointer-events: auto; background: none;
+  padding: 8px 0 0; display: flex; gap: 6px;
   flex-wrap: wrap; align-items: center; }
 
 /* progress */

@@ -125,6 +125,23 @@ export const HEURISTICS = `(() => {
     if (!shown(b)) continue;
     if (!b.textContent.trim() && !b.getAttribute('aria-label') && !b.title && !b.dataset.tip) issues.push({ kind: 'unlabelled-button', at: path(b) });
   }
+  // buttons/links that look clickable but whose centre is covered or ignores the pointer
+  for (const b of document.querySelectorAll('button:not([disabled]), a[href], [role=button], [role=tab]')) {
+    if (!shown(b)) continue;
+    const r = b.getBoundingClientRect();
+    if (r.top < 0 || r.bottom > innerHeight || r.left < 0 || r.right > innerWidth) continue;
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    let clipped = false; // scrolled out of view inside a panel is fine
+    for (let e = b.parentElement; e && e !== document.body; e = e.parentElement) {
+      if (getComputedStyle(e).overflow === 'visible') continue;
+      const pr = e.getBoundingClientRect();
+      if (cx < pr.left || cx > pr.right || cy < pr.top || cy > pr.bottom) { clipped = true; break; }
+    }
+    if (clipped) continue;
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    if (hit && hit !== b && !b.contains(hit) && !hit.closest('.modal-backdrop, [role=tooltip], .toast, .narrow-notice, .sidebar.nav-open .nav'))
+      issues.push({ kind: 'unclickable', text: (b.textContent || b.getAttribute('aria-label') || '').trim().slice(0, 30), at: path(b), covered_by: path(hit) });
+  }
   for (const img of document.images) if (shown(img) && img.complete && img.naturalWidth === 0 && img.src) issues.push({ kind: 'broken-img', src: img.src.slice(0, 120), at: path(img) });
   const offenders = [];
   for (const el of document.querySelectorAll('body *')) {

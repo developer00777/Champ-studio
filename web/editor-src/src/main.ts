@@ -346,7 +346,7 @@ function topbar(ai: AiDrawer): HTMLElement {
   return h(
     "header",
     { class: "topbar" },
-    h("a", { class: "brand", href: "/", "data-tip": "Back to Champ Studio" }, h("span", { class: "logo-mark" }), h("span", { class: "brand-name" }, "Champ Studio")),
+    h("a", { class: "brand", href: "/#/projects", "data-tip": "Back to your sequences" }, h("span", { class: "logo-mark" }), h("span", { class: "brand-name" }, "Champ Studio")),
     h("span", { class: "sep" }),
     nameIn,
     status,

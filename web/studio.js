@@ -82,7 +82,10 @@ async function fillBrandSelect(select, storeKey) {
 
 // two decimals everywhere; a third only for sub-cent amounts so tiny spends don't read as $0.00
 const money = (v) => { const n = Number(v || 0); return `$${n.toFixed(n > 0 && n < 0.01 ? 3 : 2)}`; };
-const openEditor = (pid) => window.open(`/editor/?project=${pid}`, "_blank");
+// Same-tab navigation: window.open() after an await is treated as a popup and silently blocked,
+// and a background tab is easy to miss. The editor links back to Champ Studio from its logo.
+const editorUrl = (pid) => `/editor/?project=${encodeURIComponent(pid)}`;
+const openEditor = (pid) => location.assign(editorUrl(pid));
 
 function videoPlayer(assetId) {
   return el("video", { class: "media", src: `/api/assets/${assetId}/file`, controls: true, playsinline: true,
@@ -546,7 +549,7 @@ const templatesView = (() => {
         el("div", { class: "pc-meta" }, `v${p.version} · ${fmtDate(new Date(p.updated_at * 1000).toISOString())}`,
            p.locked_by ? ` · editing: ${p.locked_by}` : ""),
         el("div", { class: "card-actions static" },
-          el("button", { class: "btn sm ember", onclick: () => openEditor(p.id) }, "Open"),
+          el("a", { class: "btn sm ember", href: editorUrl(p.id), title: "Open in the editor (Ctrl/middle-click: new tab)" }, "Open"),
           el("a", { class: "btn sm", href: `/api/projects/${p.id}/interchange?format=fcp_xml` }, "Premiere XML"),
           el("button", { class: "btn sm danger", onclick: async () => {
             if (!confirm(`Delete "${p.name}"? This can't be undone.`)) return;
