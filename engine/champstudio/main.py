@@ -540,8 +540,22 @@ for _r in (_core_routes, _project_routes, _brand_routes, _director_routes, _temp
 
 # ── web UI ───────────────────────────────────────────────────────────
 
+class WebFiles(StaticFiles):
+    """The web UI ships unhashed files (app.js, styles.css): make browsers revalidate them on every
+    load (cheap 304s) so an upgrade never pairs new HTML with a stale cached script or stylesheet.
+    The editor's Vite assets are content-hashed and can be cached for good."""
+
+    async def get_response(self, path, scope):
+        resp = await super().get_response(path, scope)
+        if path.startswith("editor/assets/"):
+            resp.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        else:
+            resp.headers["Cache-Control"] = "no-cache"
+        return resp
+
+
 if WEB_DIR.is_dir():
-    app.mount("/", StaticFiles(directory=WEB_DIR, html=True), name="web")
+    app.mount("/", WebFiles(directory=WEB_DIR, html=True), name="web")
 
 
 def run() -> None:
