@@ -207,6 +207,9 @@ async def stage_plan(pid: str, h: jobs.JobHandle | None = None) -> dict:
     data["plan"] = await make_plan(data["brief"], _kit(data), project_id=pid)
     data["scene_state"] = {}
     data["stage"] = "planned"
+    title = (data["plan"] or {}).get("title")
+    if data.pop("auto_name", False) and title:
+        projects.rename(pid, title[:80])
     _store(pid, data)
     return {"plan": data["plan"]}
 

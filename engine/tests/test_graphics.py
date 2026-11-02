@@ -198,3 +198,20 @@ def test_graphic_endpoint_hover_preview_and_save_as_template(client):
     assert "Sam Lee" in texts and "Head of Growth" in texts
     pins = [layer["pin"] for layer in again["graphic"]["layers"] if layer.get("pin")]
     assert pins and all(p["to"] in {layer["id"] for layer in again["graphic"]["layers"]} for p in pins)
+
+
+def test_add_template_to_new_and_existing_sequence(client):
+    r = client.post("/api/templates/mg-lt-pill/add-to-project", json={"values": {"name": "Dana Lee"}, "aspect": "9:16"})
+    assert r.status_code == 200, r.text
+    pid = r.json()["project_id"]
+    p = client.get(f"/api/projects/{pid}").json()
+    assert p["kind"] == "edit" and (p["data"]["width"], p["data"]["height"]) == (1080, 1920)
+    clips = [c for t in p["data"]["tracks"] for c in t["clips"]]
+    assert len(clips) == 1 and clips[0]["type"] == "graphic"
+    # a second graphic lands on its own track above the first, with a unique id
+    r2 = client.post("/api/templates/mg-callout-badge/add-to-project", json={"project_id": pid}).json()
+    tracks = client.get(f"/api/projects/{pid}").json()["data"]["tracks"]
+    video = [t for t in tracks if t["kind"] == "video"]
+    where = {c["id"]: i for i, t in enumerate(video) for c in t["clips"]}
+    assert where[r2["clip_id"]] > where[clips[0]["id"]]
+    assert client.post("/api/templates/mg-lt-pill/add-to-project", json={"project_id": "nope"}).status_code == 404

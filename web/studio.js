@@ -80,7 +80,8 @@ async function fillBrandSelect(select, storeKey) {
   select.onchange = () => setPref(storeKey, select.value);
 }
 
-const money = (v) => `$${Number(v || 0).toFixed(v >= 1 ? 2 : 3)}`;
+// two decimals everywhere; a third only for sub-cent amounts so tiny spends don't read as $0.00
+const money = (v) => { const n = Number(v || 0); return `$${n.toFixed(n > 0 && n < 0.01 ? 3 : 2)}`; };
 const openEditor = (pid) => window.open(`/editor/?project=${pid}`, "_blank");
 
 function videoPlayer(assetId) {
@@ -384,6 +385,11 @@ const templatesView = (() => {
     let t;
     try { t = await api(`/api/templates/${tid}`); } catch (e) { toast(e.message, "error"); return; }
     const values = { ...(t.defaults || {}) };
+    let brandPrimary = "#F26722";
+    try {
+      const { brands } = await api("/api/brands");
+      brandPrimary = brands.find((b) => b.id === $("#tpl-brand").value)?.colors?.primary || brandPrimary;
+    } catch { /* keep the fallback swatch */ }
     const form = el("div", { class: "slot-form" });
     const inputs = {};
     for (const [name, prop] of Object.entries(t.slots.properties)) {
@@ -395,8 +401,11 @@ const templatesView = (() => {
         input.value = (values[name] || []).join("\n");
         inputs[name] = () => input.value.split("\n").map((x) => x.trim()).filter(Boolean);
       } else if (kind === "color") {
-        input = el("input", { type: "color", class: "color-in", value: values[name] || "#F26722" });
-        inputs[name] = () => input.value.toUpperCase();
+        // unchanged colour slots stay unset so the brand kit decides
+        let touched = !!values[name];
+        input = el("input", { type: "color", class: "color-in", value: values[name] || brandPrimary,
+                              title: "Defaults to the brand kit colour", oninput: () => { touched = true; } });
+        inputs[name] = () => touched ? input.value.toUpperCase() : undefined;
       } else if (kind === "music") {
         input = el("select", { class: "sel" }, ...MOODS.map((m) => el("option", { value: m, selected: m === values[name] }, m)));
         inputs[name] = () => input.value;
@@ -451,7 +460,7 @@ const templatesView = (() => {
     const aspects = el("div", { class: "chip-row multi" });
     const aspectPick = multiChips(aspects, (t.aspects || ASPECTS).map((a) => ({ value: a, label: a })), `tpl.out.${tid}`, [aspect.value]);
     const opt = (label, key, def) => {
-      const sw = el("button", { class: "switch", role: "switch", "aria-checked": "false", type: "button" }, el("span"));
+      const sw = el("button", { class: "switch", role: "switch", "aria-checked": "false", type: "button", "aria-label": label }, el("span"));
       const b = bindSwitch(sw, key, def);
       return { el: el("div", { class: "ctl" }, el("label", {}, label), sw), get value() { return b.value; } };
     };
@@ -470,6 +479,30 @@ const templatesView = (() => {
           el("button", { class: "btn sm", onclick: () => openEditor(res.projects[a]) }, "Open in editor"),
           el("button", { class: "btn sm", onclick: () => shareForReview(res.projects[a], id) }, "Share for review"))))));
     } }) }, "Create video");
+
+    // motion graphics: drop the graphic into an editor sequence instead of rendering a video
+    let toSequence = [];
+    if (t.graphic) {
+      const seqSel = el("select", { class: "sel", "aria-label": "Sequence" }, el("option", { value: "" }, "New sequence"));
+      api("/api/projects?kind=edit").then(({ projects }) => seqSel.append(...projects.map((p) =>
+        el("option", { value: p.id }, `${p.name} · v${p.version}`)))).catch(() => {});
+      const addBtn = el("button", { class: "btn ember", onclick: async () => {
+        addBtn.disabled = true; addBtn.classList.add("busy");
+        try {
+          const r = await api(`/api/templates/${tid}/add-to-project`, { method: "POST", body: {
+            project_id: seqSel.value || null, values: collect(), brand_kit_id: $("#tpl-brand").value,
+            aspect: aspectPick.value[0] || aspect.value } });
+          toast(`Added to “${r.name}” — opening the editor`, "ok");
+          openEditor(r.project_id);
+        } catch (e) { toast(e.message, "error"); }
+        finally { addBtn.disabled = false; addBtn.classList.remove("busy"); }
+      } }, "Add to sequence");
+      toSequence = [el("h3", { class: "sub-title" }, "Use in the editor"),
+        el("p", { class: "hint" }, "Adds this graphic on its own track at the start of the sequence; its fields stay editable in Essential Graphics."),
+        el("div", { class: "controls-row" }, el("div", { class: "ctl" }, el("label", {}, "Sequence"), seqSel),
+          el("div", { class: "ctl" }, el("label", {}, " "), addBtn)),
+        el("h3", { class: "sub-title" }, "Or render it as a video")];
+    }
 
     const csv = el("textarea", { class: "sel wide", rows: 5, placeholder: "first_name,company,cta\nDana,Acme,Book a call\n…  (columns named like slots replace them; any column can be merged into text as {column})" });
     const batchOut = el("div", { class: "job-host" });
@@ -490,6 +523,7 @@ const templatesView = (() => {
         el("h3", { class: "sub-title" }, "Fill from a brief"), brief, fillBtn),
       el("div", { class: "tpl-main" },
         form,
+        ...toSequence,
         el("div", { class: "controls-row" }, el("div", { class: "ctl" }, el("label", {}, "Ratios"), aspects), vo.el, music.el, vid.el),
         go, out,
         el("details", { class: "batch" }, el("summary", {}, "Batch: personalised videos from a CSV"), csv, batchGo, batchOut)));

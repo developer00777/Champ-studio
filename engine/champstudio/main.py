@@ -47,6 +47,12 @@ async def lifespan(_app: FastAPI):
             log.info("resumed %d provider job(s) after restart", n)
     except Exception:  # noqa: BLE001 — never block startup on job recovery
         log.exception("job recovery failed")
+    try:
+        pruned = jobs.prune()
+        if pruned:
+            log.info("pruned %d finished job record(s)", pruned)
+    except Exception:  # noqa: BLE001
+        log.exception("job pruning failed")
     yield
 
 
@@ -324,8 +330,11 @@ async def generate_video(body: VideoRequest):
 
 
 @app.get("/api/videos/jobs", dependencies=[guarded])
-async def video_jobs():
-    return {"jobs": jobs.list_jobs()}
+async def video_jobs(limit: int = 50):
+    """Animate and Lip Sync jobs only (the jobs table also holds ingest, render and Director work)."""
+    rows = jobs.list_jobs(limit=limit, kind="video") + jobs.list_jobs(limit=limit, kind="lipsync")
+    rows.sort(key=lambda j: j.get("created_at") or 0, reverse=True)
+    return {"jobs": rows[:limit]}
 
 
 @app.get("/api/videos/jobs/{job_id}", dependencies=[guarded])

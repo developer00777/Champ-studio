@@ -1,5 +1,10 @@
 # Champ Studio — end-to-end audit and fix plan (2026-11-02)
 
+> **Status: all three phases done (2026-11-02).** Every finding below is fixed except the optional
+> paid smoke test (not approved). Re-run with `node scripts/ui-audit/run.mjs`: 30 states, 0 problems.
+> Decisions taken: responsive phone navigation for the app; a "make the window wider" notice for the
+> editor below 900 px (one monitor at a time with a Source/Program toggle below 1240 px).
+
 ## How the audit was done
 
 - **Static wiring**: every DOM id referenced by `web/app.js` and `web/studio.js` checked against

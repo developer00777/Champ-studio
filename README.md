@@ -114,6 +114,15 @@ faked with real media bytes:
 cd web/editor-src && npm install && npm test && npm run build   # editor (Vite + TypeScript)
 ```
 
+UI audit (needs Node 22+ and Chrome, app running on :8787): crawls every view at desktop and phone
+sizes, the editor at four window widths with its panels and dialogs, and the review page; writes
+screenshots + `report.json` to `ui-audit-out/` and exits non-zero on console errors, failed
+requests, invisible text, clipped labels, overflow or broken images.
+
+```bash
+node scripts/ui-audit/run.mjs [--project <editor sequence id>]
+```
+
 
 ```bash
 cd engine && uv venv --python-preference only-managed -p 3.12 .venv

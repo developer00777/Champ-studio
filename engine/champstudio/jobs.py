@@ -139,6 +139,24 @@ def list_jobs(limit: int = 50, kind: str | None = None, project_id: str | None =
     return [_row_to_job(r) for r in rows]
 
 
+def prune(*, ingest_days: float = 7, other_days: float = 90) -> int:
+    """Retention: drop finished jobs that are only history. Ingest jobs go after a week (and
+    straight away once a newer one exists for the same asset); everything else after 90 days.
+    Assets and projects are untouched — only job records are removed."""
+    now = db.now()
+    done = "status IN ('completed', 'failed', 'canceled')"
+    with db.conn() as c:
+        n = c.execute(f"DELETE FROM jobs WHERE {done} AND kind = 'ingest' AND created_at < ?",
+                      (now - ingest_days * 86400,)).rowcount
+        n += c.execute(f"""DELETE FROM jobs WHERE {done} AND kind = 'ingest' AND EXISTS (
+                              SELECT 1 FROM jobs newer WHERE newer.kind = 'ingest' AND newer.id != jobs.id
+                              AND json_extract(newer.payload, '$.asset_id') = json_extract(jobs.payload, '$.asset_id')
+                              AND newer.created_at > jobs.created_at)""").rowcount
+        n += c.execute(f"DELETE FROM jobs WHERE {done} AND kind != 'ingest' AND created_at < ?",
+                       (now - other_days * 86400,)).rowcount
+    return n
+
+
 def cancel_job(job_id: str) -> dict | None:
     task = _tasks.get(job_id)
     if task and not task.done():

@@ -15,6 +15,10 @@
 
   <aside class="sidebar">
     <div class="wordmark">Champ&nbsp;<em>Studio</em></div>
+    <span class="nav-current" id="nav-current" aria-hidden="true"></span>
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"/></svg>
+    </button>
     <nav class="nav" id="nav">
       <div class="nav-group">Make</div>
       <button class="nav-item" data-view="director">
@@ -143,7 +147,7 @@
     <section class="view" id="view-create">
       <header class="view-head">
         <h1>Create</h1>
-        <p>Images, voiceovers and talking heads. <kbd>⌘</kbd><kbd>↵</kbd> to run.</p>
+        <p>Images, voiceovers and talking heads. <kbd class="mod-key">⌘</kbd><kbd>↵</kbd> to run.</p>
       </header>
       <div class="tab-row" id="create-tabs" role="tablist">
         <button class="tab" role="tab" data-tab="image">Image</button>
@@ -156,7 +160,7 @@
           <textarea id="create-prompt" rows="1" placeholder="Describe the image you want — subject, style, lighting…"></textarea>
           <button class="btn ember big" id="create-go">Generate</button>
         </div>
-        <div class="controls-row" id="create-controls">
+        <div class="controls-row">
           <div class="ctl" id="create-model-slot"><label>Model</label></div>
           <div class="ctl"><label>Aspect</label><div class="chip-row" id="create-aspect"></div></div>
           <div class="ctl"><label>Resolution</label>
@@ -247,7 +251,7 @@
     <section class="view" id="view-animate">
       <header class="view-head">
         <h1>Animate</h1>
-        <p>Text-to-video, or bring an image to life. <kbd>⌘</kbd><kbd>↵</kbd> to run.</p>
+        <p>Text-to-video, or bring an image to life. <kbd class="mod-key">⌘</kbd><kbd>↵</kbd> to run.</p>
       </header>
       <div class="prompt-dock glass">
         <textarea id="animate-prompt" rows="1" placeholder="Describe the motion — camera moves, action, mood…"></textarea>
@@ -284,7 +288,7 @@
         <h1>Derivative Lab</h1>
         <p>Chain transforms — image → vector → palette → anything. Every output is a new asset.</p>
       </header>
-      <div class="lab-source glass" id="lab-source">
+      <div class="lab-source glass">
         <div class="drop-zone" id="lab-drop">
           <div class="empty-mark">⌬</div>
           <p><strong>Drop an image here</strong> to upload, or</p>

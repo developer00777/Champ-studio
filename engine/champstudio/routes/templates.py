@@ -236,6 +236,61 @@ async def graphic(tid: str, body: GraphicRequest):
     return {"clip": clip, "duration": clip["duration"]}
 
 
+class AddToProject(BaseModel):
+    project_id: str | None = None      # None: start a new sequence
+    name: str | None = None
+    values: dict = {}
+    brand_kit_id: str | None = None
+    aspect: str = "16:9"
+    start: int = 0
+
+
+@router.post("/api/templates/{tid}/add-to-project", dependencies=[editor_only])
+async def add_to_project(tid: str, body: AddToProject, request: Request):
+    """Drop a template as one graphic clip on a new top video track of an editor sequence."""
+    from .projects import empty_timeline
+
+    t = _template(tid)
+    who = actor(request)["id"]
+    if body.project_id:
+        p = projects.get(body.project_id)
+        if not p or p["kind"] != "edit":
+            raise HTTPException(404, "sequence not found")
+        data = p["data"]
+        aspect = next((a for a, (w, h) in CANVAS_ASPECTS.items() if w * data["height"] == h * data["width"]), body.aspect)
+    else:
+        aspect = body.aspect
+        data = empty_timeline(aspect)
+        p = projects.create(body.name or t["name"], "edit", data, brand_kit_id=body.brand_kit_id, actor=who)
+    clip = templates.graphic_clip(t, body.values, brands.get(body.brand_kit_id or p.get("brand_kit_id")), aspect,
+                                  start=max(0, body.start))
+    tl = Timeline(**data)
+    taken = {c.id for tr in tl.tracks for c in tr.clips}
+    n = 2
+    while clip["id"] in taken:
+        clip["id"] = f"g-{tid}-{n}"
+        n += 1
+    videos = [tr for tr in tl.tracks if tr.kind == "video"]
+    top_used = max((i for i, tr in enumerate(videos) if tr.clips), default=-1)
+    free = next((tr for tr in videos[top_used + 1:] if not tr.locked), None)  # lowest empty track above all picture
+    out = tl.model_dump(by_alias=True)
+    if free:  # topmost empty video track
+        next(tr for tr in out["tracks"] if tr["id"] == free.id)["clips"].append(clip)
+    else:
+        last_video = max(i for i, tr in enumerate(out["tracks"]) if tr["kind"] == "video")
+        tid_new = f"v{len(videos) + 1}"
+        while any(tr["id"] == tid_new for tr in out["tracks"]):
+            tid_new += "x"
+        out["tracks"].insert(last_video + 1, {"id": tid_new, "kind": "video", "name": f"V{len(videos) + 1}",
+                                              "clips": [clip]})
+    try:
+        saved = projects.save(p["id"], Timeline(**out).model_dump(by_alias=True), actor=who)
+    except (projects.Locked, projects.Conflict) as e:
+        raise HTTPException(409, str(e)) from e
+    db.audit("template.add_to_project", tid, {"project": p["id"]}, actor=who)
+    return {"project_id": p["id"], "clip_id": clip["id"], "name": saved.get("name", p["name"])}
+
+
 class SaveGraphic(BaseModel):
     clip: dict
     name: str = Field(min_length=3, max_length=60)

@@ -29,6 +29,7 @@ const CLIP_COLORS: Record<string, string> = {
   shape: "#5E55A0",
   color: "#545B6B",
   captions: "#A0702A",
+  graphic: "#B0477A",
   adjustment: "#47566E",
   audio: "#2E7650",
 };

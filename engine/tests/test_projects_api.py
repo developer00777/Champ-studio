@@ -103,6 +103,31 @@ def test_ingest_builds_proxy_thumbs_and_peaks(client, color_video):
     assert client.post(f"/api/assets/{vid}/ingest").json()["job_id"] is None  # cached
 
 
+def test_silent_video_becomes_ready(client, media_dir):
+    """AI clips often have no audio track: they must still count as ready (no waveform needed),
+    otherwise the editor re-queues ingest forever."""
+    import subprocess
+
+    out = media_dir / "silent.mp4"
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", "color=c=green:s=160x90:r=30:d=1",
+                    "-c:v", "libx264", "-pix_fmt", "yuv420p", str(out)], check=True)
+    vid = add_to_library(str(out), "video/mp4")
+    r = client.post(f"/api/assets/{vid}/ingest").json()
+    assert wait_job(client, r["job_id"])["status"] == "completed"
+    st = client.get(f"/api/assets/{vid}/media").json()
+    assert st["ready"] and "peaks" not in st and st["probe"]["has_audio"] is False
+    assert client.post(f"/api/assets/{vid}/ingest").json()["job_id"] is None  # nothing left to build
+
+
+def test_animate_job_list_only_holds_video_and_lipsync_jobs(client):
+    from champstudio import jobs
+
+    for kind in ("video", "lipsync", "ingest", "render", "director.plan"):
+        jobs.create_job(kind, {"prompt": kind})
+    kinds = {j["kind"] for j in client.get("/api/videos/jobs").json()["jobs"]}
+    assert kinds <= {"video", "lipsync"} and {"video", "lipsync"} <= kinds
+
+
 def test_otio_round_trip_is_lossless_for_our_fields(color_video):
     vid = add_to_library(color_video, "video/mp4")
     tl = Timeline(**sample_timeline(vid))
@@ -139,3 +164,20 @@ def test_costs_and_roles_endpoints(client):
     assert est["usd"] == pytest.approx(0.3)
     assert "total" in client.get("/api/costs").json()
     assert "Inter" in client.get("/api/fonts").json()["families"]
+
+
+def test_job_retention_prunes_history_only():
+    from champstudio import db, jobs
+
+    old = jobs.create_job("render", {"x": 1}, status="completed")
+    keep = jobs.create_job("video", {"prompt": "recent"}, status="completed")
+    running = jobs.create_job("render", {"x": 2}, status="in_progress")
+    dup_a = jobs.create_job("ingest", {"asset_id": "same"}, status="completed")
+    dup_b = jobs.create_job("ingest", {"asset_id": "same"}, status="completed")
+    with db.conn() as c:
+        c.execute("UPDATE jobs SET created_at = created_at - ? WHERE id IN (?, ?)", (100 * 86400, old["id"], running["id"]))
+        c.execute("UPDATE jobs SET created_at = created_at - 5 WHERE id = ?", (dup_a["id"],))
+    jobs.prune()
+    alive = {j["id"] for j in jobs.list_jobs(limit=1000)}
+    assert old["id"] not in alive and dup_a["id"] not in alive  # old history and superseded ingest
+    assert {keep["id"], running["id"], dup_b["id"]} <= alive     # recent, unfinished, newest ingest

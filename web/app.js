@@ -63,7 +63,8 @@ const setPref = (k, v) => { try { localStorage.setItem(PREFIX + k, JSON.stringif
 
 const fmtDate = (iso) => {
   if (!iso) return "";
-  const d = new Date(iso);
+  // engine timestamps are epoch seconds; ISO strings and millisecond values also accepted
+  const d = new Date(typeof iso === "number" && iso < 1e12 ? iso * 1000 : iso);
   return isNaN(d) ? "" : d.toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 };
 const shortModel = (m) => (m || "").split("/").pop() || m || "";
@@ -199,6 +200,9 @@ function chipGroup(container, options, storeKey, def) {
 
 function bindSwitch(elWrap, storeKey, def = false) {
   let on = pref(storeKey, def);
+  // give the switch the name of the label beside it (screen readers announce "Autopilot, switch, off")
+  const label = elWrap.closest(".ctl")?.querySelector("label")?.textContent.trim();
+  if (label && !elWrap.getAttribute("aria-label")) elWrap.setAttribute("aria-label", label);
   const paint = () => elWrap.setAttribute("aria-checked", String(on));
   elWrap.addEventListener("click", () => { on = !on; setPref(storeKey, on); paint(); });
   paint();
@@ -217,13 +221,32 @@ function autoGrow(ta) {
 
 /* ── routing ────────────────────────────────────────────────────── */
 
+// shortcut hints: ⌘ on Apple devices, Ctrl everywhere else (both keys work)
+if (!/Mac|iPhone|iPad/i.test(navigator.userAgentData?.platform || navigator.platform || "")) {
+  document.querySelectorAll("kbd.mod-key").forEach((k) => { k.textContent = "Ctrl"; });
+}
+
 const onEnter = {}; // view -> fn
 function show(view) {
   $$(".view").forEach((v) => v.classList.toggle("active", v.id === `view-${view}`));
   $$(".nav-item").forEach((b) => b.classList.toggle("active", b.dataset.view === view));
+  const label = $(`.nav-item[data-view="${view}"]`)?.textContent.trim() || "";
+  $("#nav-current").textContent = label;
+  setNavOpen(false);
   if (location.hash !== `#/${view}`) history.replaceState(null, "", `#/${view}`);
   onEnter[view]?.();
 }
+/* small screens: the nav is a drop-down menu under the top bar */
+function setNavOpen(open) {
+  $(".sidebar").classList.toggle("nav-open", open);
+  $("#nav-toggle").setAttribute("aria-expanded", String(open));
+  $("#nav-toggle").setAttribute("aria-label", open ? "Close menu" : "Open menu");
+}
+$("#nav-toggle").addEventListener("click", () => setNavOpen(!$(".sidebar").classList.contains("nav-open")));
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") setNavOpen(false); });
+document.addEventListener("click", (e) => {
+  if ($(".sidebar").classList.contains("nav-open") && !e.target.closest(".sidebar")) setNavOpen(false);
+});
 $("#nav").addEventListener("click", (e) => {
   const btn = e.target.closest(".nav-item");
   if (btn) show(btn.dataset.view);

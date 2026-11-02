@@ -109,7 +109,20 @@ function build(): void {
   const inspector = new Inspector();
   const ai = new AiDrawer();
   ai.getSelectedAssets = () => [...project.selected];
-  project.onOpen = (a) => source.open(a);
+  // narrow windows show one monitor at a time; this toggles Source ↔ Program
+  const workspace = h("main", { class: "workspace" });
+  const swapLabel = h("span", null, "Source");
+  const syncSwap = () => (swapLabel.textContent = workspace.classList.contains("source-on") ? "Program" : "Source");
+  const swap = h("button", { class: "btn btn-ghost btn-sm narrow-only", type: "button", "data-tip": "Show the Source or Program monitor", onclick: () => {
+    workspace.classList.toggle("source-on");
+    syncSwap();
+    requestAnimationFrame(() => program.fit());
+  } }, icon("film"), swapLabel);
+  project.onOpen = (a) => {
+    source.open(a);
+    workspace.classList.add("source-on");
+    syncSwap();
+  };
 
   // left panel tabs
   const leftBody = h("div", { class: "panel-body" }, project.el);
@@ -167,12 +180,16 @@ function build(): void {
   store.on("readonly", syncBanner);
   syncBanner();
 
+  workspace.append(left, source.el, program.el, right);
+  const bar = topbar(ai);
+  bar.querySelector(".grow")?.after(swap);
   const app = h(
     "div",
     { class: "app" },
-    topbar(ai),
+    bar,
     banner,
-    h("main", { class: "workspace" }, left, source.el, program.el, right),
+    workspace,
+    h("div", { class: "narrow-notice", role: "alert" }, icon("fullscreen", 28), h("h2", null, "Make the window wider"), h("p", null, "The editor needs at least 900 px of width — widen the window or use a desktop browser.")),
     splitter,
     tlPanel,
     ai.el,
@@ -367,6 +384,7 @@ function timelineToolbar(tv: TimelineView): HTMLElement {
   const editBtns = [
     iconButton("razor", "Add edit at playhead", () => actions.splitAtPlayhead(), "Ctrl+K", "btn icon-btn btn-ghost"),
     iconButton("text", "Add title", () => actions.addTitle(), "T", "btn icon-btn btn-ghost"),
+    iconButton("grid", "New graphic (Essential Graphics)", () => actions.newGraphic(), undefined, "btn icon-btn btn-ghost"),
     iconButton("image", "Add color matte", () => actions.addColorMatte(), undefined, "btn icon-btn btn-ghost"),
     iconButton("sparkle", "Add adjustment layer", () => actions.addAdjustmentLayer(), undefined, "btn icon-btn btn-ghost"),
     iconButton("marker", "Add marker", () => actions.addMarker(), "M", "btn icon-btn btn-ghost"),

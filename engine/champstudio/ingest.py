@@ -31,6 +31,11 @@ def derived_path(asset_id: str, name: str) -> Path | None:
     return p if p.exists() else None
 
 
+def _thumbs_stale(meta: dict) -> bool:
+    """Portrait strips made before v2 were 50 px wide and look blurry; rebuild them."""
+    return meta.get("v", 1) < 2 and meta.get("tile_w", 0) < meta.get("tile_h", 0)
+
+
 def status(asset_id: str) -> dict:
     d = data_dir() / "derived" / asset_id
     out: dict = {"asset_id": asset_id, "ready": False}
@@ -41,9 +46,15 @@ def status(asset_id: str) -> dict:
             out[name.split(".")[0]] = f"/api/assets/{asset_id}/derived/{name}"
     if (d / "thumbs.json").exists():
         out["thumbs_meta"] = json.loads((d / "thumbs.json").read_text())
+        if _thumbs_stale(out["thumbs_meta"]):  # not ready → the editor asks for a rebuild
+            out.pop("thumbs", None)
+            out.pop("thumbs_meta")
     kind = (library.get_asset(asset_id) or {}).get("kind")
     need = {"video": ["probe", "proxy", "thumbs", "peaks"], "audio": ["probe", "peaks"], "image": ["probe"]}
-    out["ready"] = all(k in out for k in need.get(kind, ["probe"]))
+    keys = need.get(kind, ["probe"])
+    if "probe" in out and not out["probe"].get("has_audio"):  # silent clips never get a waveform
+        keys = [k for k in keys if k != "peaks"]
+    out["ready"] = all(k in out for k in keys)
     return out
 
 
@@ -74,7 +85,9 @@ def ingest(asset_id: str, progress=lambda p, s: None) -> dict:
         if not (d / "proxy.mp4").exists():
             progress(0.2, "building proxy")
             media.make_proxy(str(src), str(d / "proxy.mp4"))
-        if not (d / "thumbs.jpg").exists():
+        meta_path = d / "thumbs.json"
+        stale = meta_path.exists() and _thumbs_stale(json.loads(meta_path.read_text()))
+        if not (d / "thumbs.jpg").exists() or stale:
             progress(0.7, "thumbnails")
             meta = media.thumbnail_strip(str(src), str(d / "thumbs.jpg"))
             (d / "thumbs.json").write_text(json.dumps(meta))

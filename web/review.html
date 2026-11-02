@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Video Review · Champ Studio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 rx=%224%22 fill=%22%23FF6B35%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
@@ -41,14 +42,16 @@
                     padding: 8px 10px; font: inherit; }
   textarea { resize: vertical; min-height: 64px; }
   .muted { color: var(--mist); font-size: 12px; }
-  .err { padding: 40px; text-align: center; }
+  .err { padding: 40px; text-align: center; grid-column: 1 / -1; }
+  #decide[hidden] { display: none; }
+  .note { font-size: 12px; color: var(--amber); min-height: 16px; }
   @media (max-width: 900px) { main { grid-template-columns: 1fr; } aside { max-height: none; } }
 </style>
 </head>
 <body>
 <header>
   <div><div class="brand">Champ&nbsp;<em>Studio</em> · Review</div><h1 id="title">Loading…</h1></div>
-  <div class="bar" style="margin:0">
+  <div class="bar" id="decide" style="margin:0" hidden>
     <span class="status" id="status"></span>
     <button id="changes">Request changes</button>
     <button class="ok" id="approve">Approve</button>
@@ -66,6 +69,7 @@
     <input id="author" placeholder="Your name">
     <textarea id="body" placeholder="Comment at the current frame…"></textarea>
     <button class="primary" id="send">Comment at <span id="send-tc">00:00:00:00</span></button>
+    <div class="note" id="note" role="status"></div>
     <div class="list" id="list"></div>
   </aside>
 </main>
@@ -102,15 +106,32 @@ function paint(data) {
   }
 }
 
+let poll = null;
+function unavailable(message) {
+  clearInterval(poll);
+  $("#title").textContent = "Review link unavailable";
+  document.title = "Review link unavailable · Champ Studio";
+  $("#decide").hidden = true;
+  $("#main").innerHTML = `<div class="err"><h1>This review link can't be opened</h1><p class="muted">${esc(message)}</p>
+    <p class="muted">Ask the person who shared it for a new link.</p></div>`;
+}
+
 async function load() {
   try {
     const data = await api(`/api/review/${token}`);
     fps = data.fps || 30;
     if (!$("#video").src) $("#video").src = data.video_url;
     paint(data);
+    $("#decide").hidden = false;
   } catch (e) {
-    $("#main").innerHTML = `<div class="err"><h1>Review link unavailable</h1><p class="muted">${esc(e.message)}</p></div>`;
+    unavailable(e.message === "Not Found" ? "The link was not found or has been revoked." : e.message);
   }
+}
+
+/** Run a reviewer action; show failures instead of dropping them. */
+async function act(fn) {
+  $("#note").textContent = "";
+  try { await fn(); } catch (e) { $("#note").textContent = `Couldn't save: ${e.message}`; }
 }
 
 $("#video").addEventListener("timeupdate", () => { $("#tc").textContent = tc(frame()); $("#send-tc").textContent = tc(frame()); });
@@ -121,18 +142,23 @@ $("#send").onclick = async () => {
   const author = $("#author").value.trim() || "Guest reviewer";
   try { localStorage.setItem("champ.review.author", author); } catch {}
   const f = frame();
-  await api(`/api/review/${token}/comments`, { body, author, in_frame: f, out_frame: f });
-  $("#body").value = "";
-  load();
+  await act(async () => {
+    await api(`/api/review/${token}/comments`, { body, author, in_frame: f, out_frame: f });
+    $("#body").value = "";
+    await load();
+  });
 };
-const setStatus = async (status) => {
+const setStatus = (status) => act(async () => {
   await api(`/api/review/${token}/status`, { status, author: $("#author").value.trim() || "Guest reviewer" });
-  load();
-};
+  await load();
+});
 $("#approve").onclick = () => setStatus("approved");
 $("#changes").onclick = () => setStatus("changes_requested");
-load();
-setInterval(load, 15000);
+if (!token) unavailable("This page needs a review link (…/review.html?t=…).");
+else {
+  load();
+  poll = setInterval(load, 15000);
+}
 </script>
 </body>
 </html>

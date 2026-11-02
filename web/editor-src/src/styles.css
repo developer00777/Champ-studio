@@ -368,7 +368,7 @@ input[type="checkbox"] {
 .app {
   --tl-h: 38vh;
   height: 100vh;
-  min-width: 1100px;
+  min-width: 900px; /* narrower windows get the "make the window wider" notice */
   display: grid;
   grid-template-rows: 46px auto minmax(240px, 1fr) 5px var(--tl-h);
   grid-template-columns: 100%;
@@ -2023,4 +2023,63 @@ input[type="checkbox"] {
 .layer-tools .icon-btn:nth-child(1) svg,
 .layer-tools .icon-btn:nth-child(2) svg {
   transform: rotate(90deg);
+}
+
+/* ── narrow windows ───────────────────────────────────────────── */
+
+.narrow-only,
+.narrow-notice {
+  display: none;
+}
+
+@media (max-width: 1240px) {
+  .workspace {
+    grid-template-columns: minmax(200px, 230px) minmax(0, 1fr) minmax(240px, 280px);
+  }
+  .workspace > .monitor[data-monitor="source"],
+  .workspace.source-on > .monitor[data-monitor="program"] {
+    display: none;
+  }
+  .workspace.source-on > .monitor[data-monitor="source"] {
+    display: flex;
+  }
+  .narrow-only {
+    display: inline-flex;
+  }
+  /* icon-only top-bar buttons */
+  .topbar > .btn.btn-sm:not(.narrow-only) > svg + span {
+    display: none;
+  }
+  .project-name {
+    width: 200px;
+  }
+}
+
+@media (max-width: 899px) {
+  .app {
+    min-width: 0;
+  }
+  .narrow-notice {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 24px;
+    text-align: center;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .narrow-notice h2 {
+    margin: 0;
+    font: 600 18px var(--font-head);
+  }
+  .narrow-notice p {
+    margin: 0;
+    max-width: 340px;
+    color: var(--muted);
+  }
 }

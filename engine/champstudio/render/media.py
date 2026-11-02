@@ -223,11 +223,13 @@ def thumbnail_strip(src: str, dst: str, *, every_s: float = 2.0, height: int = 9
     every = max(every_s, dur / max_tiles)
     tiles = max(1, min(max_tiles, int(dur / every) + 1))
     aspect = (info.get("width") or 16) / max(1, info.get("height") or 9)
+    if aspect < 1:  # portrait: size by width so cards don't upscale a 50 px sliver
+        height = int(round(120 / aspect / 2) * 2)
     tile_w = int(round(height * aspect / 2) * 2)
     _run([FFMPEG, "-v", "error", "-nostdin", "-y", "-i", src,
           "-vf", f"fps=1/{every:.4f},scale={tile_w}:{height},tile={tiles}x1",
           "-frames:v", "1", "-q:v", "5", dst], timeout=600)
-    return {"tiles": tiles, "tile_w": tile_w, "tile_h": height, "every_s": every}
+    return {"tiles": tiles, "tile_w": tile_w, "tile_h": height, "every_s": every, "v": 2}
 
 
 def extract_audio(src: str, dst: str, *, rate: int = 16000, mono: bool = True,

@@ -53,11 +53,21 @@ async def list_director():
     return {"projects": projects.list_("director")}
 
 
+def short_name(text: str, limit: int = 60) -> str:
+    """First line of a brief, cut on a word boundary with an ellipsis."""
+    line = " ".join((text or "").split()) or "Untitled video"
+    if len(line) <= limit:
+        return line
+    cut = line[: limit - 1].rsplit(" ", 1)[0].rstrip(",;:.-—")
+    return f"{cut}…"
+
+
 @router.post("/api/director", dependencies=[editor_only])
 async def create(body: NewDirector, request: Request):
     data = {"brief": body.brief.model_dump(), "brand_kit_id": body.brand_kit_id, "aspects": body.aspects or ["16:9"],
-            "quality": body.quality, "stage": "new", "plan": None, "scene_state": {}}
-    p = projects.create(body.name or body.brief.prompt[:60], "director", data, brand_kit_id=body.brand_kit_id,
+            "quality": body.quality, "stage": "new", "plan": None, "scene_state": {},
+            "auto_name": not body.name}  # replaced by the plan's title once the script is written
+    p = projects.create(body.name or short_name(body.brief.prompt), "director", data, brand_kit_id=body.brand_kit_id,
                         actor=actor(request)["id"])
     data["id"] = p["id"]
     projects.save(p["id"], data)
