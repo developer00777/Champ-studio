@@ -84,6 +84,7 @@ button { font-family: inherit; }
   white-space: nowrap;
 }
 .wordmark em { font-style: normal; color: var(--ember); }
+.brand-mark { width: 26px; height: 26px; margin-right: 10px; vertical-align: -6px; }
 .nav { display: flex; flex-direction: column; gap: 4px; }
 .nav-item {
   display: flex;

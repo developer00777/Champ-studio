@@ -1,6 +1,10 @@
 # Champ Studio on Windows
 
-Two ways — pick one.
+**Easiest:** the desktop app. Double-click `desktop\windows\Install Champ Studio.cmd`; it installs
+Docker Desktop if needed and adds a Champ Studio icon. See
+[desktop/windows/README.md](../desktop/windows/README.md).
+
+Or by hand. Pick one:
 
 ## A. Simple (no Docker) — any Windows 10/11 machine
 

@@ -57,6 +57,14 @@ Add your OpenRouter key in **Settings** (either UI). Keys are stored `0600` in
 `~/.champstudio/settings.json` (Mac app also keeps them in your Keychain), and never
 leave your machine except to the provider.
 
+## Install — Windows desktop app (one click, Docker underneath)
+
+Double-click `desktop\windows\Install Champ Studio.cmd`. It adds **Champ Studio** to the Desktop
+and Start menu. The first launch installs Docker Desktop if needed, builds the engine
+(5–10 minutes) and opens Champ Studio in its own window; after that it opens in seconds. Teammates
+get a zip from `desktop\windows\make-release.ps1`. Details:
+[desktop/windows/README.md](desktop/windows/README.md).
+
 ## Install — Windows / Linux / cloud (Docker, identical behavior)
 
 ```bash
@@ -75,7 +83,7 @@ platforms. For a team deployment, set `CHAMP_STUDIO_ACCESS_TOKEN` in `.env` and 
 |---|---|---|
 | Mac designers | **`dist/ChampStudio-1.0.0.dmg`** — engine embedded, zero setup | Build: `./macapp/scripts/make_dmg.sh`. They drag to Applications, right-click → Open the first time (ad-hoc signed), add a key. Engine auto-starts (~30 s first launch). |
 | Server / everyone via browser | **Multi-arch Docker image** (amd64+arm64) | See [docs/DEPLOY-SERVER.md](docs/DEPLOY-SERVER.md) — set `CHAMP_STUDIO_ACCESS_TOKEN`, share `http://server:8787`. |
-| Windows devices | **`windows/`** one-click scripts (no Docker) | See [windows/README-WINDOWS.md](windows/README-WINDOWS.md) — `setup-windows.ps1` once, then `run-windows.bat`. Docker Desktop also works. |
+| Windows devices | **`dist/ChampStudio-Windows-1.0.0.zip`** — desktop app; sets up Docker itself | Build: `desktop\windows\make-release.ps1`. They unzip and double-click `Install Champ Studio.cmd`; see [desktop/windows/README.md](desktop/windows/README.md). Without Docker: [windows/README-WINDOWS.md](windows/README-WINDOWS.md). |
 
 ## What's inside
 
@@ -85,6 +93,7 @@ platforms. For a team deployment, set `CHAMP_STUDIO_ACCESS_TOKEN` in `.env` and 
 | `web/` | Buildless web UI (Champ Suite design language), served by the engine |
 | `macapp/` | Native SwiftUI macOS app (SPM, no Xcode needed) |
 | `docker/` + `docker-compose.yml` | Container packaging |
+| `desktop/windows/` | Windows desktop app: installer, launcher with setup window, tray icon |
 | `docs/superpowers/specs/` | Design spec |
 
 ## API in 20 seconds

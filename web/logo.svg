@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 64">
+  <defs>
+    <linearGradient id="ember" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF8C5A"/>
+      <stop offset="1" stop-color="#F0571E"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="62" height="62" rx="16" fill="#0B0D12" stroke="#2A2F3D" stroke-width="2"/>
+  <circle cx="32" cy="32" r="18" fill="url(#ember)"/>
+  <path d="M27.5 23.6v16.8a1.2 1.2 0 0 0 1.8 1l13.4-8.4a1.2 1.2 0 0 0 0-2l-13.4-8.4a1.2 1.2 0 0 0-1.8 1z" fill="#0B0D12"/>
+  <text x="80" y="43" font-family="Space Grotesk, Segoe UI, system-ui, sans-serif" font-size="30" font-weight="700" fill="#FAFAF7">Champ <tspan fill="#FF6B35">Studio</tspan></text>
+</svg>

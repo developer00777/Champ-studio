@@ -1,0 +1,20 @@
+# Champ Studio desktop app. ChampStudio.ps1 builds the image and runs this with
+#   docker compose -p champ_studio -f compose.yml up -d
+# setting CHAMP_IMAGE and CHAMP_PORT. The compose project, container and data volume are the same
+# as the repo's docker-compose.yml, so both share projects, media and settings.
+services:
+  champstudio:
+    image: ${CHAMP_IMAGE:?set by ChampStudio.ps1}
+    container_name: champstudio
+    ports:
+      - "127.0.0.1:${CHAMP_PORT:-8787}:8787"   # this PC only
+    environment:
+      # From %LOCALAPPDATA%\ChampStudio\champstudio.env when present; otherwise use Settings in the app.
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - MUAPI_API_KEY=${MUAPI_API_KEY:-}
+    volumes:
+      - champ-data:/data
+    restart: unless-stopped
+
+volumes:
+  champ-data:
