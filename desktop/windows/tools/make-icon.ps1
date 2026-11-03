@@ -21,7 +21,7 @@ function Get-ChampDib {
     for ($y = $h - 1; $y -ge 0; $y--) { $bw.Write($raw, $y * $bits.Stride, $w * 4) }   # bottom-up BGRA
     $bw.Write((New-Object byte[] ($maskRow * $h)))                            # AND mask (alpha does the work)
     $bw.Flush()
-    $ms.ToArray()
+    , $ms.ToArray()     # the comma keeps it a byte[] (unrolled, BinaryWriter would write 1 byte)
 }
 
 $sizes = 16, 20, 24, 32, 40, 48, 64, 128, 256
@@ -48,6 +48,6 @@ for ($i = 0; $i -lt $sizes.Count; $i++) {                                    # I
     $bw.Write([int]$frames[$i].Length); $bw.Write([int]$offset)
     $offset += $frames[$i].Length
 }
-foreach ($f in $frames) { $bw.Write($f) }
+foreach ($f in $frames) { $bw.Write([byte[]]$f) }
 $bw.Close()
 Write-Host "Wrote $((Resolve-Path $out).Path) ($((Get-Item $out).Length) bytes)"
