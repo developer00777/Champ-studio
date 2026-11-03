@@ -34,6 +34,12 @@ New-Item -ItemType Directory -Force -Path $dest, "$dest\lib", "$dest\assets", $d
 Copy-Item -Force -Path "$PSScriptRoot\ChampStudio.ps1", "$PSScriptRoot\Uninstall.ps1", "$PSScriptRoot\compose.yml" -Destination $dest
 Copy-Item -Force -Path "$PSScriptRoot\lib\*.ps1" -Destination "$dest\lib"
 Copy-Item -Force -Path "$PSScriptRoot\assets\champstudio.ico" -Destination "$dest\assets"
+# Shortcuts get the icon under a name that changes with its content: Windows caches shortcut icons
+# by path, so a new logo under the old name would keep showing the old picture.
+$iconTag = (Get-FileHash -Algorithm SHA256 -LiteralPath "$dest\assets\champstudio.ico").Hash.Substring(0, 8).ToLower()
+$shellIcon = "$dest\assets\champstudio-$iconTag.ico"
+Get-ChildItem -LiteralPath "$dest\assets" -Filter 'champstudio-*.ico' | Where-Object { $_.FullName -ne $shellIcon } | Remove-Item -Force
+Copy-Item -Force -LiteralPath "$dest\assets\champstudio.ico" -Destination $shellIcon
 Write-Host '  Copying the engine source'
 Copy-ChampSource -From $from -To "$dest\source"
 
@@ -77,7 +83,7 @@ foreach ($path in $links) {
     $lnk.TargetPath = $ps
     $lnk.Arguments = $launch
     $lnk.WorkingDirectory = $dest
-    $lnk.IconLocation = "$dest\assets\champstudio.ico,0"
+    $lnk.IconLocation = "$shellIcon,0"
     $lnk.WindowStyle = 7          # minimized: no console flash while PowerShell hides itself
     $lnk.Description = 'Champ Studio'
     $lnk.Save()
@@ -92,7 +98,7 @@ $strings = [ordered]@{
     DisplayName     = 'Champ Studio'
     DisplayVersion  = $version
     Publisher       = 'Champions Group'
-    DisplayIcon     = "$dest\assets\champstudio.ico"
+    DisplayIcon     = $shellIcon
     InstallLocation = $dest
     UninstallString = "`"$ps`" -NoProfile -ExecutionPolicy Bypass -File `"$dest\Uninstall.ps1`""
 }
@@ -101,6 +107,7 @@ foreach ($pair in @(@('NoModify', 1), @('NoRepair', 1), @('EstimatedSize', $kb))
     New-ItemProperty -Path $key -Name $pair[0] -Value $pair[1] -PropertyType DWord -Force | Out-Null
 }
 
+& "$env:SystemRoot\System32\ie4uinit.exe" -show 2>$null   # ask Explorer to refresh icons now
 Write-Host "Champ Studio $build installed." -ForegroundColor Green
 if (-not $NoLaunch) {
     Write-Host 'Opening Champ Studio (the first launch sets up Docker and builds the engine).'
